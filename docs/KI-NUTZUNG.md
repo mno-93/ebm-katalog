@@ -14,16 +14,27 @@ Im Repository liegt `.mcp.json`; Werkzeuge, die diese Datei lesen, binden den Se
 
 | Werkzeug | Wofür |
 |---|---|
-| `ebm_suche` | Volltext über EBM, Anhang 2 und BMV-Ä-Pauschalen |
-| `ebm_gop` | alles zu einer GOP: Bewertung mit Altersstufen, Merkmale, Leistungsinhalte, Abrechnungsbestimmung, Anmerkungen, Ausschlüsse, Arztgruppen, Bezüge zum BMV-Ä |
-| `ebm_abschnitt` | Präambeln, Allgemeine Bestimmungen, Kapiteltexte; mehrdeutige Nummern mit Pfad |
-| `ebm_nebeneinander` | eingetragene Ausschlüsse zwischen zwei Nummern, beide Richtungen, mit Bezug |
-| `ebm_arztgruppe` | Arztgruppenfilter: Gruppen, Umfang, Sichtbarkeit einer GOP |
-| `ebm_ops` | Anhang 2: OPS → GOP und GOP → OPS |
-| `ebm_bmv` | Pauschalen außerhalb des EBM mit Betrag oder „regional“ und Fundstelle |
-| `ebm_verweise` | wer eine Nummer erwähnt — für Folgenabschätzungen |
+| `ebm_suche` | Volltext über EBM, Anhang 2 und BMV-Ä-Pauschalen; GOP-Treffer mit Punktzahl. Ohne Treffer wird mit hinterlegten Fachbegriffen erneut gesucht (`umformuliert_zu`, `auch_unter`), enthält keine GOP alle Wörter, kommen `teiltreffer` |
+| `ebm_gop` | eine oder mehrere GOP (Komma, höchstens 20): Bewertung mit Altersstufen, Merkmale, Leistungsinhalte, Abrechnungsbestimmung, Anmerkungen, Ausschlüsse, Arztgruppen, Zeiten aus Anhang 3, Zuschläge und Zusatzpauschalen, die die GOP erwähnen, Bezüge zum BMV-Ä; `umfang=kompakt` ohne Anmerkungen und Rückverweise; ohne Treffer `aehnlich` |
+| `ebm_abschnitt` | Präambeln, Allgemeine Bestimmungen, Kapitel- und Anhangtexte; mehrdeutige Nummern mit Pfad, eindeutig mit „Anhang 2.1“ oder „AB 4.3.1“. Lange Texte gekürzt, mit `filter` nur die Stellen rund um einen Begriff |
+| `ebm_nebeneinander` | eingetragene Ausschlüsse, beide Richtungen, mit Bezug; Ausschlüsse ganzer Abschnitte aufgelöst (`ueber_abschnitt`); `b` als Liste für eine Sammelprüfung (höchstens 100) |
+| `ebm_arztgruppe` | Arztgruppenfilter: Gruppen (als Auswahlliste im Schema), Umfang, Sichtbarkeit einer GOP |
+| `ebm_ops` | Anhang 2: OPS → GOP und GOP → OPS, mit Felderklärung |
+| `ebm_bmv` | Pauschalen außerhalb des EBM mit Betrag oder „regional“ und Fundstelle; ohne Treffer Vorschläge und die Liste nicht erfasster Regelungen |
+| `ebm_verweise` | wer eine Nummer erwähnt und in welchen Anhangtabellen (2, 3) sie steht — für Folgenabschätzungen |
+| `ebm_felder` | Bedeutung der Felder; was die Online-Ansicht nicht erläutert, ist so gekennzeichnet |
 
-Jede Antwort enthält Belege (Quartal, Nummer, Knotenkennung, Pfad bzw. Anlage mit Seite) und den Hinweis „KI-gebaut und nicht amtlich“. Ohne Treffer sagt das Werkzeug das ausdrücklich. Zum Ausprobieren ohne Assistent:
+Jede Antwort enthält Belege (Quartal, Nummer, Knotenkennung, Pfad bzw. Anlage mit Seite) und den Hinweis „KI-gebaut und nicht amtlich“. Ohne Treffer sagt das Werkzeug das ausdrücklich. Die Fachbegriffe für die Suche stehen in `quellen/synonyme.json` (von Hand, nur Einträge, deren Zielbegriff im Katalog vorkommt).
+
+Weitere MCP-Funktionen:
+
+- **Annotations:** Alle Werkzeuge sind als nur lesend, wiederholbar und ohne Außenwirkung gekennzeichnet (`readOnlyHint`, `idempotentHint`, `openWorldHint: false`); Clients können sie ohne Rückfrage zulassen.
+- **Strukturierte Ausgabe:** Jedes Ergebnis kommt zusätzlich als `structuredContent` (JSON); der Textteil ist auf 60.000 Zeichen begrenzt.
+- **Resources:** `ebm://regeln`, `ebm://felder`, `ebm://bmv` und die Vorlagen `ebm://<Quartal>/gop/{nr}`, `ebm://<Quartal>/abschnitt/{nr}`, `ebm://<Quartal>/ops/{code}` als Markdown. GOP-Ergebnisse verweisen per `resource_link` darauf.
+- **Vorlagen:** `ebm_frage`, `ebm_fallpruefung` (GOP-Liste, Alter, Arztgruppe), `ebm_folgenabschaetzung` (GOP) mit Regeln und Abfragefolge.
+- **Completions:** GOP-Nummern, Abschnittsnummern, Arztgruppen und OPS-Codes für die Argumente der Resource-Vorlagen und Vorlagen.
+
+Zum Ausprobieren ohne Assistent:
 
 ```bash
 python3 -I werkzeuge/ek.py frage ebm_nebeneinander '{"a":"03000","b":"01436"}'
@@ -58,7 +69,7 @@ JSON nach [DATENMODELL.md](DATENMODELL.md), für eigene Auswertungen.
 - `schritte`: Werkzeugaufrufe in der Reihenfolge, in der ein Assistent sie stellen würde, mit Kurzbefund und `pruefungen` wie im Fragenkatalog,
 - `antwort` (Absätze, Listen mit `- `, `**fett**`, Links auf Seitenadressen wie `#gop-03230`), `belege`, `einordnung` (was gelingt, wo die Grenzen liegen, was abgeleitet ist).
 
-`ek.py fragenkatalog` führt die Schritte aus und prüft ihre Kernaussagen. Der Antworttext ist von Hand formuliert und KI-gebaut; er wird nicht automatisch geprüft und ist fachlich nicht freigegeben. Die Beispiele zeigen auch Schwächen offen, etwa dass die Suche Alltagsbegriffe („Gespräch Hausarzt“, „Telematikinfrastruktur“) nicht immer der richtigen Position zuordnet.
+`ek.py fragenkatalog` führt die Schritte aus und prüft ihre Kernaussagen. Der Antworttext ist von Hand formuliert und KI-gebaut; er wird nicht automatisch geprüft und ist fachlich nicht freigegeben. Die Einordnungen benennen auch Grenzen, etwa dass Begrenzungen in Präambeln stehen und eigens abgerufen werden müssen.
 
 ## Einsatz in der Fachabteilung
 

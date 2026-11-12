@@ -151,25 +151,10 @@
       "text": "Gespräch Hausarzt",
       "bereich": "ebm"
      },
-     "befund": "nur Abschnitte, keine passende GOP",
+     "befund": "keine GOP enthält beide Wörter; als erster Teiltreffer die 03230",
      "pruefungen": [
       {
-       "pfad": "anzahl",
-       "min": 1
-      }
-     ]
-    },
-    {
-     "werkzeug": "ebm_suche",
-     "argumente": {
-      "text": "problemorientiertes Gespräch",
-      "bereich": "ebm",
-      "grenze": 5
-     },
-     "befund": "03230, 04230, 50700",
-     "pruefungen": [
-      {
-       "pfad": "treffer[0].nr",
+       "pfad": "teiltreffer[0].nr",
        "gleich": "03230"
       }
      ]
@@ -212,9 +197,10 @@
     {
      "werkzeug": "ebm_abschnitt",
      "argumente": {
-      "nr": "3.1"
+      "nr": "3.1",
+      "filter": "03230"
      },
-     "befund": "Präambel 3.1: Punktzahlvolumen von 64 Punkten je Behandlungsfall für die 03230",
+     "befund": "Präambel 3.1, nur die Stellen zur 03230: Punktzahlvolumen von 64 Punkten je Behandlungsfall",
      "pruefungen": [
       {
        "enthaelt": "Das Punktzahlvolumen beträgt 64 Punkte multipliziert mit der Anzahl der Behandlungsfälle"
@@ -237,7 +223,7 @@
      "link": "#gop-03230"
     }
    ],
-   "einordnung": "Gelingt erst im zweiten Anlauf: Die Suche mit Alltagsbegriffen („Gespräch Hausarzt“) findet die GOP nicht, erst der Fachbegriff. Die Begrenzung über das Punktzahlvolumen steht nicht bei der GOP, sondern in der Präambel; der Assistent muss sie eigens abrufen. Der letzte Satz zur Vergütung oberhalb des Volumens ist eine Deutung der Formulierung „aus dem alle … Leistungen zu vergüten sind“."
+   "einordnung": "Die Suche mit Alltagsbegriffen („Gespräch Hausarzt“) findet keine GOP mit beiden Wörtern, nennt die 03230 aber als ersten Teiltreffer. Die Begrenzung über das Punktzahlvolumen steht nicht bei der GOP, sondern in der Präambel; der Assistent ruft sie gezielt mit filter ab. Der letzte Satz zur Vergütung oberhalb des Volumens ist eine Deutung der Formulierung „aus dem alle … Leistungen zu vergüten sind“."
   },
   {
    "id": "B4",
@@ -377,21 +363,12 @@
      "argumente": {
       "nr_oder_begriff": "Telematikinfrastruktur"
      },
-     "befund": "kein Treffer",
+     "befund": "über den hinterlegten Fachbegriff „ti-pauschale“: 4 bis 6 Ärzte 313,52 €, reduziert 156,75 € monatlich ab 01.01.2026",
      "pruefungen": [
       {
-       "pfad": "gefunden",
-       "gleich": false
-      }
-     ]
-    },
-    {
-     "werkzeug": "ebm_bmv",
-     "argumente": {
-      "nr_oder_begriff": "TI-Pauschale"
-     },
-     "befund": "4 bis 6 Ärzte: 313,52 €, reduziert 156,75 € monatlich ab 01.01.2026",
-     "pruefungen": [
+       "pfad": "umformuliert_zu",
+       "gleich": "ti-pauschale"
+      },
       {
        "enthaelt": "313.52"
       },
@@ -411,7 +388,7 @@
      "link": "#bmv-anl-32-ti-pauschale-nach-festlegung-des-bmg--1"
     }
    ],
-   "einordnung": "Gelingt, aber nur mit dem Kurzbegriff: „Telematikinfrastruktur“ findet nichts. Die Antwort hängt an der von Hand gepflegten BMV-Ä-Erfassung und benennt deren zeitliche Grenze."
+   "einordnung": "Gelingt mit einem Aufruf: „Telematikinfrastruktur“ führt über einen hinterlegten Fachbegriff zur TI-Pauschale; das Ergebnis weist die Umformulierung aus. Die Antwort hängt an der von Hand gepflegten BMV-Ä-Erfassung und benennt deren zeitliche Grenze."
   },
   {
    "id": "B6",
@@ -446,7 +423,7 @@
      "argumente": {
       "nr": "03230"
      },
-     "befund": "97 Knoten erwähnen die 03230, davon 87 in Kapitel 35",
+     "befund": "97 Knoten erwähnen die 03230, davon 87 in Kapitel 35; in den Tabellen: Anhang 3",
      "pruefungen": [
       {
        "pfad": "erwaehnt_in",
@@ -457,28 +434,20 @@
       },
       {
        "enthaelt": "30700"
-      }
-     ]
-    },
-    {
-     "werkzeug": "ebm_suche",
-     "argumente": {
-      "text": "03230",
-      "bereich": "alle"
-     },
-     "befund": "03230, Präambel 3.1 und Anhang 3 (fehlt in ebm_verweise)",
-     "pruefungen": [
+      },
       {
-       "enthaelt": "J#####AR3###QG#"
+       "pfad": "in_tabellen[0].stelle",
+       "gleich": "Anhang 3 (Zeitaufwand)"
       }
      ]
     },
     {
      "werkzeug": "ebm_abschnitt",
      "argumente": {
-      "nr": "3"
+      "nr": "3",
+      "filter": "03230"
      },
-     "befund": "Anhang 3: 03230 mit Kalkulations- und Prüfzeit 10/10 Minuten, Tages- und Quartalsprofil",
+     "befund": "Anhang 3, Zeile der 03230: Kalkulations- und Prüfzeit 10/10 Minuten, Tages- und Quartalsprofil",
      "pruefungen": [
       {
        "enthaelt": "03230 | Problemorientiertes ärztliches Gespräch, das aufgrund von Art und Schwere der Erkrankung erforderlich ist | 10 | 10 | Tages- und Quartalsprofil"
@@ -498,7 +467,7 @@
      ]
     }
    ],
-   "antwort": "Die [03230](#gop-03230) wird in **97 Knoten** des EBM erwähnt:\n- **87** in Kapitel 35 (Psychotherapie)\n- **5** in Kapitel 37, z. B. 37300, 37302, 37305, 37306, 37711\n- **3** im hausärztlichen Kapitel: 03370, 03372, 03373 (Palliativversorgung)\n- die [30700](#gop-30700) (Grundpauschale schmerztherapeutischer Patient)\n- die [Präambel 3.1](#k-G66xxxUI1xxxQGx) mit dem Punktzahlvolumen und eigener Fallzählung\n\nZusätzlich, ohne dass das Verweiswerkzeug sie meldet:\n- **[Anhang 3](#k-JxxxxxAR3xxxQGx)**: Die 03230 steht dort mit **10 Minuten Kalkulations- und 10 Minuten Prüfzeit**, geeignet für Tages- und Quartalsprofil. Eine Änderung von Mindestdauer oder Takt wirkt auf die Plausibilitätsprüfung.\n- **Parallele Position [04230](#gop-04230)** in der Kinder- und Jugendmedizin, mit gleichem Leistungsinhalt und eigenem Punktzahlvolumen in der [Präambel 4.1](#k-6UHxxxQG3xxxQGx); dazu die [50700](#gop-50700) (Gespräch bei Mukoviszidose) mit gleichlautendem Titel.\n\nBei einer Änderung sind vor allem Präambel 3.1, Anhang 3, die Gleichbehandlung der 04230 und die gegenseitigen Ausschlüsse zu prüfen.",
+   "antwort": "Die [03230](#gop-03230) wird in **97 Knoten** des EBM erwähnt:\n- **87** in Kapitel 35 (Psychotherapie)\n- **5** in Kapitel 37, z. B. 37300, 37302, 37305, 37306, 37711\n- **3** im hausärztlichen Kapitel: 03370, 03372, 03373 (Palliativversorgung)\n- die [30700](#gop-30700) (Grundpauschale schmerztherapeutischer Patient)\n- die [Präambel 3.1](#k-G66xxxUI1xxxQGx) mit dem Punktzahlvolumen und eigener Fallzählung\n\nZusätzlich:\n- **[Anhang 3](#k-JxxxxxAR3xxxQGx)**: Die 03230 steht dort mit **10 Minuten Kalkulations- und 10 Minuten Prüfzeit**, geeignet für Tages- und Quartalsprofil. Eine Änderung von Mindestdauer oder Takt wirkt auf die Plausibilitätsprüfung.\n- **Parallele Position [04230](#gop-04230)** in der Kinder- und Jugendmedizin, mit gleichem Leistungsinhalt und eigenem Punktzahlvolumen in der [Präambel 4.1](#k-6UHxxxQG3xxxQGx); dazu die [50700](#gop-50700) (Gespräch bei Mukoviszidose) mit gleichlautendem Titel.\n\nBei einer Änderung sind vor allem Präambel 3.1, Anhang 3, die Gleichbehandlung der 04230 und die gegenseitigen Ausschlüsse zu prüfen.",
    "belege": [
     {
      "text": "EBM 2026/Q4, Verweise auf GOP 03230",
@@ -517,7 +486,7 @@
      "link": "#k-6UHxxxQG3xxxQGx"
     }
    ],
-   "einordnung": "Für die Fachabteilung: Eine solche Folgenabschätzung ist in der Online-Ansicht nur durch Durchklicken möglich. Lücke des Katalogs: `ebm_verweise` erfasst keine Nummern in Anhangtabellen; Anhang 3 findet erst die Volltextsuche. Dass 04230 und 50700 mitbetroffen sind, ist eine fachliche Einschätzung, sie verweisen nicht auf die 03230. In dieser Fassung ergänzt um Funde aus dem Blindtest."
+   "einordnung": "Für die Fachabteilung: Eine solche Folgenabschätzung ist in der Online-Ansicht nur durch Durchklicken möglich. Das Verweiswerkzeug nennt neben den Erwähnungen auch die Fundstelle in Anhang 3. Dass 04230 und 50700 mitbetroffen sind, ist eine fachliche Einschätzung, sie verweisen nicht auf die 03230. In dieser Fassung ergänzt um Funde aus dem Blindtest."
   }
  ]
 }

@@ -10,3 +10,7 @@ Diese Regeln liefert der MCP-Server bei der Anmeldung als Anweisung mit (`instru
 6. **Keine Einzelfallberatung.** Allgemeine Auskunft zur Systematik geben; bei Abrechnungsfragen im Einzelfall auf die Abrechnungsberatung der Kassenärztlichen Vereinigung verweisen.
 7. **Grenzen offen benennen:** KI-gebaut und nicht amtlich; Anlage 3 BMV-Ä (Qualitätssicherungsvereinbarungen), regionale Verträge und Selektivverträge sind nicht enthalten.
 8. **Mehrdeutige Nummern klären.** Abschnittsnummern kommen in den Allgemeinen Bestimmungen und in den Kapiteln vor; den Pfad nennen.
+9. **Regeln außerhalb der GOP suchen.** Begrenzungen stehen oft in der Präambel des Kapitels oder bei Zuschlägen, nicht bei der GOP selbst. Vor einer Antwort zur Abrechenbarkeit die Präambel mit `ebm_abschnitt` und `filter=<GOP>` abrufen.
+10. **Felder nicht raten.** Unklare Felder mit `ebm_felder` nachschlagen. Was dort als „nicht erläutert“ steht (z. B. die Spalte §115b), unverändert wiedergeben und nicht deuten.
+11. **Fehlende Angaben benennen.** Hängt die Antwort von Alter, Arztgruppe oder „gleiche Sitzung oder gleicher Behandlungsfall“ ab und fehlt die Angabe, die Annahme ausdrücklich nennen oder nachfragen.
+12. **Sparsam abfragen.** Mehrere GOP in einem `ebm_gop`-Aufruf, mehrere Paare in einem `ebm_nebeneinander`-Aufruf (b als Liste); `umfang=kompakt`, wenn Anmerkungen nicht gebraucht werden.

@@ -32,11 +32,53 @@ class Protokoll(unittest.TestCase):
 
     def test_unbekannte_methode(self):
         with self.assertRaises(LookupError):
-            self.s.behandeln({"method": "resources/list"})
+            self.s.behandeln({"method": "gibts/nicht"})
+
+    def test_annotations_und_ausgabeschema(self):
+        for t in self.s.behandeln({"method": "tools/list"})["tools"]:
+            self.assertTrue(t["annotations"]["readOnlyHint"])
+            self.assertFalse(t["annotations"]["openWorldHint"])
+            self.assertEqual(t["outputSchema"]["type"], "object")
+            self.assertTrue(t["title"])
+
+    def test_faehigkeiten(self):
+        caps = self.s.behandeln({"method": "initialize", "params": {}})["capabilities"]
+        self.assertEqual(set(caps), {"tools", "prompts", "resources", "completions"})
+
+    def test_resources_und_vorlagen(self):
+        uris = [r["uri"] for r in self.s.behandeln({"method": "resources/list"})["resources"]]
+        self.assertIn("ebm://regeln", uris)
+        r = self.s.behandeln({"method": "resources/read", "params": {"uri": "ebm://regeln"}})
+        self.assertIn("Nur aus Werkzeugergebnissen", r["contents"][0]["text"])
+        tpl = [r["uriTemplate"] for r in self.s.behandeln({"method": "resources/templates/list"})["resourceTemplates"]]
+        self.assertTrue(any(u.endswith("/gop/{nr}") for u in tpl))
+
+    def test_vorlagen_liste(self):
+        namen = {p["name"] for p in self.s.behandeln({"method": "prompts/list"})["prompts"]}
+        self.assertEqual(namen, {"ebm_frage", "ebm_fallpruefung", "ebm_folgenabschaetzung"})
+        r = self.s.behandeln({"method": "prompts/get", "params": {"name": "ebm_fallpruefung", "arguments": {"gops": "03000, 03230", "alter": "60"}}})
+        self.assertIn("Alter 60", r["messages"][0]["content"]["text"])
+
+    def test_schema_mit_auswahl(self):
+        s = mcp.schema({"x": ("string", "d", True, ["a", "b"]), "y": ("integer", "e", False)})
+        self.assertEqual(s["properties"]["x"]["enum"], ["a", "b"])
+        self.assertEqual(s["required"], ["x"])
 
     def test_vorlage(self):
         r = self.s.behandeln({"method": "prompts/get", "params": {"name": "ebm_frage", "arguments": {"frage": "Was ist 03000?"}}})
         self.assertIn("Was ist 03000?", r["messages"][0]["content"]["text"])
+
+
+class Hilfen(unittest.TestCase):
+    def test_liste(self):
+        self.assertEqual(katalog.liste("03000, 03040;01436 x"), ["03000", "03040", "01436", "X"])
+        self.assertEqual(katalog.liste(["03000", " "]), ["03000"])
+
+    def test_auszuege(self):
+        t = "a" * 1000 + " 03230 | x " + "b" * 1000 + " 03230 " + "c" * 50
+        st = katalog.auszuege(t, "03230", fenster=20)
+        self.assertEqual(len(st), 2)
+        self.assertTrue(all("03230" in s for s in st))
 
 
 class Klartext(unittest.TestCase):

@@ -1,0 +1,10 @@
+{
+ "hinweis": "Alltagsbegriffe -> Begriffe, unter denen der Katalog sucht. Von Hand gepflegt, nicht amtlich. Nur Einträge, deren Zielbegriff im Katalog vorkommt; Quelle der Alltagsbegriffe: Blindtest und Nutzerfragen.",
+ "synonyme": {
+  "telematikinfrastruktur": "ti-pauschale",
+  "ti pauschale": "ti-pauschale",
+  "check-up": "gesundheitsuntersuchung",
+  "checkup": "gesundheitsuntersuchung",
+  "hausbesuch": "besuch"
+ }
+}

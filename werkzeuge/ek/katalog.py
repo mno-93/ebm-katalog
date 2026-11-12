@@ -3,16 +3,29 @@
 Jede Antwort ist ein dict mit den Fakten und einem Feld `belege` (Quartal, Nummer, Knotenkennung,
 Herkunft, Auszug). Antworten ohne Treffer sagen das ausdrücklich (`gefunden: False`), statt zu raten.
 """
+import difflib
 import html as H
 import json
 import re
 from functools import cached_property
 
-from .grundlagen import AUS, aktuelles_quartal
+from .grundlagen import AUS, WURZEL, aktuelles_quartal
 
 HINWEIS = ("KI-gebaut und nicht amtlich: abgeleitet aus der EBM-Online-Ansicht (ebm.kbv.de) und den Verträgen auf kbv.de. "
            "Mit einem KI-Assistenten erstellt und nur stichprobenartig geprüft. "
            "Verbindlich sind ausschließlich diese Veröffentlichungen.")
+FELDER = {
+    "bewertung.punkte / bewertung.euro": "Punktzahl und Eurobetrag aus dem Kopf der Detailansicht; der Eurobetrag gilt mit dem bundeseinheitlichen Orientierungswert, regionale Punktwerte können abweichen.",
+    "merkmale": "Kennzeichen im Kopf der Detailansicht (Häkchen = zutreffend, Kreuz = nicht zutreffend), 1:1 übernommen. Ihre Bedeutung erläutert die Online-Ansicht nicht. „fachärztliche Grundversorgung“ erscheint dort auch bei hausärztlichen GOP mit Häkchen; das ist kein Fehler des Abzugs, aber ungeklärt — nicht deuten.",
+    "zuschlaege": "Zuschläge und Zusatzpauschalen, die diese GOP erwähnen (Titel mit „Zuschlag“ oder „Zusatzpauschale“ unter den Rückverweisen). Ob sie im Einzelfall anfallen, regeln deren Bestimmungen.",
+    "ausschluesse.bezug": "Bezug des Abrechnungsausschlusses, z. B. „in derselben Sitzung“, „am Behandlungstag“, „im Behandlungsfall“.",
+    "ausschluesse.kapitel": "Ausschluss eines ganzen Abschnitts; ebm_nebeneinander löst ihn auf die Positionen des Abschnitts auf.",
+    "zeiten": "Anhang 3 EBM: Kalkulationszeit und Prüfzeit in Minuten sowie Eignung der Prüfzeit (Tages-/Quartalsprofil). KA = keine Kalkulationszeit vorgegeben, ./. = keine Prüfzeit.",
+    "ops.kategorie": "Kategorie des Eingriffs nach Anhang 2 (z. B. A5); bestimmt die zugeordneten GOP.",
+    "ops.p115b": "Wert der Spalte „§115b“ der Anhang-2-Ansicht, 1:1 übernommen. Die Online-Ansicht erläutert ihn nicht; nicht deuten.",
+    "ops.zuordnung.kalk / pruef": "Kalkulations- und Prüfzeit in Minuten (Spalten „Kalk. Zeit“ und „Prüfzeit“ der Anhang-2-Ansicht).",
+    "arztgruppen": "Gruppen, in deren Filter die Position in der Online-Ansicht erscheint. Sichtbarkeit ist keine Abrechnungsberechtigung.",
+}
 EBM_URL = "https://ebm.kbv.de/"
 OPS_URL = "https://ebm.kbv.de/ops.xhtml"
 
@@ -31,6 +44,32 @@ def klartext(html, links=None):
 
 def _norm(s):
     return re.sub(r"\s+", " ", (s or "").lower())
+
+
+def liste(x):
+    """Eine oder mehrere Nummern: Liste oder Text mit Komma, Semikolon oder Leerzeichen."""
+    if isinstance(x, (list, tuple)):
+        return [str(v).strip().upper() for v in x if str(v).strip()]
+    return [v.upper() for v in re.split(r"[,;\s]+", str(x or "").strip()) if v]
+
+
+def auszuege(text, begriff, fenster=300, hoechstens=20):
+    """Textstellen rund um jedes Vorkommen eines Begriffs (überlappende Fenster zusammengeführt)."""
+    tl, b = text.lower(), begriff.lower()
+    spannen, i = [], tl.find(b)
+    while i >= 0 and len(spannen) < hoechstens:
+        a, e = max(0, i - fenster), min(len(text), i + len(b) + fenster)
+        if spannen and a <= spannen[-1][1]:
+            spannen[-1][1] = e
+        else:
+            spannen.append([a, e])
+        i = tl.find(b, i + len(b))
+    return [("…" if a else "") + text[a:e].strip() + ("…" if e < len(text) else "") for a, e in spannen]
+
+
+def synonyme():
+    f = WURZEL / "quellen" / "synonyme.json"
+    return json.loads(f.read_text(encoding="utf-8"))["synonyme"] if f.exists() else {}
 
 
 class Katalog:
@@ -117,14 +156,40 @@ class Katalog:
         n = self.K.get(kid)
         return n["nr"] if n else None
 
+    @cached_property
+    def anhang3(self):
+        """Zeilen aus Anhang 3 (Zeitaufwand): GOP -> Kalkulations-, Prüfzeit, Eignung."""
+        ns = [n for n in self.nr.get("3", []) if self.pfad(n)[:1] and self.pfad(n)[0].startswith("VI")]
+        if not ns:
+            return {}
+        s = "\n".join(a["text"] for a in self._abschnitte(ns[0]["knotenId"]))
+        z = re.findall(r"\|\s*(\d{5}[A-Z]?)([*°]{0,3})\s*\|\s*([^|]*?)\s*\|\s*([^|]*?)\s*\|\s*([^|]*?)\s*\|\s*([^|]*?)\s*(?=\||$)", s)
+        return {"knoten": ns[0], "zeilen": {r[0]: {"kalkulationszeit": r[3], "pruefzeit": r[4], "eignung": r[5], "kennzeichen": r[1] or None} for r in z}}
+
+    def _in_abschnitt(self, nr, kap):
+        """Liegt eine Nummer in dem Abschnitt eines Kapitel-Ausschlusses?"""
+        ziele = set(kap.get("k", "").split("_")) | {kap.get("nr")}
+        for n in self.nr.get(nr, []):
+            p = self.K.get(n["eltern"])
+            while p:
+                if p["knotenId"] in ziele or p["nr"] in ziele:
+                    return True
+                p = self.K.get(p["eltern"])
+        return False
+
     # ---------- Werkzeuge ----------
-    def gop(self, nr):
+    def gop(self, nr, umfang="voll"):
+        nrs = liste(nr)
+        if len(nrs) > 1:
+            return {"positionen": [self.gop(x, umfang) for x in nrs[:20]], "gekuerzt": len(nrs) > 20, "hinweis": HINWEIS}
+        nr = nrs[0] if nrs else ""
         n, kinder = self.gop_knoten(nr)
         if not n:
             b = self.bmv(nr)
             if b.get("gefunden"):
                 return {"gefunden": False, "hinweis": f"{nr} ist keine Gebührenordnungsposition des EBM, sondern eine Pauschale aus dem BMV-Ä.", "bmv": b}
-            return {"gefunden": False, "hinweis": f"{nr} steht im EBM {self.quartal} nicht.", "quartal": self.quartal}
+            aehnlich = sorted({x for x, ns in self.nr.items() if x[:4] == nr[:4] and any(m["typ"] == "gop" for m in ns)})[:15]
+            return {"gefunden": False, "hinweis": f"{nr} steht im EBM {self.quartal} nicht.", "aehnlich": aehnlich, "quartal": self.quartal}
         d = self.inhalt(n["knotenId"])
         bew = []
         if n.get("bewertung"):
@@ -137,31 +202,80 @@ class Katalog:
              "bewertung_hinweis": None if bew else "Keine Bewertung im Kopf der Detailansicht; sie kann im Text (Anmerkung, Präambel) stehen.",
              "merkmale": d.get("merkmale", []), "abschnitte": self._abschnitte(n["knotenId"]), "ausschluesse": aus,
              "untergliederung": [c["titel"] for c in kinder],
-             "erwaehnt_in": [self._nr_von(k) for k in d.get("referenziert_von", [])],
+             "erwaehnt_in": [self._nr_von(k) for k in d.get("referenziert_von", [])][:25],
+             "erwaehnt_in_anzahl": len(d.get("referenziert_von", [])),
              "bmv_bezuege": d.get("bmv_verweise", [])}
+        zus = {}
+        for k in d.get("referenziert_von", []):
+            h = self.gop_knoten(self.K[k]["nr"])[0] if self.K[k]["typ"] == "gop" else None
+            if h and re.search(r"zuschlag|zusatzpauschale", _norm(h["titel"] or h["baumtitel"])):
+                zus[h["nr"]] = f"{h['nr']} {h['titel'] or h['baumtitel']}"
+        if zus:
+            r["zuschlaege"] = [zus[x] for x in sorted(zus)]
+        if r["erwaehnt_in_anzahl"] > 25:
+            r["erwaehnt_in_hinweis"] = "Gekürzt auf 25; vollständige Liste mit ebm_verweise."
+        z = self.anhang3.get("zeilen", {}).get(n["nr"]) if self.anhang3 else None
+        if z:
+            r["zeiten"] = {**z, "quelle": "Anhang 3 EBM"}
         if self.ag_daten:
             p = self.pos[n["knotenId"]]
             r["arztgruppen"] = [g for g, m in self.ag_daten["mengen"].items() if p in m]
         if self.ops_daten and n["nr"] in self.ops_daten["nach_gop"]:
             r["ops_anzahl"] = len(self.ops_daten["nach_gop"][n["nr"]])
         r["belege"] = [self.beleg(n)]
+        if umfang == "kompakt":
+            behalten = {"Abrechnungsbestimmung", "Obligater Leistungsinhalt"}
+            r["abschnitte"] = [a for a in r["abschnitte"] if a["ueberschrift"] in behalten]
+            r["umfang"] = "kompakt: nur Bewertung, obligater Leistungsinhalt, Abrechnungsbestimmung, Ausschlüsse; Anmerkungen mit umfang=voll"
+            for x in ("erwaehnt_in", "erwaehnt_in_hinweis", "untergliederung"):
+                r.pop(x, None)
         r["hinweis"] = HINWEIS
         return r
 
-    def knoten(self, nr_oder_id):
-        """Abschnitt, Präambel oder Bestimmung über Nummer (z. B. 4.3.1) oder Knotenkennung."""
-        ns = [self.K[nr_oder_id]] if nr_oder_id in self.K else self.nr.get(nr_oder_id.strip(), [])
+    def knoten(self, nr_oder_id, filter=None, grenze=15000):
+        """Abschnitt, Präambel oder Bestimmung über Nummer (z. B. 4.3.1) oder Knotenkennung.
+
+        filter: nur Textstellen rund um diesen Begriff (z. B. eine GOP in Anhang 3).
+        grenze: Höchstlänge je Text in Zeichen; längere Texte werden gekürzt und als gekürzt gekennzeichnet.
+        """
+        m = re.fullmatch(r"\s*(anhang|ab|allgemeine bestimmungen?)\s+(\d+(?:\.\d+)*)\s*", nr_oder_id, re.I)
+        if m:
+            wurzel = "VI" if m.group(1).lower() == "anhang" else "I "
+            ns = [n for n in self.nr.get(m.group(2), []) if self.pfad(n)[:1] and self.pfad(n)[0].startswith(wurzel)]
+        else:
+            ns = [self.K[nr_oder_id]] if nr_oder_id in self.K else self.nr.get(nr_oder_id.strip(), [])
         if not ns:
-            return {"gefunden": False, "hinweis": f"Kein Knoten {nr_oder_id} im EBM {self.quartal}."}
-        out = []
+            return {"gefunden": False, "hinweis": f"Kein Knoten {nr_oder_id} im EBM {self.quartal}. Anhänge mit „Anhang N“, Allgemeine Bestimmungen mit „AB N“ abrufen."}
+        out, gekuerzt = [], False
         for n in ns:
+            abschnitte = []
+            for a in self._abschnitte(n["knotenId"]):
+                if filter:
+                    st = auszuege(a["text"], filter)
+                    if st:
+                        abschnitte.append({"ueberschrift": a["ueberschrift"], "auszuege": st})
+                elif len(a["text"]) > grenze:
+                    gekuerzt = True
+                    abschnitte.append({"ueberschrift": a["ueberschrift"], "text": a["text"][:grenze] + " …",
+                                       "gekuerzt": f"{len(a['text']):,} Zeichen, gezeigt {grenze:,}; gezielt mit filter abrufen".replace(",", ".")})
+                else:
+                    abschnitte.append(a)
+            if filter and not abschnitte:
+                continue
             out.append({"nr": n["nr"], "titel": n["titel"] or n["baumtitel"], "typ": n["typ"], "pfad": " › ".join(self.pfad(n)),
-                        "abschnitte": self._abschnitte(n["knotenId"]),
+                        "abschnitte": abschnitte,
                         "enthaelt": [f"{self.K[c]['nr']} {self.K[c]['titel'] or self.K[c]['baumtitel']}" for c in n["kinder"]][:60],
                         "beleg": self.beleg(n)})
-        return {"gefunden": True, "treffer": out, "mehrdeutig": len(out) > 1, "hinweis": HINWEIS}
+        if not out:
+            return {"gefunden": False, "hinweis": f"„{filter}“ kommt in {nr_oder_id} nicht vor."}
+        r = {"gefunden": True, "treffer": out, "mehrdeutig": len(out) > 1, "hinweis": HINWEIS}
+        if filter:
+            r["filter"] = filter
+        if gekuerzt:
+            r["gekuerzt"] = True
+        return r
 
-    def suche(self, text, bereich="alle", grenze=15):
+    def suche(self, text, bereich="alle", grenze=15, _umformuliert=False):
         """Volltextsuche über Nummer, Titel und Text; bereich: alle | ebm | ops | bmv."""
         w = [x for x in _norm(text).split() if x]
         if not w:
@@ -176,7 +290,7 @@ class Katalog:
                     if not all(x in titel or x in body for x in w):
                         continue
                 s = sum(40 for x in w if x in titel) + (5 if n["typ"] == "gop" else 0) + (0 if body is None else sum(min(body.count(x), 8) for x in w))
-                tr.append((s, {"bereich": "ebm", "nr": n["nr"], "titel": n["titel"] or n["baumtitel"], "typ": n["typ"], "knotenId": n["knotenId"]}))
+                tr.append((s, self._treffer(n)))
         if bereich in ("alle", "ops") and self.ops_daten:
             for o in self.ops_daten["knoten"]:
                 t = _norm(f"{o['nr']} {o['titel']}")
@@ -189,7 +303,54 @@ class Katalog:
                 if all(x in t for x in w):
                     tr.append((35 * len(w), {"bereich": "bmv", "nr": p["nr"] or p["id"], "titel": p["titel"], "anlage": a["anlage"]}))
         tr.sort(key=lambda x: -x[0])
-        return {"anfrage": text, "anzahl": len(tr), "treffer": [t for _, t in tr[:grenze]], "quartal": self.quartal}
+        r = {"anfrage": text, "anzahl": len(tr), "treffer": [t for _, t in tr[:grenze]], "quartal": self.quartal}
+        neu = None if _umformuliert else self._synonym(text)
+        if neu and tr:
+            r["auch_unter"] = {"begriff": neu, "treffer": self.suche(neu, bereich, 5, _umformuliert=True)["treffer"],
+                               "hinweis": "Für die Anfrage ist ein Fachbegriff hinterlegt; Treffer dazu zusätzlich."}
+        if not tr and neu:
+            r2 = self.suche(neu, bereich, grenze, _umformuliert=True)
+            if r2["anzahl"]:
+                r2.update({"anfrage": text, "umformuliert_zu": neu, "umformuliert_hinweis": "Ohne Treffer für die Anfrage; gesucht wurde mit einem hinterlegten Fachbegriff."})
+                return r2
+        if bereich in ("alle", "ebm") and len(w) > 1 and not any(t.get("typ") == "gop" for _, t in tr[:grenze]):
+            gops = [n for n in self.index["knoten"] if n["typ"] == "gop"]
+            titel = {n["knotenId"]: _norm(n["titel"] or n["baumtitel"]) for n in gops}
+            import math
+            idf = {x: math.log(len(gops) / (1 + sum(1 for s in titel.values() if x in s))) for x in w}
+            teil = []
+            for n in gops:
+                s, m = 0.0, 0
+                for x in w:
+                    if x in titel[n["knotenId"]]:
+                        m += 1
+                        ganz = re.search(r"(?<!\w)" + re.escape(x) + r"(?!\w)", titel[n["knotenId"]])
+                        s += idf[x] * (2 if ganz else 1)
+                if m:
+                    teil.append((s, m, n))
+            gesehen, out = set(), []
+            for _, m, n in sorted(teil, key=lambda x: -x[0]):
+                if n["nr"] not in gesehen:
+                    gesehen.add(n["nr"]); out.append({**self._treffer(n), "passende_woerter": m})
+                if len(out) >= 10:
+                    break
+            if out:
+                r["teiltreffer"] = out
+                r["teiltreffer_hinweis"] = "Keine Gebührenordnungsposition enthält alle Suchwörter; diese GOP enthalten einen Teil davon im Titel."
+        return r
+
+    def _treffer(self, n):
+        t = {"bereich": "ebm", "nr": n["nr"], "titel": n["titel"] or n["baumtitel"], "typ": n["typ"], "knotenId": n["knotenId"]}
+        if n["typ"] == "gop" and n.get("bewertung"):
+            t["punkte"] = n["bewertung"].get("punkte")
+        return t
+
+    def _synonym(self, text):
+        syn, q = synonyme(), _norm(text)
+        neu = q
+        for alt, fach in syn.items():
+            neu = re.sub(r"(?<![\w-])" + re.escape(alt) + r"(?![\w-])", fach, neu)
+        return neu if neu != q else None
 
     def nebeneinander(self, a, b):
         """Prüft eingetragene Abrechnungsausschlüsse zwischen zwei Nummern, in beide Richtungen."""
@@ -201,6 +362,10 @@ class Katalog:
                         ids = l["k"].split("_")
                         if l["nr"] == y or any(self._nr_von(i) == y for i in ids):
                             out.append({"eingetragen_bei": x, "bezug": z["bezug"], "beleg": self.beleg(n, f"Abrechnungsausschluss {z['bezug']}: {l['nr']}")})
+                    for kap in z.get("kapitel", []):
+                        if self._in_abschnitt(y, kap):
+                            out.append({"eingetragen_bei": x, "bezug": z["bezug"], "ueber_abschnitt": kap["nr"],
+                                        "beleg": self.beleg(n, f"Abrechnungsausschluss {z['bezug']}: Abschnitt {kap['nr']} (enthält {y})")})
             if self.bmv_daten:
                 for p in self.bmv_daten["pauschalen"]:
                     if (p["nr"] or p["id"]) == x:
@@ -208,10 +373,23 @@ class Katalog:
                             if y in z["nr"]:
                                 out.append({"eingetragen_bei": x, "bezug": z["bezug"], "beleg": self.bmv_beleg(p)})
             return out
-        a, b = a.strip().upper(), b.strip().upper()
+        bs = liste(b)
+        if len(bs) > 1:
+            einzeln = [self.nebeneinander(a, x) for x in bs[:100]]
+            return {"a": liste(a)[0] if liste(a) else a, "geprueft": len(einzeln),
+                    "mit_ausschluss": [{"b": e["b"], "bezuege": sorted({x["bezug"] for x in e["eintraege"]}),
+                                        "eingetragen_bei": sorted({x["eingetragen_bei"] for x in e["eintraege"]}),
+                                        "ueber_abschnitt": sorted({x["ueber_abschnitt"] for x in e["eintraege"] if x.get("ueber_abschnitt")})}
+                                       for e in einzeln if e.get("ausschluss_eingetragen")],
+                    "ohne_ausschluss": [e["b"] for e in einzeln if e.get("bekannt", True) and not e.get("ausschluss_eingetragen")],
+                    "unbekannt": [x for e in einzeln if e.get("bekannt") is False for x in e.get("unbekannt", [])],
+                    "gekuerzt": len(bs) > 100,
+                    "hinweis": "Sammelprüfung; Belege je Paar mit einer Einzelprüfung. Kein eingetragener Ausschluss ist keine Zusage der Berechnungsfähigkeit.",
+                    "quartal": self.quartal}
+        a, b = a.strip().upper(), (bs[0] if bs else "")
         unbekannt = [x for x in (a, b) if x not in self.nr and not (self.bmv_daten and x in self.bmv_daten["nach_id"])]
         if unbekannt:
-            return {"bekannt": False, "hinweis": f"Nicht im Katalog: {', '.join(unbekannt)}."}
+            return {"bekannt": False, "unbekannt": unbekannt, "b": b, "hinweis": f"Nicht im Katalog: {', '.join(unbekannt)}."}
         e = eintraege(a, b) + eintraege(b, a)
         return {"a": a, "b": b, "ausschluss_eingetragen": bool(e), "eintraege": e,
                 "hinweis": ("Ausschluss eingetragen; der Bezug (z. B. am Behandlungstag, im Behandlungsfall) bestimmt, wann er gilt."
@@ -250,7 +428,8 @@ class Katalog:
                 return {"gefunden": False, "hinweis": f"OPS {code} steht nicht im Anhang 2 {self.quartal}.", "aehnlich": kand}
             return {"gefunden": True, "nr": o["nr"], "titel": o["titel"], "kategorie": o.get("kategorie"), "p115b": o.get("p115b"),
                     "seitenangabe": o.get("seite"), "zuordnung": o.get("gops", []),
-                    "beleg": {"quartal": self.quartal, "herkunft": f"Anhang-2-Ansicht {OPS_URL}", "knotenId": o["id"]}, "hinweis": HINWEIS}
+                    "beleg": {"quartal": self.quartal, "herkunft": f"Anhang-2-Ansicht {OPS_URL}", "knotenId": o["id"]},
+                    "felder": {k: v for k, v in FELDER.items() if k.startswith("ops.")}, "hinweis": HINWEIS}
         if gop:
             rows = d["nach_gop"].get(gop.strip(), [])
             return {"gop": gop, "anzahl": len(rows), "ops": [{"nr": o["nr"], "titel": o["titel"], "art": art} for o, art in rows[:200]],
@@ -274,7 +453,17 @@ class Katalog:
         p = d["nach_id"].get(q)
         treffer = [p] if p else [x for x in d["pauschalen"] if all(w in _norm(x["titel"] + " " + d["anlage_nach_id"][x["anlage"]]["titel"]) for w in _norm(q).split())]
         if not treffer:
-            return {"gefunden": False, "hinweis": f"Keine Pauschale „{q}“ im BMV-Ä-Teil des Katalogs."}
+            neu = self._synonym(q)
+            if neu:
+                r = self.bmv(neu)
+                if r.get("gefunden"):
+                    r.update({"umformuliert_zu": neu, "umformuliert_hinweis": "Ohne Treffer für die Anfrage; gesucht wurde mit einem hinterlegten Fachbegriff."})
+                    return r
+            woerter = sorted({w for x in d["pauschalen"] for w in re.findall(r"[\wÄÖÜäöüß-]{4,}", x["titel"])})
+            nah = difflib.get_close_matches(q, woerter, n=5, cutoff=0.6)
+            return {"gefunden": False, "hinweis": f"Keine Pauschale „{q}“ im BMV-Ä-Teil des Katalogs.",
+                    "vorschlaege": nah, "regelungen": [a["titel"] for a in d["anlagen"]],
+                    "nicht_erfasst": d.get("ohne_eigene_pauschale")}
         out = []
         for p in treffer[:10]:
             a = d["anlage_nach_id"][p["anlage"]]
@@ -293,27 +482,54 @@ class Katalog:
         if not n:
             return {"gefunden": False, "hinweis": f"{nr} steht im EBM {self.quartal} nicht."}
         d = self.inhalt(n["knotenId"])
-        return {"nr": n["nr"], "erwaehnt_in": [f"{self.K[k]['nr']} {self.K[k]['titel'] or self.K[k]['baumtitel']}" for k in d.get("referenziert_von", [])],
-                "verweist_auf": [f"{self.K[k]['nr']} {self.K[k]['titel'] or self.K[k]['baumtitel']}" for k in d.get("verweise", [])],
-                "beleg": self.beleg(n)}
+        r = {"nr": n["nr"], "erwaehnt_in": [f"{self.K[k]['nr']} {self.K[k]['titel'] or self.K[k]['baumtitel']}" for k in d.get("referenziert_von", [])],
+             "verweist_auf": [f"{self.K[k]['nr']} {self.K[k]['titel'] or self.K[k]['baumtitel']}" for k in d.get("verweise", [])],
+             "beleg": self.beleg(n)}
+        z = self.anhang3.get("zeilen", {}).get(n["nr"]) if self.anhang3 else None
+        if z:
+            r["in_tabellen"] = [{"stelle": "Anhang 3 (Zeitaufwand)", **z, "beleg": self.beleg(self.anhang3["knoten"])}]
+        if self.ops_daten and n["nr"] in self.ops_daten["nach_gop"]:
+            r.setdefault("in_tabellen", []).append({"stelle": "Anhang 2 (OPS-Zuordnung)", "ops_anzahl": len(self.ops_daten["nach_gop"][n["nr"]])})
+        r["hinweis"] = "erwaehnt_in: Knoten mit Link oder Nummer im Text; in_tabellen: Fundstellen in den Tabellen der Anhänge 2 und 3."
+        return r
+
+    def felder(self):
+        return {"felder": FELDER, "hinweis": HINWEIS}
 
 
 WERKZEUGE = {
-    "ebm_suche": ("Volltextsuche im EBM, im Anhang 2 (OPS) und in den Pauschalen des BMV-Ä. Liefert Nummern und Titel; Details mit den anderen Werkzeugen abrufen.",
-                  {"text": ("string", "Suchbegriffe oder Nummer", True), "bereich": ("string", "alle | ebm | ops | bmv", False), "grenze": ("integer", "Anzahl Treffer, Standard 15", False)},
+    "ebm_suche": ("Volltextsuche im EBM, im Anhang 2 (OPS) und in den Pauschalen des BMV-Ä. Liefert Nummern, Titel und bei GOP die Punktzahl; Details mit den anderen Werkzeugen. "
+                  "Ohne Treffer wird mit hinterlegten Fachbegriffen erneut gesucht (umformuliert_zu); enthält keine GOP alle Wörter, kommen teiltreffer.",
+                  {"text": ("string", "Suchbegriffe oder Nummer", True), "bereich": ("string", "alle | ebm | ops | bmv", False, ["alle", "ebm", "ops", "bmv"]),
+                   "grenze": ("integer", "Anzahl Treffer, Standard 15", False)},
                   lambda k, a: k.suche(a["text"], a.get("bereich", "alle"), int(a.get("grenze", 15)))),
-    "ebm_gop": ("Vollständige Angaben zu einer Gebührenordnungsposition: Bewertung (auch Altersstufen), Merkmale, Leistungsinhalt, Abrechnungsbestimmung, Anmerkungen, Ausschlüsse, Arztgruppen, Bezüge zum BMV-Ä.",
-                {"nr": ("string", "fünfstellige GOP, z. B. 03000", True)}, lambda k, a: k.gop(a["nr"])),
-    "ebm_abschnitt": ("Text eines Abschnitts, einer Präambel oder einer Allgemeinen Bestimmung, z. B. 4.3.1 oder 3.1. Gleiche Nummern kommen in Allgemeinen Bestimmungen und Kapiteln vor; dann alle Treffer mit Pfad.",
-                      {"nr": ("string", "Abschnittsnummer oder Knotenkennung", True)}, lambda k, a: k.knoten(a["nr"])),
-    "ebm_nebeneinander": ("Prüft, ob zwischen zwei Nummern (GOP oder BMV-Ä-Pauschale) ein Abrechnungsausschluss eingetragen ist, in beide Richtungen, mit Bezug.",
-                          {"a": ("string", "erste Nummer", True), "b": ("string", "zweite Nummer", True)}, lambda k, a: k.nebeneinander(a["a"], a["b"])),
+    "ebm_gop": ("Angaben zu einer oder mehreren Gebührenordnungspositionen: Bewertung (auch Altersstufen), Merkmale, Leistungsinhalt, Abrechnungsbestimmung, Anmerkungen, "
+                "Ausschlüsse, Arztgruppen, Zeiten aus Anhang 3, Zuschläge, die die GOP erwähnen, Bezüge zum BMV-Ä. Mehrere Nummern durch Komma trennen (höchstens 20). "
+                "umfang=kompakt lässt Anmerkungen und Rückverweise weg.",
+                {"nr": ("string", "GOP, z. B. 03000, oder mehrere: 03000, 03040", True),
+                 "umfang": ("string", "voll (Standard) | kompakt", False, ["voll", "kompakt"])},
+                lambda k, a: k.gop(a["nr"], a.get("umfang", "voll"))),
+    "ebm_abschnitt": ("Text eines Abschnitts, einer Präambel, einer Allgemeinen Bestimmung oder eines Anhangs, z. B. 4.3.1, 3.1, „Anhang 2“ oder „AB 4.3.1“. Gleiche Nummern kommen in Allgemeinen Bestimmungen, "
+                      "Kapiteln und Anhängen vor; dann alle Treffer mit Pfad. Lange Texte werden gekürzt; mit filter nur die Stellen rund um einen Begriff (z. B. eine GOP).",
+                      {"nr": ("string", "Abschnittsnummer oder Knotenkennung", True), "filter": ("string", "optional: nur Textstellen rund um diesen Begriff", False)},
+                      lambda k, a: k.knoten(a["nr"], a.get("filter"))),
+    "ebm_nebeneinander": ("Prüft, ob zwischen Nummern (GOP oder BMV-Ä-Pauschale) ein Abrechnungsausschluss eingetragen ist, in beide Richtungen, mit Bezug; "
+                          "Ausschlüsse ganzer Abschnitte werden aufgelöst. b kann mehrere Nummern enthalten (Sammelprüfung, höchstens 100).",
+                          {"a": ("string", "erste Nummer", True), "b": ("string", "zweite Nummer oder mehrere, durch Komma getrennt", True)},
+                          lambda k, a: k.nebeneinander(a["a"], a["b"])),
     "ebm_arztgruppe": ("Arztgruppenfilter der Online-Ansicht: Liste der Gruppen, Umfang einer Gruppe oder ob eine GOP für eine Gruppe sichtbar ist.",
-                       {"gruppe": ("string", "z. B. Hausarzt", False), "gop": ("string", "optional: GOP", False)}, lambda k, a: k.arztgruppe(a.get("gruppe"), a.get("gop"))),
-    "ebm_ops": ("Anhang 2: Kategorie, §115b-Status und zugeordnete GOP zu einem OPS-Code, oder alle OPS-Codes zu einer GOP der Kapitel 31/36.",
+                       {"gruppe": ("string", "Arztgruppe, z. B. Hausarzt", False, "ARZTGRUPPEN"), "gop": ("string", "optional: GOP", False)},
+                       lambda k, a: k.arztgruppe(a.get("gruppe"), a.get("gop"))),
+    "ebm_ops": ("Anhang 2: Kategorie, §115b-Spalte und zugeordnete GOP zu einem OPS-Code, oder alle OPS-Codes zu einer GOP der Kapitel 31/36.",
                 {"code": ("string", "OPS-Code, z. B. 5-010.2", False), "gop": ("string", "GOP, z. B. 31272", False)}, lambda k, a: k.ops(a.get("code"), a.get("gop"))),
-    "ebm_bmv": ("Pauschalen aus dem Bundesmantelvertrag-Ärzte und seinen Anlagen, die nicht im EBM stehen (z. B. Onkologie, Sozialpsychiatrie, DiGA, Kurarzt, TI-Pauschale). Ohne Argument: Übersicht.",
+    "ebm_bmv": ("Pauschalen aus dem Bundesmantelvertrag-Ärzte und seinen Anlagen, die nicht im EBM stehen (z. B. Onkologie, Sozialpsychiatrie, DiGA, Kurarzt, TI-Pauschale). "
+                "Ohne Argument: Übersicht mit nicht erfassten Regelungen.",
                 {"nr_oder_begriff": ("string", "Nummer (z. B. 86510) oder Begriff", False)}, lambda k, a: k.bmv(a.get("nr_oder_begriff"))),
-    "ebm_verweise": ("Welche Knoten erwähnen eine Nummer, und worauf verweist sie? Für Folgenabschätzung bei Änderungen.",
+    "ebm_verweise": ("Welche Knoten erwähnen eine Nummer, worauf verweist sie, und in welchen Anhangtabellen (Anhang 2, Anhang 3) steht sie? Für Folgenabschätzung bei Änderungen.",
                      {"nr": ("string", "GOP oder Abschnittsnummer", True)}, lambda k, a: k.verweise(a["nr"])),
+    "ebm_felder": ("Erklärt die Felder der Werkzeugergebnisse (Merkmale, Zeiten, Kategorie, §115b-Spalte, kalk/pruef, Ausschlussbezug).", {}, lambda k, a: k.felder()),
 }
+
+TITEL = {"ebm_suche": "EBM durchsuchen", "ebm_gop": "Gebührenordnungsposition", "ebm_abschnitt": "Abschnitt oder Präambel",
+         "ebm_nebeneinander": "Nebeneinanderberechnung prüfen", "ebm_arztgruppe": "Arztgruppenfilter", "ebm_ops": "OPS-Zuordnung (Anhang 2)",
+         "ebm_bmv": "Pauschalen aus dem BMV-Ä", "ebm_verweise": "Verweise und Folgenabschätzung", "ebm_felder": "Felder erklärt"}

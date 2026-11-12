@@ -832,6 +832,282 @@
    "sollantwort": "Sieben Regelungen: Onkologie (Anlage 7), Sozialpsychiatrie (11), DiGA (34), Kurarzt (25), Gutachtenhonorare (zu Anlage 1), TI-Pauschale (Festlegung des BMG) und die außer Kraft getretenen eArztbrief-Pauschalen (32).",
    "fundstelle": "Auswertung der Anlagen",
    "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "S01",
+   "frage": "Welche Ausschlüsse hat die 03230 gegenüber 35401, 35503, 03000 und 30700?",
+   "kategorie": "Schnittstelle",
+   "zielgruppe": "KI-Assistent",
+   "werkzeug": "ebm_nebeneinander",
+   "argumente": {
+    "a": "03230",
+    "b": "35401, 35503, 03000, 30700"
+   },
+   "pruefungen": [
+    {
+     "pfad": "geprueft",
+     "gleich": 4
+    },
+    {
+     "pfad": "mit_ausschluss",
+     "laenge": 3
+    },
+    {
+     "enthaelt": "35.2.1"
+    },
+    {
+     "pfad": "ohne_ausschluss[0]",
+     "gleich": "03000"
+    }
+   ],
+   "sollantwort": "Ausschluss mit 35401 und 35503 über die Abschnitte 35.2.1/35.2.2 (in derselben Sitzung) und mit 30700 (im Behandlungsfall); mit 03000 keiner eingetragen.",
+   "fundstelle": "EBM, GOP 03230, Abrechnungsausschlüsse",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "S02",
+   "frage": "Welche Kalkulations- und Prüfzeit hat die 03230?",
+   "kategorie": "Schnittstelle",
+   "zielgruppe": "KI-Assistent",
+   "werkzeug": "ebm_gop",
+   "argumente": {
+    "nr": "03230",
+    "umfang": "kompakt"
+   },
+   "pruefungen": [
+    {
+     "pfad": "zeiten.kalkulationszeit",
+     "gleich": "10"
+    },
+    {
+     "pfad": "zeiten.pruefzeit",
+     "gleich": "10"
+    },
+    {
+     "pfad": "zeiten.eignung",
+     "gleich": "Tages- und Quartalsprofil"
+    }
+   ],
+   "sollantwort": "10 Minuten Kalkulationszeit, 10 Minuten Prüfzeit, geeignet für Tages- und Quartalsprofil.",
+   "fundstelle": "EBM, Anhang 3",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "S03",
+   "frage": "Was steht in Anhang 3 zur 03230?",
+   "kategorie": "Schnittstelle",
+   "zielgruppe": "KI-Assistent",
+   "werkzeug": "ebm_abschnitt",
+   "argumente": {
+    "nr": "3",
+    "filter": "03230"
+   },
+   "pruefungen": [
+    {
+     "pfad": "gefunden",
+     "gleich": true
+    },
+    {
+     "enthaelt": "03230 | Problemorientiertes ärztliches Gespräch"
+    }
+   ],
+   "sollantwort": "Zeile der 03230 in Anhang 3 (Auszug statt des ganzen Anhangs).",
+   "fundstelle": "EBM, Anhang 3",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "S04",
+   "frage": "Was regelt die Präambel 3.1 zur 03230?",
+   "kategorie": "Schnittstelle",
+   "zielgruppe": "KI-Assistent",
+   "werkzeug": "ebm_abschnitt",
+   "argumente": {
+    "nr": "3.1",
+    "filter": "03230"
+   },
+   "pruefungen": [
+    {
+     "enthaelt": "Das Punktzahlvolumen beträgt 64 Punkte"
+    }
+   ],
+   "sollantwort": "Punktzahlvolumen von 64 Punkten je Behandlungsfall.",
+   "fundstelle": "EBM, Präambel 3.1",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "S05",
+   "frage": "Wie hoch ist die Pauschale für die Telematikinfrastruktur?",
+   "kategorie": "Schnittstelle",
+   "zielgruppe": "KI-Assistent",
+   "werkzeug": "ebm_bmv",
+   "argumente": {
+    "nr_oder_begriff": "Telematikinfrastruktur"
+   },
+   "pruefungen": [
+    {
+     "pfad": "gefunden",
+     "gleich": true
+    },
+    {
+     "pfad": "umformuliert_zu",
+     "gleich": "ti-pauschale"
+    },
+    {
+     "enthaelt": "313.52"
+    }
+   ],
+   "sollantwort": "Über den hinterlegten Fachbegriff TI-Pauschale: Staffeln nach Praxisgröße, z. B. 313,52 € monatlich bei 4 bis 6 Ärzt:innen.",
+   "fundstelle": "Festlegung des BMG, Übersicht der KBV",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "S06",
+   "frage": "Welche GOP gibt es für ein Gespräch beim Hausarzt?",
+   "kategorie": "Schnittstelle",
+   "zielgruppe": "KI-Assistent",
+   "werkzeug": "ebm_suche",
+   "argumente": {
+    "text": "Gespräch Hausarzt",
+    "bereich": "ebm"
+   },
+   "pruefungen": [
+    {
+     "pfad": "teiltreffer[0].nr",
+     "gleich": "03230"
+    }
+   ],
+   "sollantwort": "03230 (problemorientiertes ärztliches Gespräch) als erster Teiltreffer.",
+   "fundstelle": "EBM, GOP 03230",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "S07",
+   "frage": "Wo steht die 03230 in den Anhangtabellen?",
+   "kategorie": "Schnittstelle",
+   "zielgruppe": "KI-Assistent",
+   "werkzeug": "ebm_verweise",
+   "argumente": {
+    "nr": "03230"
+   },
+   "pruefungen": [
+    {
+     "pfad": "in_tabellen[0].stelle",
+     "gleich": "Anhang 3 (Zeitaufwand)"
+    }
+   ],
+   "sollantwort": "In Anhang 3 (Zeitaufwand).",
+   "fundstelle": "EBM, Anhang 3",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "S08",
+   "frage": "Was kostet die 03231?",
+   "kategorie": "Schnittstelle",
+   "zielgruppe": "KI-Assistent",
+   "werkzeug": "ebm_gop",
+   "argumente": {
+    "nr": "03231"
+   },
+   "pruefungen": [
+    {
+     "pfad": "gefunden",
+     "gleich": false
+    },
+    {
+     "enthaelt": "03230"
+    }
+   ],
+   "sollantwort": "Steht nicht im EBM; ähnliche Nummer 03230.",
+   "fundstelle": "—",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "S09",
+   "frage": "Bewertung von 03000 und 03040 auf einmal?",
+   "kategorie": "Schnittstelle",
+   "zielgruppe": "KI-Assistent",
+   "werkzeug": "ebm_gop",
+   "argumente": {
+    "nr": "03000, 03040",
+    "umfang": "kompakt"
+   },
+   "pruefungen": [
+    {
+     "pfad": "positionen",
+     "laenge": 2
+    },
+    {
+     "pfad": "positionen[1].bewertung[0].punkte",
+     "gleich": "128"
+    }
+   ],
+   "sollantwort": "03000 nach Altersstufen, 03040 128 Punkte.",
+   "fundstelle": "EBM, GOP 03000 und 03040",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "S10",
+   "frage": "Welche Zuschläge gibt es zur 31105?",
+   "kategorie": "Schnittstelle",
+   "zielgruppe": "KI-Assistent",
+   "werkzeug": "ebm_gop",
+   "argumente": {
+    "nr": "31105",
+    "umfang": "kompakt"
+   },
+   "pruefungen": [
+    {
+     "enthaelt": "31050 Zuschlag für zusätzlichen Hygieneaufwand"
+    },
+    {
+     "enthaelt": "31108"
+    }
+   ],
+   "sollantwort": "31050 (Hygieneaufwand) und 31108 (Simultaneingriffe, Schnitt-Naht-Zeit).",
+   "fundstelle": "EBM, GOP 31050 und 31108",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "S11",
+   "frage": "Was regelt die Präambel zu Anhang 2 bei mehreren Eingriffen?",
+   "kategorie": "Schnittstelle",
+   "zielgruppe": "KI-Assistent",
+   "werkzeug": "ebm_abschnitt",
+   "argumente": {
+    "nr": "Anhang 2.1",
+    "filter": "höchsten bewertete"
+   },
+   "pruefungen": [
+    {
+     "pfad": "gefunden",
+     "gleich": true
+    },
+    {
+     "enthaelt": "so kann nur der am höchsten bewertete Eingriff berechnet werden"
+    }
+   ],
+   "sollantwort": "Mehrere Prozeduren unter einer Diagnose oder über einen gemeinsamen Zugang: nur der höchstbewertete Eingriff.",
+   "fundstelle": "EBM, Anhang 2, Präambel 2.1",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "S12",
+   "frage": "Gibt es eine Zusatzpauschale zur Versichertenpauschale 03000?",
+   "kategorie": "Schnittstelle",
+   "zielgruppe": "KI-Assistent",
+   "werkzeug": "ebm_gop",
+   "argumente": {
+    "nr": "03000",
+    "umfang": "kompakt"
+   },
+   "pruefungen": [
+    {
+     "enthaelt": "03040 Zusatzpauschale"
+    }
+   ],
+   "sollantwort": "Ja, u. a. die Vorhaltepauschale 03040.",
+   "fundstelle": "EBM, GOP 03040",
+   "status": "Entwurf – fachlich nicht freigegeben"
   }
  ]
 }

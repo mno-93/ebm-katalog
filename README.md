@@ -31,7 +31,7 @@ Tests: `python3 -I -m unittest discover -s tests -v`
 
 ## Für KI-Assistenten
 
-Der MCP-Server (`ek.py mcp`, eingebunden über `.mcp.json`) gibt Assistenten acht Werkzeuge mit Belegen je Antwort; die [Antwortregeln](docs/ANTWORTREGELN.md) werden mitgeliefert. Für Systeme ohne MCP erzeugt `ek.py texte` Markdown je GOP und eine `llms.txt`. Ein [Fragenkatalog](fragen/fragenkatalog.json) prüft in der CI, ob die Werkzeuge die belegten Fakten liefern. [Beispielantworten](fragen/beispielantworten.json) zeigen auf der Katalogseite, wie ein Assistent damit Alltagsfragen beantworten könnte, mit Abfrageschritten und Einordnung. Einzelheiten: [docs/KI-NUTZUNG.md](docs/KI-NUTZUNG.md).
+Der MCP-Server (`ek.py mcp`, eingebunden über `.mcp.json`) gibt Assistenten neun Werkzeuge mit Belegen je Antwort, dazu Resources, Vorlagen und Completions; die [Antwortregeln](docs/ANTWORTREGELN.md) werden mitgeliefert. Für Systeme ohne MCP erzeugt `ek.py texte` Markdown je GOP und eine `llms.txt`. Ein [Fragenkatalog](fragen/fragenkatalog.json) prüft in der CI, ob die Werkzeuge die belegten Fakten liefern. [Beispielantworten](fragen/beispielantworten.json) zeigen auf der Katalogseite, wie ein Assistent damit Alltagsfragen beantworten könnte, mit Abfrageschritten und Einordnung. Einzelheiten: [docs/KI-NUTZUNG.md](docs/KI-NUTZUNG.md).
 
 ## Befehle
 
