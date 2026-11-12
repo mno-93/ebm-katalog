@@ -15,7 +15,7 @@ import html as H, json, re, shutil
 from collections import defaultdict
 from html.parser import HTMLParser
 
-from .grundlagen import AUS, ROH, WEB, lies_jsonl
+from .grundlagen import AUS, ROH, WEB, WURZEL, lies_jsonl
 SRC = "https://ebm.kbv.de"
 KEEP = {"p", "ul", "ol", "li", "strong", "b", "em", "i", "br", "table", "thead", "tbody", "tr", "th", "td", "sup", "sub", "a", "h5", "h6", "span", "div"}
 VOID = {"br"}
@@ -257,6 +257,9 @@ def main(q):
     shutil.copy(WEB / "index.html", site / "index.html")
     for f in [out / "index.json"] + sorted(out.glob("teil-*.json")) + [out / f"{n}.json" for n, d in extra.items() if d]:
         (proto / f.name).write_bytes(f.read_bytes())
+    bsp = WURZEL / "fragen" / "beispielantworten.json"
+    if bsp.exists():
+        (proto / bsp.name).write_bytes(bsp.read_bytes())
     print(f"{len(recs)} Knoten, {len(seen)} GOP, {len(parts)} Teile, {len(unresolved)} Verweisziele ohne Knoten im Baum -> {out}")
     if unresolved:
         (out / "unaufgeloest.txt").write_text("\n".join(unresolved), encoding="utf-8")

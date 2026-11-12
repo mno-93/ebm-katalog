@@ -113,11 +113,20 @@ pre{background:var(--code-bg);border-radius:6px;padding:12px 14px;overflow:auto;
 details summary{cursor:pointer;color:var(--accent);font-size:14px}
 header .wrap.ki{display:block;font-size:12px;color:var(--muted);padding-block:0 10px;margin-top:-6px}
 .ki a{color:inherit}
+[hidden]{display:none!important}
+.bsp{border-top:1px solid var(--line);padding:18px 0 6px}
+.bspf{font-weight:600;font-size:16px;margin:0 0 10px}
+.bspid{display:block;font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.03em;margin-bottom:2px}
+.bspa{border-left:3px solid var(--accent);padding:2px 0 2px 14px;margin-bottom:10px}
+.bspa p{margin:6px 0}
+.bspb,.bspe{font-size:13px;color:var(--muted);margin:8px 0}
+.bsps{font-size:13px;padding-left:22px}
+.bsps code{font-size:12px;overflow-wrap:anywhere}
 </style>
 
 <header><div class="wrap">
   <div class="brand"><h1>Offener EBM-Katalog</h1><span class="q" id="qlabel">Quartal 2026/Q4</span><span class="pill" title="KI-gebaut: Abzug, Aufbereitung, Werkzeuge und Texte wurden mit einem KI-Assistenten (Claude) erstellt und nur stichprobenartig geprüft. Verbindlich sind ausschließlich ebm.kbv.de und kbv.de.">Prototyp · KI-gebaut · nicht amtlich</span></div>
-  <nav class="main" aria-label="Ansicht"><a href="#" id="nav-ebm">EBM</a><a href="#anhang2" id="nav-ops">Anhang 2 (OPS)</a><a href="#bmv" id="nav-bmv">BMV-Ä</a><a href="#schnittstelle" id="nav-api">Schnittstelle</a></nav>
+  <nav class="main" aria-label="Ansicht"><a href="#" id="nav-ebm">EBM</a><a href="#anhang2" id="nav-ops">Anhang 2 (OPS)</a><a href="#bmv" id="nav-bmv">BMV-Ä</a><a href="#beispiele" id="nav-bsp">Beispielantworten</a><a href="#schnittstelle" id="nav-api">Schnittstelle</a></nav>
 </div>
   <div class="wrap ki">KI-gebaut: Abzug, Aufbereitung, Werkzeuge und Texte wurden mit einem KI-Assistenten (Claude) erstellt und nur stichprobenartig geprüft. Nicht amtlich – verbindlich sind ausschließlich <a href="https://ebm.kbv.de/">ebm.kbv.de</a> und die Verträge auf <a href="https://www.kbv.de/infothek/rechtsquellen/bundesmantelvertrag">kbv.de</a>.</div>
 </header>
@@ -351,22 +360,45 @@ function renderApi(){
   opsData().then(d => { const e = $("#opsn"); if (e) e.textContent = d.anzahl.toLocaleString("de-DE"); });
 }
 
+/* ---------- Beispielantworten ---------- */
+let BSP = null;
+function inline(s){ return esc(s).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>").replace(/`([^`]+)`/g, "<code>$1</code>").replace(/\[([^\]]+)\]\((#[^)\s]+)\)/g, '<a href="$2">$1</a>'); }
+function mini(text){
+  return text.split(/\n\n+/).map(b => { const z = b.split("\n");
+    const li = z.filter(l => l.startsWith("- ")), p = z.filter(l => !l.startsWith("- "));
+    return (p.length ? `<p>${p.map(inline).join("<br>")}</p>` : "") + (li.length ? `<ul>${li.map(l => `<li>${inline(l.slice(2))}</li>`).join("")}</ul>` : ""); }).join("");
+}
+async function renderBsp(){
+  if (!BSP) BSP = await load("beispielantworten.json").catch(() => ({beispiele: [], hinweis: "Keine Beispielantworten vorhanden."}));
+  $("#api").innerHTML = `<h2>Beispielantworten eines KI-Assistenten</h2>
+  <p>So könnte ein KI-Assistent Alltagsfragen beantworten, wenn er über die Schnittstelle dieses Projekts auf den Katalog zugreift. Die Abfrageschritte zeigen, welche Werkzeuge er aufruft und was sie liefern; der Abschnitt „Einordnung“ benennt, was gelingt und wo die Grenzen liegen.</p>
+  <p class="note">${inline(BSP.hinweis)}</p>
+  ${BSP.beispiele.map(b => `<section class="bsp" id="bsp-${esc(b.id)}">
+    <p class="bspf"><span class="bspid">${esc(b.id)} · ${esc(b.fuer)}</span>${esc(b.frage)}</p>
+    <div class="bspa">${mini(b.antwort)}</div>
+    ${b.belege.length ? `<p class="bspb">Belege: ${b.belege.map(x => `<a href="${esc(x.link)}">${esc(x.text)}</a>`).join(" · ")}</p>` : ""}
+    <details><summary>Abfrageschritte (${b.schritte.length})</summary><ol class="bsps">${b.schritte.map(s => `<li><code>${esc(s.werkzeug)}(${esc(JSON.stringify(s.argumente))})</code> → ${esc(s.befund)}</li>`).join("")}</ol></details>
+    <p class="bspe"><strong>Einordnung:</strong> ${inline(b.einordnung)}</p>
+  </section>`).join("")}`;
+}
+
 /* ---------- Routing ---------- */
 function setMode(m){
   MODE = m;
-  [["ebm","nav-ebm"],["ops","nav-ops"],["bmv","nav-bmv"],["api","nav-api"]].forEach(([k, id]) => { const a = $("#" + id); if (k === m) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
-  $("#view").hidden = m === "api"; $("#api").hidden = m !== "api";
+  [["ebm","nav-ebm"],["ops","nav-ops"],["bmv","nav-bmv"],["bsp","nav-bsp"],["api","nav-api"]].forEach(([k, id]) => { const a = $("#" + id); if (k === m) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
+  const voll = m === "api" || m === "bsp"; $("#view").hidden = voll; $("#api").hidden = !voll;
   $("#ag").hidden = m !== "ebm" || !AG; $("#ftlabel").hidden = m !== "ebm";
   $("#q").placeholder = m === "ops" ? "OPS-Code oder Begriff" : m === "bmv" ? "Nummer oder Begriff" : "GOP, Abschnitt oder Begriff";
 }
 let LASTMODE = null;
 async function route(){
   const h = location.hash.slice(1);
-  const m = h === "schnittstelle" ? "api" : (h === "anhang2" || h.startsWith("o-")) ? "ops" : (h === "bmv" || h.startsWith("bmv-") || h.startsWith("anl-")) ? "bmv" : "ebm";
+  const m = h === "schnittstelle" ? "api" : h === "beispiele" ? "bsp" : (h === "anhang2" || h.startsWith("o-")) ? "ops" : (h === "bmv" || h.startsWith("bmv-") || h.startsWith("anl-")) ? "bmv" : "ebm";
   if (m !== LASTMODE){ $("#q").value = ""; LASTMODE = m; }
   setMode(m);
   if (!IDX) return;
   if (m === "api"){ renderApi(); return; }
+  if (m === "bsp"){ renderBsp(); return; }
   if (m === "ops"){
     $("#detail").innerHTML = `<p class="empty">Lade Anhang 2 …</p>`;
     const d = await opsData();

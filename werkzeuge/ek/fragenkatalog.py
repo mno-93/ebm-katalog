@@ -54,9 +54,25 @@ def main(argv=None):
         zeilen.append(f"| {f['id']} | {'✅' if ok else '❌'} | {f['frage']} | {'; '.join(t for r, t in res if not r) or '—'} |")
         if not ok:
             print(f"❌ {f['id']} {f['frage']}: " + "; ".join(t for r, t in res if not r))
-    bericht = [f"# Fragenkatalog — Prüfbericht {k.quartal}", "", f"{len(d['fragen']) - fehler} von {len(d['fragen'])} Fragen bestanden.", "",
+    b = WURZEL / "fragen" / "beispielantworten.json"
+    bsp = json.loads(b.read_text(encoding="utf-8"))["beispiele"] if b.exists() else []
+    for f in bsp:
+        res = []
+        for i, s in enumerate(f["schritte"], 1):
+            try:
+                erg = WERKZEUGE[s["werkzeug"]][2](k, s["argumente"])
+                res += [(r, f"Schritt {i}: {t}") for r, t in (pruefe(erg, p) for p in s["pruefungen"])]
+            except Exception as e:
+                res.append((False, f"Schritt {i}: Fehler: {e}"))
+        ok = all(r for r, _ in res)
+        fehler += not ok
+        zeilen.append(f"| {f['id']} | {'✅' if ok else '❌'} | Beispielantwort: {f['frage']} | {'; '.join(t for r, t in res if not r) or '—'} |")
+        if not ok:
+            print(f"❌ {f['id']} {f['frage']}: " + "; ".join(t for r, t in res if not r))
+    n = len(d["fragen"]) + len(bsp)
+    bericht = [f"# Fragenkatalog — Prüfbericht {k.quartal}", "", f"{n - fehler} von {n} Fragen bestanden (davon {len(bsp)} Beispielantworten).", "",
                d["hinweis"], "", "| ID | Ergebnis | Frage | Abweichung |", "|---|---|---|---|"] + zeilen
     AUS.mkdir(exist_ok=True)
     (AUS / "fragenkatalog-bericht.md").write_text("\n".join(bericht) + "\n", encoding="utf-8")
-    print(f"Fragenkatalog {k.quartal}: {len(d['fragen']) - fehler} von {len(d['fragen'])} bestanden")
+    print(f"Fragenkatalog {k.quartal}: {n - fehler} von {n} bestanden (davon {len(bsp)} Beispielantworten)")
     return 1 if fehler else 0

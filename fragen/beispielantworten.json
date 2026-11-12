@@ -1,0 +1,523 @@
+{
+ "hinweis": "Exemplarische Antworten, wie ein KI-Assistent sie mit den Werkzeugen dieses Projekts geben könnte. KI-gebaut, fachlich nicht geprüft, nicht amtlich. Die Werkzeugaufrufe und ihre Kernaussagen prüft `ek.py fragenkatalog` bei jedem Lauf; der Antworttext selbst ist von Hand formuliert und wird nicht automatisch geprüft. B1, B2, B4 und B7 sind um Funde eines Blindtests ergänzt: Ein separates Modell ohne Entwicklungskontext hat dieselben Fragen nur über die Schnittstelle und die Dokumentation beantwortet.",
+ "quartal": "2026-4",
+ "beispiele": [
+  {
+   "id": "B1",
+   "fuer": "Praxis",
+   "frage": "Was bekomme ich für die Versichertenpauschale bei einer 60-jährigen Patientin?",
+   "schritte": [
+    {
+     "werkzeug": "ebm_gop",
+     "argumente": {
+      "nr": "03000"
+     },
+     "befund": "fünf Altersstufen; 55. bis 75. Lebensjahr: 148 Punkte, 18,86 €; einmal im Behandlungsfall",
+     "pruefungen": [
+      {
+       "enthaelt": "ab Beginn des 55. bis zum vollendeten 75. Lebensjahr"
+      },
+      {
+       "enthaelt": "\"punkte\": \"148\""
+      },
+      {
+       "enthaelt": "18.86"
+      },
+      {
+       "enthaelt": "einmal im Behandlungsfall"
+      }
+     ]
+    },
+    {
+     "werkzeug": "ebm_gop",
+     "argumente": {
+      "nr": "03040"
+     },
+     "befund": "Vorhaltepauschale 128 Punkte, 16,31 €, von der KV zugesetzt; Ab- und Aufschläge in der Anmerkung",
+     "pruefungen": [
+      {
+       "enthaelt": "wird durch die zuständige Kassenärztliche Vereinigung zugesetzt"
+      },
+      {
+       "enthaelt": "\"punkte\": \"128\""
+      },
+      {
+       "enthaelt": "Abschlag in Höhe von 13 Punkten"
+      },
+      {
+       "enthaelt": "Aufschlag in Höhe von 9 Punkten"
+      },
+      {
+       "enthaelt": "Abschlag in Höhe von 40 %"
+      },
+      {
+       "enthaelt": "Abschlag in Höhe von 50 %"
+      }
+     ]
+    },
+    {
+     "werkzeug": "ebm_abschnitt",
+     "argumente": {
+      "nr": "3.1"
+     },
+     "befund": "Präambel 3.1: Aufschlag 22,5 % auf 03000 in fachgleichen Berufsausübungsgemeinschaften",
+     "pruefungen": [
+      {
+       "enthaelt": "Aufschlag in Höhe von 22,5 % auf die Versichertenpauschalen nach den Gebührenordnungspositionen 03000 und 03030"
+      }
+     ]
+    }
+   ],
+   "antwort": "Ich gehe davon aus, dass Sie hausärztlich tätig sind.\n\nFür eine 60-jährige Patientin gilt bei der [03000](#gop-03000) die Altersstufe „ab Beginn des 55. bis zum vollendeten 75. Lebensjahr“: **148 Punkte, 18,86 €**, berechnungsfähig **einmal im Behandlungsfall**.\n\nWas dazukommen kann:\n- **Vorhaltepauschale [03040](#gop-03040): 128 Punkte, 16,31 €**, einmal im Behandlungsfall. Sie wird von der Kassenärztlichen Vereinigung zugesetzt, Sie rechnen sie nicht selbst an. Abschlag von 13 Punkten bei weniger als 400 Behandlungsfällen je Arzt, Aufschlag von 9 Punkten bei mehr als 1.200; Abschlag von 40 % bei weniger als 10 Schutzimpfungen nach Anlage 1 der Schutzimpfungsrichtlinie (mit Ausnahmen); Abschlag von 50 % neben einer 03030 im selben Behandlungsfall.\n- In fachgleichen Berufsausübungsgemeinschaften und Praxen mit angestellten Hausärzt:innen: **Aufschlag von 22,5 %** auf die 03000 ([Präambel 3.1](#k-G66xxxUI1xxxQGx)).\n\nDrei Anmerkungen der 03000 sind für den Alltag wichtig:\n- Im organisierten Not(-fall)dienst sind stattdessen die Notfallpauschalen 01210 ff. zu berechnen.\n- Bei einer Überweisung mit Definitionsauftrag ist die 03000 nicht berechnungsfähig.\n- Bei ausschließlich unvorhergesehener Inanspruchnahme im Zusammenhang mit 01100, 01101, 01411, 01412 oder 01415 tritt die 03030 an ihre Stelle.\n\nIm selben Behandlungsfall ausgeschlossen sind u. a. 01600, 01601, 01610, 03030 und 03100. Für die Abrechnung im Einzelfall ist die Abrechnungsberatung Ihrer KV zuständig.",
+   "belege": [
+    {
+     "text": "EBM 2026/Q4, GOP 03000",
+     "link": "#gop-03000"
+    },
+    {
+     "text": "EBM 2026/Q4, GOP 03040 (Anmerkung)",
+     "link": "#gop-03040"
+    },
+    {
+     "text": "EBM 2026/Q4, Präambel 3.1",
+     "link": "#k-G66xxxUI1xxxQGx"
+    }
+   ],
+   "einordnung": "Gelingt vollständig. Die Vorhaltepauschale und der Aufschlag stehen nicht bei der 03000; ein Assistent findet sie nur, wenn er nach Ergänzungen sucht. In dieser Fassung ergänzt um Funde aus dem Blindtest (separates Modell, nur über die Schnittstelle)."
+  },
+  {
+   "id": "B2",
+   "fuer": "Praxis",
+   "frage": "Darf ich die Versichertenpauschale 03000 und die Konsultationspauschale 01436 nebeneinander abrechnen?",
+   "schritte": [
+    {
+     "werkzeug": "ebm_gop",
+     "argumente": {
+      "nr": "01436"
+     },
+     "befund": "Anmerkung: nicht neben Versichertenpauschalen; im Behandlungsfall weiterer Kontakt nötig",
+     "pruefungen": [
+      {
+       "enthaelt": "kann nicht neben Versicherten-, Grund- und/oder Konsiliarpauschalen berechnet werden"
+      },
+      {
+       "enthaelt": "mindestens ein weiterer persönlicher Arzt-Patienten-Kontakt"
+      }
+     ]
+    },
+    {
+     "werkzeug": "ebm_nebeneinander",
+     "argumente": {
+      "a": "03000",
+      "b": "01436"
+     },
+     "befund": "Ausschluss in derselben Sitzung, bei beiden GOP eingetragen",
+     "pruefungen": [
+      {
+       "pfad": "ausschluss_eingetragen",
+       "gleich": true
+      },
+      {
+       "enthaelt": "in derselben Sitzung"
+      },
+      {
+       "pfad": "eintraege",
+       "laenge": 2
+      }
+     ]
+    }
+   ],
+   "antwort": "**Nicht in derselben Sitzung.** Der EBM trägt den Ausschluss bei beiden Positionen ein: bei der [03000](#gop-03000) und bei der [01436](#gop-01436), jeweils mit dem Bezug „in derselben Sitzung“.\n\nDie Anmerkung zur 01436 regelt den Behandlungsfall: Sie „kann nicht neben Versicherten-, Grund- und/oder Konsiliarpauschalen berechnet werden“. Für die Versichertenpauschale ist **im selben Behandlungsfall mindestens ein weiterer persönlicher Arzt-Patienten-Kontakt** (oder eine Videosprechstunde nach Anlage 31b BMV-Ä) nötig.\n\nBeide Positionen können also im selben Quartal vorkommen, aber nur bei getrennten Kontakten (eigene Lesart aus Sitzungsbezug und Anmerkung). Bei einer Überweisung mit Definitionsauftrag ist die 03000 ohnehin nicht berechnungsfähig.",
+   "belege": [
+    {
+     "text": "EBM 2026/Q4, GOP 03000, Abrechnungsausschlüsse",
+     "link": "#gop-03000"
+    },
+    {
+     "text": "EBM 2026/Q4, GOP 01436, Abrechnungsausschlüsse",
+     "link": "#gop-01436"
+    }
+   ],
+   "einordnung": "Gelingt: Die Prüfung in beide Richtungen zeigt den gegenseitigen Ausschluss, die Anmerkung der 01436 klärt den Behandlungsfall. Die Anmerkung hat erst der Blindtest gefunden; die erste Fassung dieser Antwort ließ den Punkt offen."
+  },
+  {
+   "id": "B3",
+   "fuer": "Praxis",
+   "frage": "Ich habe als Hausärztin 25 Minuten mit einem schwer erkrankten Patienten gesprochen. Was kann ich dafür abrechnen?",
+   "schritte": [
+    {
+     "werkzeug": "ebm_suche",
+     "argumente": {
+      "text": "Gespräch Hausarzt",
+      "bereich": "ebm"
+     },
+     "befund": "nur Abschnitte, keine passende GOP",
+     "pruefungen": [
+      {
+       "pfad": "anzahl",
+       "min": 1
+      }
+     ]
+    },
+    {
+     "werkzeug": "ebm_suche",
+     "argumente": {
+      "text": "problemorientiertes Gespräch",
+      "bereich": "ebm",
+      "grenze": 5
+     },
+     "befund": "03230, 04230, 50700",
+     "pruefungen": [
+      {
+       "pfad": "treffer[0].nr",
+       "gleich": "03230"
+      }
+     ]
+    },
+    {
+     "werkzeug": "ebm_gop",
+     "argumente": {
+      "nr": "03230"
+     },
+     "befund": "128 Punkte, 16,31 € je vollendete 10 Minuten; Bedingungen in der Anmerkung",
+     "pruefungen": [
+      {
+       "enthaelt": "je vollendete 10 Minuten"
+      },
+      {
+       "enthaelt": "\"punkte\": \"128\""
+      },
+      {
+       "enthaelt": "16.31"
+      },
+      {
+       "enthaelt": "im Notfall und im organisierten Not(-fall)dienst nicht berechnungsfähig"
+      }
+     ]
+    },
+    {
+     "werkzeug": "ebm_arztgruppe",
+     "argumente": {
+      "gruppe": "Hausarzt",
+      "gop": "03230"
+     },
+     "befund": "im Filter Hausarzt sichtbar",
+     "pruefungen": [
+      {
+       "pfad": "sichtbar",
+       "gleich": true
+      }
+     ]
+    },
+    {
+     "werkzeug": "ebm_abschnitt",
+     "argumente": {
+      "nr": "3.1"
+     },
+     "befund": "Präambel 3.1: Punktzahlvolumen von 64 Punkten je Behandlungsfall für die 03230",
+     "pruefungen": [
+      {
+       "enthaelt": "Das Punktzahlvolumen beträgt 64 Punkte multipliziert mit der Anzahl der Behandlungsfälle"
+      }
+     ]
+    }
+   ],
+   "antwort": "In Frage kommt die [03230](#gop-03230), das **problemorientierte ärztliche Gespräch**, das aufgrund von Art und Schwere der Erkrankung erforderlich ist: **128 Punkte, 16,31 € je vollendete 10 Minuten**. Sie ist im Arztgruppenfilter für Hausärzte sichtbar.\n\nFür 25 Minuten ergibt das zwei vollendete 10-Minuten-Einheiten, also **2 × 03230 = 256 Punkte** (eigene Rechnung aus der Abrechnungsbestimmung).\n\nDabei gilt:\n- Neben anderen diagnostischen oder therapeutischen GOP muss die Arzt-Patienten-Kontaktzeit mindestens 10 Minuten länger sein als dort angegeben.\n- Im Notfall und im organisierten Not(-fall)dienst ist die 03230 nicht berechnungsfähig.\n- In derselben Sitzung ausgeschlossen sind u. a. 03370, 03372, 03373, 35100, 35110 sowie die Abschnitte 35.2.1 und 35.2.2, im Behandlungsfall die 30700.\n- Die Gespräche werden aus einem **Punktzahlvolumen** vergütet: 64 Punkte je Behandlungsfall der Praxis ([Präambel 3.1](#k-G66xxxUI1xxxQGx)). Was darüber hinausgeht, wird nicht zusätzlich vergütet.",
+   "belege": [
+    {
+     "text": "EBM 2026/Q4, GOP 03230",
+     "link": "#gop-03230"
+    },
+    {
+     "text": "EBM 2026/Q4, Präambel 3.1 (Punktzahlvolumen)",
+     "link": "#k-G66xxxUI1xxxQGx"
+    },
+    {
+     "text": "Arztgruppenfilter Hausarzt",
+     "link": "#gop-03230"
+    }
+   ],
+   "einordnung": "Gelingt erst im zweiten Anlauf: Die Suche mit Alltagsbegriffen („Gespräch Hausarzt“) findet die GOP nicht, erst der Fachbegriff. Die Begrenzung über das Punktzahlvolumen steht nicht bei der GOP, sondern in der Präambel; der Assistent muss sie eigens abrufen. Der letzte Satz zur Vergütung oberhalb des Volumens ist eine Deutung der Formulierung „aus dem alle … Leistungen zu vergüten sind“."
+  },
+  {
+   "id": "B4",
+   "fuer": "Praxis",
+   "frage": "Welche Leistungen rechne ich ab, wenn ich ambulant eine kombinierte Lappenplastik an der Hand nach einer Verbrennung operiere (OPS 5-927.09)?",
+   "schritte": [
+    {
+     "werkzeug": "ebm_ops",
+     "argumente": {
+      "code": "5-927.09"
+     },
+     "befund": "Kategorie A5; 31105, 31505, 31610/31611, 31825 ambulant; 36105, 36505, 36825 stationär",
+     "pruefungen": [
+      {
+       "pfad": "kategorie",
+       "gleich": "A5"
+      },
+      {
+       "pfad": "zuordnung[0].gop",
+       "gleich": "31105"
+      },
+      {
+       "enthaelt": "31505"
+      },
+      {
+       "enthaelt": "31825"
+      },
+      {
+       "enthaelt": "31610"
+      },
+      {
+       "enthaelt": "31611"
+      }
+     ]
+    },
+    {
+     "werkzeug": "ebm_gop",
+     "argumente": {
+      "nr": "31050"
+     },
+     "befund": "Hygienezuschlag zur 31105, 225 Punkte",
+     "pruefungen": [
+      {
+       "enthaelt": "Zuschlag für zusätzlichen Hygieneaufwand zu der Gebührenordnungsposition 31105"
+      },
+      {
+       "enthaelt": "\"punkte\": \"225\""
+      }
+     ]
+    },
+    {
+     "werkzeug": "ebm_gop",
+     "argumente": {
+      "nr": "31108"
+     },
+     "befund": "Zuschlag je weitere 15 Minuten Schnitt-Naht-Zeit bei Simultaneingriffen",
+     "pruefungen": [
+      {
+       "enthaelt": "bei Simultaneingriffen"
+      },
+      {
+       "enthaelt": "Präambel 2.1, Nr. 14"
+      }
+     ]
+    },
+    {
+     "werkzeug": "ebm_abschnitt",
+     "argumente": {
+      "nr": "31.2.1"
+     },
+     "befund": "Erklärung zum Vertrag nach § 115b, OPS und ICD-10-GM, Drei-Tage-Regel",
+     "pruefungen": [
+      {
+       "enthaelt": "zur Teilnahme am Vertrag gemäß § 115b SGB V erklärt hat"
+      },
+      {
+       "enthaelt": "Die Diagnosen sind nach dem ICD-10-Diagnoseschlüssel"
+      },
+      {
+       "enthaelt": "In einem Zeitraum von drei Tagen, beginnend mit dem Operationstag"
+      }
+     ]
+    },
+    {
+     "werkzeug": "ebm_abschnitt",
+     "argumente": {
+      "nr": "31.2.2"
+     },
+     "befund": "Histologie oder Bilddokumentation Pflicht",
+     "pruefungen": [
+      {
+       "enthaelt": "obligate histologische Untersuchung entnommenen Materials und/oder eine Bilddokumentation"
+      }
+     ]
+    },
+    {
+     "werkzeug": "ebm_abschnitt",
+     "argumente": {
+      "nr": "2.1"
+     },
+     "befund": "mehrdeutig; Präambel Anhang 2: nur der höchstbewertete Eingriff",
+     "pruefungen": [
+      {
+       "enthaelt": "so kann nur der am höchsten bewertete Eingriff berechnet werden"
+      }
+     ]
+    }
+   ],
+   "antwort": "Anhang 2 ordnet [5-927.09](#o-12QxxxZI6xxxXNx) der **Kategorie A5** zu. Für die ambulante Operation ergibt sich:\n\n- **Operation:** [31105](#gop-31105) Dermatochirurgischer Eingriff der Kategorie A5, 3.981 Punkte, 507,20 €\n- **Hygienezuschlag:** [31050](#gop-31050) zur 31105, 225 Punkte, 28,67 €\n- **Postoperative Überwachung:** [31505](#gop-31505), 977 Punkte, 124,47 €\n- **Anästhesie,** falls durch Anästhesist:in: [31825](#gop-31825), 2.744 Punkte, 349,60 €\n- **Postoperative Behandlung:** [31611](#gop-31611) beim Operateur (240 Punkte) oder [31610](#gop-31610) bei Überweisung an eine andere Praxis (301 Punkte)\n- Nur bei Simultaneingriffen: [31108](#gop-31108) je weitere vollendete 15 Minuten Schnitt-Naht-Zeit, für die Narkose [31828](#gop-31828)\n\nVoraussetzungen aus den Präambeln:\n- Erklärung gegenüber der KV zur Teilnahme am Vertrag nach § 115b SGB V und die nötige Ausstattung ([Präambel 31.2.1](#k-HQxxxxYSxxxxQGx)).\n- Vollständig erbracht erst mit Angabe der OPS-Prozedur und der Diagnose nach ICD-10-GM.\n- Drei Tage ab dem Operationstag sind in der Praxis des Operateurs daneben nur die in der Präambel aufgezählten GOP berechnungsfähig.\n- Dermatochirurgische Eingriffe setzen eine histologische Untersuchung und/oder eine prä- und postoperative Bilddokumentation voraus ([Präambel 31.2.2](#k-63RGxxQG2xxxQGx)).\n- Mehrere Prozeduren unter einer Diagnose oder über einen gemeinsamen Zugang: nur der höchstbewertete Eingriff ([Präambel Anhang 2](#k-11xxxxHIxxxxQGx)).\n\nBei belegärztlicher (stationärer) Durchführung gelten stattdessen 36105, 36505 und 36825. In der Spalte § 115b steht für diesen Code „KEIN“; was das bedeutet, erklärt der Katalog nicht.",
+   "belege": [
+    {
+     "text": "EBM 2026/Q4, Anhang 2, OPS 5-927.09",
+     "link": "#o-12QxxxZI6xxxXNx"
+    },
+    {
+     "text": "Präambel 31.2.1",
+     "link": "#k-HQxxxxYSxxxxQGx"
+    },
+    {
+     "text": "Präambel 31.2.2",
+     "link": "#k-63RGxxQG2xxxQGx"
+    },
+    {
+     "text": "Präambel Anhang 2",
+     "link": "#k-11xxxxHIxxxxQGx"
+    }
+   ],
+   "einordnung": "Die Zuordnung kommt mit einem Aufruf; die Online-Ansicht verlinkt vom EBM nicht in Anhang 2, der Katalog schon. Hygienezuschlag und Voraussetzungen stehen nicht im Anhang, sondern bei anderen GOP und in drei Präambeln; ein Assistent findet sie nur mit weiteren Abrufen. Wer welche postoperative Position und die Anästhesie abrechnet, ist aus den Spaltennamen abgeleitet. In dieser Fassung ergänzt um Funde aus dem Blindtest."
+  },
+  {
+   "id": "B5",
+   "fuer": "Praxis",
+   "frage": "Wie hoch ist die TI-Pauschale für unsere Praxis mit fünf Ärztinnen und Ärzten?",
+   "schritte": [
+    {
+     "werkzeug": "ebm_bmv",
+     "argumente": {
+      "nr_oder_begriff": "Telematikinfrastruktur"
+     },
+     "befund": "kein Treffer",
+     "pruefungen": [
+      {
+       "pfad": "gefunden",
+       "gleich": false
+      }
+     ]
+    },
+    {
+     "werkzeug": "ebm_bmv",
+     "argumente": {
+      "nr_oder_begriff": "TI-Pauschale"
+     },
+     "befund": "4 bis 6 Ärzte: 313,52 €, reduziert 156,75 € monatlich ab 01.01.2026",
+     "pruefungen": [
+      {
+       "enthaelt": "313.52"
+      },
+      {
+       "enthaelt": "156.75"
+      },
+      {
+       "enthaelt": "Festlegung des BMG"
+      }
+     ]
+    }
+   ],
+   "antwort": "Die TI-Pauschale steht nicht im EBM. Sie richtet sich nach der **Festlegung des BMG**; die frühere Anlage 32 zum BMV-Ä ist außer Kraft.\n\nFür eine Praxis mit **4 bis 6** Ärztinnen und Ärzten beträgt sie ab 01.01.2026:\n- **313,52 € monatlich** ([Tabelle 3](#bmv-anl-32-ti-pauschale-nach-festlegung-des-bmg--1))\n- **156,75 € monatlich**, wenn eine der geforderten Anwendungen fehlt ([Tabelle 4](#bmv-anl-32-ti-pauschale-nach-festlegung-des-bmg--2))\n\nDie Beträge werden jährlich mit dem Orientierungswert angepasst. Der Katalog enthält nur die Werte ab 01.01.2026; ob für 2027 neue Werte gelten, ist hier nicht abgebildet.",
+   "belege": [
+    {
+     "text": "TI-Pauschale nach Festlegung des BMG, Übersicht der KBV (PDF S. 1)",
+     "link": "#bmv-anl-32-ti-pauschale-nach-festlegung-des-bmg--1"
+    }
+   ],
+   "einordnung": "Gelingt, aber nur mit dem Kurzbegriff: „Telematikinfrastruktur“ findet nichts. Die Antwort hängt an der von Hand gepflegten BMV-Ä-Erfassung und benennt deren zeitliche Grenze."
+  },
+  {
+   "id": "B6",
+   "fuer": "Praxis",
+   "frage": "Was bekommt die Praxis für eine Reiseimpfung?",
+   "schritte": [
+    {
+     "werkzeug": "ebm_suche",
+     "argumente": {
+      "text": "Reiseimpfung"
+     },
+     "befund": "kein Treffer in EBM, Anhang 2 und BMV-Ä",
+     "pruefungen": [
+      {
+       "pfad": "anzahl",
+       "gleich": 0
+      }
+     ]
+    }
+   ],
+   "antwort": "**Dazu enthält der Katalog nichts.** Weder im EBM noch in Anhang 2 noch bei den Pauschalen des BMV-Ä gibt es einen Treffer. Ich nenne deshalb keinen Betrag.\n\nNicht abgebildet sind regionale Vereinbarungen der Kassenärztlichen Vereinigungen und Selektivverträge. Wenn es eine Regelung gibt, steht sie voraussichtlich dort; das kann ich mit diesem Katalog nicht prüfen.",
+   "belege": [],
+   "einordnung": "Gewolltes Verhalten bei fehlendem Treffer: keine Zahl erfinden, Grenze des Katalogs nennen. Die Vermutung zum Fundort ist als solche formuliert."
+  },
+  {
+   "id": "B7",
+   "fuer": "KBV-Fachabteilung",
+   "frage": "Wir überlegen, die Leistungsbeschreibung der 03230 zu ändern. Welche Stellen im EBM sind mitbetroffen?",
+   "schritte": [
+    {
+     "werkzeug": "ebm_verweise",
+     "argumente": {
+      "nr": "03230"
+     },
+     "befund": "97 Knoten erwähnen die 03230, davon 87 in Kapitel 35",
+     "pruefungen": [
+      {
+       "pfad": "erwaehnt_in",
+       "min": 90
+      },
+      {
+       "enthaelt": "03370"
+      },
+      {
+       "enthaelt": "30700"
+      }
+     ]
+    },
+    {
+     "werkzeug": "ebm_suche",
+     "argumente": {
+      "text": "03230",
+      "bereich": "alle"
+     },
+     "befund": "03230, Präambel 3.1 und Anhang 3 (fehlt in ebm_verweise)",
+     "pruefungen": [
+      {
+       "enthaelt": "J#####AR3###QG#"
+      }
+     ]
+    },
+    {
+     "werkzeug": "ebm_abschnitt",
+     "argumente": {
+      "nr": "3"
+     },
+     "befund": "Anhang 3: 03230 mit Kalkulations- und Prüfzeit 10/10 Minuten, Tages- und Quartalsprofil",
+     "pruefungen": [
+      {
+       "enthaelt": "03230 | Problemorientiertes ärztliches Gespräch, das aufgrund von Art und Schwere der Erkrankung erforderlich ist | 10 | 10 | Tages- und Quartalsprofil"
+      }
+     ]
+    },
+    {
+     "werkzeug": "ebm_abschnitt",
+     "argumente": {
+      "nr": "4.1"
+     },
+     "befund": "Präambel 4.1: eigenes Punktzahlvolumen für 04230 und 04231",
+     "pruefungen": [
+      {
+       "enthaelt": "Für die Gebührenordnungspositionen 04230 und 04231 wird ein Punktzahlvolumen"
+      }
+     ]
+    }
+   ],
+   "antwort": "Die [03230](#gop-03230) wird in **97 Knoten** des EBM erwähnt:\n- **87** in Kapitel 35 (Psychotherapie)\n- **5** in Kapitel 37, z. B. 37300, 37302, 37305, 37306, 37711\n- **3** im hausärztlichen Kapitel: 03370, 03372, 03373 (Palliativversorgung)\n- die [30700](#gop-30700) (Grundpauschale schmerztherapeutischer Patient)\n- die [Präambel 3.1](#k-G66xxxUI1xxxQGx) mit dem Punktzahlvolumen und eigener Fallzählung\n\nZusätzlich, ohne dass das Verweiswerkzeug sie meldet:\n- **[Anhang 3](#k-JxxxxxAR3xxxQGx)**: Die 03230 steht dort mit **10 Minuten Kalkulations- und 10 Minuten Prüfzeit**, geeignet für Tages- und Quartalsprofil. Eine Änderung von Mindestdauer oder Takt wirkt auf die Plausibilitätsprüfung.\n- **Parallele Position [04230](#gop-04230)** in der Kinder- und Jugendmedizin, mit gleichem Leistungsinhalt und eigenem Punktzahlvolumen in der [Präambel 4.1](#k-6UHxxxQG3xxxQGx); dazu die [50700](#gop-50700) (Gespräch bei Mukoviszidose) mit gleichlautendem Titel.\n\nBei einer Änderung sind vor allem Präambel 3.1, Anhang 3, die Gleichbehandlung der 04230 und die gegenseitigen Ausschlüsse zu prüfen.",
+   "belege": [
+    {
+     "text": "EBM 2026/Q4, Verweise auf GOP 03230",
+     "link": "#gop-03230"
+    },
+    {
+     "text": "Anhang 3",
+     "link": "#k-JxxxxxAR3xxxQGx"
+    },
+    {
+     "text": "Präambel 3.1",
+     "link": "#k-G66xxxUI1xxxQGx"
+    },
+    {
+     "text": "Präambel 4.1",
+     "link": "#k-6UHxxxQG3xxxQGx"
+    }
+   ],
+   "einordnung": "Für die Fachabteilung: Eine solche Folgenabschätzung ist in der Online-Ansicht nur durch Durchklicken möglich. Lücke des Katalogs: `ebm_verweise` erfasst keine Nummern in Anhangtabellen; Anhang 3 findet erst die Volltextsuche. Dass 04230 und 50700 mitbetroffen sind, ist eine fachliche Einschätzung, sie verweisen nicht auf die 03230. In dieser Fassung ergänzt um Funde aus dem Blindtest."
+  }
+ ]
+}

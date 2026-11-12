@@ -15,7 +15,7 @@ Prototyp eines maschinenlesbaren, verlinkten Einheitlichen Bewertungsmaßstabs (
 | Anhang-2-Ansicht | ebm.kbv.de/ops.xhtml, OPS-Codes mit Kategorie und GOP-Zuordnung | 13.106 Knoten, davon 11.228 OPS-Codes mit GOP-Zuordnung (439 GOP) |
 | Pauschalen außerhalb des EBM | BMV-Ä und Anlagen auf kbv.de, von Hand erfasst | 24 Pauschalen in 7 Regelungen |
 
-Die Katalogseite (`web/index.html`) zeigt die vier Teile mit Suche, Baum, Detailansicht und JSON je Eintrag. Wie dieselben Inhalte unter festen Adressen als Seite, JSON und FHIR erreichbar wären, beschreibt [docs/ADRESSSCHEMA.md](docs/ADRESSSCHEMA.md).
+Die Katalogseite (`web/index.html`) zeigt die vier Teile mit Suche, Baum, Detailansicht und JSON je Eintrag, dazu Beispielantworten eines KI-Assistenten. Wie dieselben Inhalte unter festen Adressen als Seite, JSON und FHIR erreichbar wären, beschreibt [docs/ADRESSSCHEMA.md](docs/ADRESSSCHEMA.md).
 
 ## Schnellstart
 
@@ -31,7 +31,7 @@ Tests: `python3 -I -m unittest discover -s tests -v`
 
 ## Für KI-Assistenten
 
-Der MCP-Server (`ek.py mcp`, eingebunden über `.mcp.json`) gibt Assistenten acht Werkzeuge mit Belegen je Antwort; die [Antwortregeln](docs/ANTWORTREGELN.md) werden mitgeliefert. Für Systeme ohne MCP erzeugt `ek.py texte` Markdown je GOP und eine `llms.txt`. Ein [Fragenkatalog](fragen/fragenkatalog.json) prüft in der CI, ob die Werkzeuge die belegten Fakten liefern. Einzelheiten: [docs/KI-NUTZUNG.md](docs/KI-NUTZUNG.md).
+Der MCP-Server (`ek.py mcp`, eingebunden über `.mcp.json`) gibt Assistenten acht Werkzeuge mit Belegen je Antwort; die [Antwortregeln](docs/ANTWORTREGELN.md) werden mitgeliefert. Für Systeme ohne MCP erzeugt `ek.py texte` Markdown je GOP und eine `llms.txt`. Ein [Fragenkatalog](fragen/fragenkatalog.json) prüft in der CI, ob die Werkzeuge die belegten Fakten liefern. [Beispielantworten](fragen/beispielantworten.json) zeigen auf der Katalogseite, wie ein Assistent damit Alltagsfragen beantworten könnte, mit Abfrageschritten und Einordnung. Einzelheiten: [docs/KI-NUTZUNG.md](docs/KI-NUTZUNG.md).
 
 ## Befehle
 
@@ -45,7 +45,7 @@ Der MCP-Server (`ek.py mcp`, eingebunden über `.mcp.json`) gibt Assistenten ach
 | `ek.py pruefen [Quartal]` | Strukturprüfung der erzeugten Daten |
 | `ek.py mcp` | MCP-Server über stdio |
 | `ek.py frage WERKZEUG '{json}'` | ein Werkzeug direkt aufrufen |
-| `ek.py fragenkatalog` | Fragenkatalog prüfen, Bericht nach `ausgabe/` |
+| `ek.py fragenkatalog` | Fragenkatalog und Abfrageschritte der Beispielantworten prüfen, Bericht nach `ausgabe/` |
 | `ek.py texte` | Markdown je GOP, Gesamttext, `llms.txt` nach `ausgabe/site/` |
 | `ek.py vertraulich` | eingecheckte Dateien auf vertrauliche Inhalte prüfen |
 | `ek.py bmv` | BMV-Ä und Anlagen laden, Text ziehen (Arbeitsgrundlage für `quellen/bmv/`; braucht `pypdf`) |
@@ -61,7 +61,7 @@ werkzeuge/ek/              abzug (JSF-Client), export, extra (Arztgruppen, OPS, 
 web/index.html             Katalogseite (eine Datei, lädt ausgabe/site/daten/*.json)
 rohdaten/<Quartal>/        gepackte Abzüge der Online-Ansicht
 quellen/bmv/               Pauschalen aus dem BMV-Ä (von Hand, mit Fundstelle) und Dokumentliste
-fragen/                    Fragenkatalog mit Sollantworten (Entwurf)
+fragen/                    Fragenkatalog mit Sollantworten (Entwurf), Beispielantworten
 tests/                     Tests mit Ausschnitten der Online-Ansicht
 docs/                      Abzug, Datenmodell, Adressschema, KI-Nutzung, Antwortregeln
 ```

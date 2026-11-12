@@ -50,6 +50,16 @@ JSON nach [DATENMODELL.md](DATENMODELL.md), für eigene Auswertungen.
 - **Erweitern:** neue Frage mit `werkzeug`, `argumente`, `pruefungen` (`gleich`, `enthaelt`, `min`, `laenge`, `nicht_leer`) und `sollantwort` anlegen. Gute Quellen sind echte Anfragen an Service-Stellen.
 - **Grenze:** Geprüft wird die Faktenlieferung der Werkzeuge, nicht die Formulierung einer KI-Antwort. Für Letzteres die Sollantworten mit Antworten eines Assistenten vergleichen lassen, wenn ein Modellzugang zur Verfügung steht.
 
+## Beispielantworten
+
+`fragen/beispielantworten.json` zeigt an Alltagsfragen, wie ein Assistent mit den Werkzeugen antworten könnte; die Katalogseite stellt sie unter „Beispielantworten“ dar. Je Beispiel:
+
+- `frage` und `fuer` (Praxis oder KBV-Fachabteilung),
+- `schritte`: Werkzeugaufrufe in der Reihenfolge, in der ein Assistent sie stellen würde, mit Kurzbefund und `pruefungen` wie im Fragenkatalog,
+- `antwort` (Absätze, Listen mit `- `, `**fett**`, Links auf Seitenadressen wie `#gop-03230`), `belege`, `einordnung` (was gelingt, wo die Grenzen liegen, was abgeleitet ist).
+
+`ek.py fragenkatalog` führt die Schritte aus und prüft ihre Kernaussagen. Der Antworttext ist von Hand formuliert und KI-gebaut; er wird nicht automatisch geprüft und ist fachlich nicht freigegeben. Die Beispiele zeigen auch Schwächen offen, etwa dass die Suche Alltagsbegriffe („Gespräch Hausarzt“, „Telematikinfrastruktur“) nicht immer der richtigen Position zuordnet.
+
 ## Einsatz in der Fachabteilung
 
 | Aufgabe | Werkzeuge |
