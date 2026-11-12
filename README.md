@@ -2,6 +2,8 @@
 
 Prototyp eines maschinenlesbaren, verlinkten Einheitlichen Bewertungsmaßstabs (EBM). Jede Gebührenordnungsposition, jeder Abschnitt, jeder OPS-Code des Anhangs 2 und jede Pauschale aus dem Bundesmantelvertrag-Ärzte (BMV-Ä), die nicht im EBM steht, erhält einen festen Eintrag mit Links in beide Richtungen.
 
+> **KI-gebaut.** Abzug, Aufbereitung, Werkzeuge, Texte und Dokumentation dieses Repositorys wurden mit einem KI-Assistenten (Claude) erstellt und nur stichprobenartig geprüft. Fehler sind möglich.
+>
 > **Nicht amtlich.** Die Inhalte stammen aus der EBM-Online-Ansicht der Kassenärztlichen Bundesvereinigung (ebm.kbv.de) und aus den Verträgen auf kbv.de. Verbindlich sind ausschließlich diese Veröffentlichungen.
 
 ## Inhalt

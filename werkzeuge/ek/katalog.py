@@ -10,7 +10,8 @@ from functools import cached_property
 
 from .grundlagen import AUS, aktuelles_quartal
 
-HINWEIS = ("Nicht amtlich: abgeleitet aus der EBM-Online-Ansicht (ebm.kbv.de) und den Verträgen auf kbv.de. "
+HINWEIS = ("KI-gebaut und nicht amtlich: abgeleitet aus der EBM-Online-Ansicht (ebm.kbv.de) und den Verträgen auf kbv.de. "
+           "Mit einem KI-Assistenten erstellt und nur stichprobenartig geprüft. "
            "Verbindlich sind ausschließlich diese Veröffentlichungen.")
 EBM_URL = "https://ebm.kbv.de/"
 OPS_URL = "https://ebm.kbv.de/ops.xhtml"

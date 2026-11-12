@@ -23,7 +23,7 @@ Im Repository liegt `.mcp.json`; Werkzeuge, die diese Datei lesen, binden den Se
 | `ebm_bmv` | Pauschalen außerhalb des EBM mit Betrag oder „regional“ und Fundstelle |
 | `ebm_verweise` | wer eine Nummer erwähnt — für Folgenabschätzungen |
 
-Jede Antwort enthält Belege (Quartal, Nummer, Knotenkennung, Pfad bzw. Anlage mit Seite) und den Hinweis „nicht amtlich“. Ohne Treffer sagt das Werkzeug das ausdrücklich. Zum Ausprobieren ohne Assistent:
+Jede Antwort enthält Belege (Quartal, Nummer, Knotenkennung, Pfad bzw. Anlage mit Seite) und den Hinweis „KI-gebaut und nicht amtlich“. Ohne Treffer sagt das Werkzeug das ausdrücklich. Zum Ausprobieren ohne Assistent:
 
 ```bash
 python3 -I werkzeuge/ek.py frage ebm_nebeneinander '{"a":"03000","b":"01436"}'

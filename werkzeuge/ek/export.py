@@ -202,7 +202,7 @@ def main(q):
     for name, data in extra.items():
         if data:
             (out / f"{name}.json").write_text(json.dumps(data, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
-    index = {"quartal": q, "quelle": SRC, "hinweis": "Inhalte 1:1 aus der EBM-Online-Ansicht der KBV; Markup bereinigt. Nicht amtlich, verbindlich ist die Veröffentlichung der KBV.",
+    index = {"quartal": q, "quelle": SRC, "hinweis": "KI-gebaut (mit einem KI-Assistenten erstellt, nur stichprobenartig geprüft). Inhalte 1:1 aus der EBM-Online-Ansicht der KBV; Markup bereinigt. Nicht amtlich, verbindlich ist die Veröffentlichung der KBV.",
              "anzahl_knoten": len(recs), "anzahl_gop": sum(r["typ"] == "gop" for r in recs),
              "anzahl_gop_nummern": len({r["nr"] for r in recs if r["typ"] == "gop"}),
              "wurzeln": [r["knotenId"] for r in order if r["eltern"] is None],
@@ -226,7 +226,7 @@ def main(q):
         (out / "gop" / f"{r['nr']}.json").write_text(json.dumps(g, ensure_ascii=False, indent=2), encoding="utf-8")
     cs = {"resourceType": "CodeSystem", "id": f"ebm-{q}", "url": f"{SRC}/fhir/CodeSystem/ebm", "version": q,
           "name": "EBM", "title": "Einheitlicher Bewertungsmaßstab (Prototyp)", "status": "draft", "experimental": True,
-          "publisher": "Prototyp, nicht amtlich", "content": "complete", "caseSensitive": True, "hierarchyMeaning": "is-a",
+          "publisher": "Prototyp, KI-gebaut, nicht amtlich", "content": "complete", "caseSensitive": True, "hierarchyMeaning": "is-a",
           "property": [{"code": "punkte", "type": "integer"}, {"code": "euro", "type": "decimal"},
                        {"code": "parent", "type": "code"}, {"code": "ausschluss", "type": "code"}, {"code": "knotenId", "type": "string"}],
           "concept": []}

@@ -1,7 +1,7 @@
 {
   "stand": "2026-11-12",
   "quelle": "https://www.kbv.de/infothek/rechtsquellen/bundesmantelvertrag",
-  "hinweis": "Von Hand aus den PDF der Anlagen erfasst, Wortlaut gekürzt. Fundstelle = Datei und PDF-Seite; Liste der Dokumente in quellen/bmv/liste.tsv. Nicht amtlich.",
+  "hinweis": "Von Hand aus den PDF der Anlagen erfasst, Wortlaut gekürzt. Fundstelle = Datei und PDF-Seite; Liste der Dokumente in quellen/bmv/liste.tsv. Mit KI-Unterstützung erfasst, nicht amtlich.",
   "anlagen": [
     {
       "anlage": "7",
