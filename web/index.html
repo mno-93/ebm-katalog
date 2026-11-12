@@ -1,0 +1,396 @@
+<meta charset="utf-8">
+<title>Offener EBM-Katalog</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: Kopfzeile mit vier Ansichten (EBM, Anhang 2, BMV-Ä, Schnittstelle); darunter Baum/Liste links und Detail rechts; einspaltig auf dem Telefon */
+:root{
+  --bg:#f4f6f7; --surface:#ffffff; --fg:#162027; --muted:#5a6872; --line:#dbe1e5;
+  --accent:#0a6b6b; --accent-soft:#e2f1f0; --warn:#8a5a00; --warn-soft:#fdf2dc;
+  --bmv:#5b4a9e; --bmv-soft:#ece9f7; --ok:#1d6b36; --no:#8b3a3a; --code-bg:#eef2f4;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0e1416; --surface:#151d20; --fg:#e4ebee; --muted:#93a2ab; --line:#28343a;
+  --accent:#53c2b8; --accent-soft:#163331; --warn:#f0c065; --warn-soft:#3a2d12; --bmv:#b3a6f0; --bmv-soft:#262142;
+  --ok:#7fd39a; --no:#e79a9a; --code-bg:#1b2529; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0e1416; --surface:#151d20; --fg:#e4ebee; --muted:#93a2ab; --line:#28343a;
+  --accent:#53c2b8; --accent-soft:#163331; --warn:#f0c065; --warn-soft:#3a2d12; --bmv:#b3a6f0; --bmv-soft:#262142;
+  --ok:#7fd39a; --no:#e79a9a; --code-bg:#1b2529; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:15px;line-height:1.5}
+a{color:var(--accent)}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1280px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header{border-bottom:1px solid var(--line);background:var(--surface)}
+header .wrap{display:flex;flex-wrap:wrap;align-items:center;gap:10px 20px;padding-block:14px}
+.brand{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.brand h1{font-size:19px;margin:0;font-weight:700;letter-spacing:-.01em}
+.q{font-family:var(--mono);font-size:13px;color:var(--muted)}
+.pill{font-size:12px;font-weight:600;letter-spacing:.03em;padding:2px 9px;border-radius:999px;background:var(--warn-soft);color:var(--warn)}
+nav.main{margin-left:auto;display:flex;gap:4px;flex-wrap:wrap}
+nav.main a{text-decoration:none;color:var(--muted);font-weight:500;padding:6px 12px;border-radius:6px}
+nav.main a[aria-current="page"]{color:var(--fg);background:var(--code-bg)}
+main .wrap{padding-block:20px 48px}
+.grid{display:grid;grid-template-columns:360px minmax(0,1fr);gap:20px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:minmax(0,1fr)} nav.main{margin-left:0}}
+.side{background:var(--surface);border:1px solid var(--line);border-radius:8px;position:sticky;top:12px;max-height:calc(100vh - 24px);display:flex;flex-direction:column;min-width:0}
+@media (max-width:860px){.side{position:static;max-height:460px}}
+.side .s{padding:12px;border-bottom:1px solid var(--line);display:grid;gap:7px}
+.side input[type=search],.side select{width:100%;font:inherit;font-size:14px;padding:8px 10px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--fg)}
+.side label.ft{font-size:13px;color:var(--muted);display:flex;gap:6px;align-items:center}
+.side .meta{font-size:12px;color:var(--muted)}
+.list{overflow:auto;padding:6px}
+.tree ul{list-style:none;margin:0;padding-left:14px}
+.tree>ul{padding-left:0}
+.tn{display:flex;gap:2px;align-items:flex-start}
+.tg{flex:0 0 22px;height:24px;border:0;background:none;color:var(--muted);cursor:pointer;font-size:11px;padding:0}
+.tg[disabled]{cursor:default;opacity:0}
+.tl{flex:1;min-width:0;padding:2px 6px;border-radius:5px;text-decoration:none;color:var(--fg);font-size:14px;line-height:1.4}
+.tl:hover{background:var(--code-bg)}
+.tl.on{background:var(--accent-soft)}
+.tl b{font-family:var(--mono);font-weight:600;font-size:12.5px;color:var(--accent);margin-right:6px}
+.tl.ab b{color:var(--muted)}
+.row{display:grid;grid-template-columns:78px minmax(0,1fr);gap:8px;padding:6px 8px;border-radius:5px;text-decoration:none;color:var(--fg);font-size:14px}
+.row:hover{background:var(--code-bg)}
+.row .c{font-family:var(--mono);font-weight:600;color:var(--accent);font-size:13px;padding-top:1px}
+.row.bmv .c{color:var(--bmv)}
+.row .t{overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.grp{font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin:12px 8px 4px;font-weight:600}
+.detail{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:24px;min-width:0}
+@media (max-width:520px){.detail{padding:16px}}
+.crumb{font-size:13px;color:var(--muted);margin-bottom:8px;display:flex;flex-wrap:wrap;gap:2px 6px}
+.crumb a{color:var(--muted);text-decoration:none}
+.crumb a:hover{text-decoration:underline}
+.gh{display:flex;gap:14px;align-items:baseline;flex-wrap:wrap}
+.gh .code{font-family:var(--mono);font-size:28px;font-weight:600;color:var(--accent);letter-spacing:.02em}
+.gh .code.bmv{color:var(--bmv)}
+.gh h2{font-size:21px;margin:0;font-weight:600;text-wrap:balance;flex:1 1 300px}
+.kopf{display:flex;flex-wrap:wrap;gap:12px 28px;margin-top:16px;padding:14px 16px;background:var(--bg);border-radius:6px}
+.kz .v{font-family:var(--mono);font-size:20px;font-weight:600;font-variant-numeric:tabular-nums}
+.kz .u{font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.merk{display:flex;align-items:center;gap:6px;font-size:14px}
+.merk i{font-style:normal;font-weight:700;width:18px;height:18px;border-radius:50%;display:inline-grid;place-items:center;font-size:11px;color:var(--surface)}
+.merk.ja i{background:var(--ok)} .merk.nein i{background:var(--no)}
+.tag{display:inline-block;font-size:12.5px;padding:2px 9px;border-radius:999px;font-weight:500;background:var(--bmv-soft);color:var(--bmv)}
+.tag.warn{background:var(--warn-soft);color:var(--warn)}
+section.b{margin-top:22px}
+section.b h3{font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin:0 0 8px;font-weight:600}
+.txt{max-width:80ch}
+.txt p{margin:0 0 8px}
+.txt ul,.txt ol{margin:0 0 8px;padding-left:20px}
+.txt li p{margin:0 0 4px}
+.txt a.tot{color:inherit;text-decoration:underline dotted}
+.txt a.bmvl{color:var(--bmv)}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:600;color:var(--muted);font-size:12.5px}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--mono);white-space:nowrap}
+.tw{overflow-x:auto}
+.chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{font-family:var(--mono);font-size:12.5px;padding:1px 7px;border:1px solid var(--line);border-radius:4px;text-decoration:none;color:var(--fg);background:var(--bg)}
+.chip:hover{border-color:var(--accent);color:var(--accent)}
+.chip.bmv{border-color:var(--bmv);color:var(--bmv)}
+.chip.txt-only{font-family:var(--sans)}
+pre{background:var(--code-bg);border-radius:6px;padding:12px 14px;overflow:auto;font-family:var(--mono);font-size:12.5px;line-height:1.55;margin:0;max-height:440px}
+.tabs{display:flex;gap:4px;margin-bottom:8px;flex-wrap:wrap}
+.tabs button{font:inherit;font-size:13px;padding:5px 11px;border:1px solid var(--line);background:var(--bg);color:var(--muted);border-radius:5px;cursor:pointer}
+.tabs button[aria-pressed="true"]{color:var(--fg);border-color:var(--accent)}
+.tabs .sp{flex:1}
+.url{font-family:var(--mono);font-size:12.5px;word-break:break-all}
+.note{font-size:13px;color:var(--muted);margin-top:8px}
+.prose{max-width:80ch}
+.prose h2{font-size:21px;margin:0 0 6px}
+.prose h3{font-size:16px;margin:26px 0 8px}
+.prose p{margin:8px 0}
+.prose ul{padding-left:20px}
+.empty{color:var(--muted);padding:12px}
+details summary{cursor:pointer;color:var(--accent);font-size:14px}
+</style>
+
+<header><div class="wrap">
+  <div class="brand"><h1>Offener EBM-Katalog</h1><span class="q" id="qlabel">Quartal 2026/Q4</span><span class="pill">Prototyp · nicht amtlich</span></div>
+  <nav class="main" aria-label="Ansicht"><a href="#" id="nav-ebm">EBM</a><a href="#anhang2" id="nav-ops">Anhang 2 (OPS)</a><a href="#bmv" id="nav-bmv">BMV-Ä</a><a href="#schnittstelle" id="nav-api">Schnittstelle</a></nav>
+</div></header>
+
+<main><div class="wrap">
+  <div class="grid" id="view">
+    <aside class="side">
+      <div class="s" id="sidehead">
+        <label for="ag" style="position:absolute;left:-9999px">Arztgruppe</label>
+        <select id="ag"><option value="">Alle Arztgruppen</option></select>
+        <label for="q" style="position:absolute;left:-9999px">Suche</label>
+        <input id="q" type="search" placeholder="GOP, Abschnitt oder Begriff" autocomplete="off">
+        <label class="ft" id="ftlabel"><input type="checkbox" id="volltext"> Volltext durchsuchen (lädt alle Teile)</label>
+        <div class="meta" id="meta">Lade Gliederung …</div>
+      </div>
+      <div class="list" id="list"></div>
+    </aside>
+    <article class="detail" id="detail"><p class="empty">Lade die Gliederung der EBM-Online-Ansicht …</p></article>
+  </div>
+  <article class="detail prose" id="api" hidden></article>
+</div></main>
+
+<script>
+const PROPOSED = "https://ebm.kbv.de";
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const num = (v, d = 2) => typeof v === "number" ? v.toLocaleString("de-DE", {minimumFractionDigits:d, maximumFractionDigits:d}) : esc(v);
+const load = f => fetch("daten/" + f).then(r => { if (!r.ok) throw new Error(f + ": " + r.status); return r.json(); });
+
+let IDX, K = {}, BYNR = {}, PARTS = {}, OPEN = new Set(), CUR = null;
+let AG = null, AGSET = null, OPS = null, OK = {}, OPSBYGOP = null, OOPEN = new Set(), BMV = null, BK = {}, BA = {};
+let MODE = "ebm";
+
+const slug = n => n.typ === "gop" && BYNR[n.nr] === n ? "gop-" + n.nr : "k-" + n.knotenId.replace(/#/g, "x");
+const fromSlug = s => s.startsWith("gop-") ? BYNR[s.slice(4)] : K[s.slice(2).replace(/x/g, "#")];
+const oslug = o => "o-" + o.id.replace(/#/g, "x");
+const label = n => n.typ === "gop" ? n.titel : (n.titel || n.baumtitel);
+function part(t){ if (!PARTS[t]) PARTS[t] = load(`teil-${t}.json`); return PARTS[t]; }
+function ancestors(n, M = K, key = "eltern"){ const a = []; let p = M[n[key]]; while (p){ a.unshift(p); p = M[p[key]]; } return a; }
+function opsData(){ if (!OPS) OPS = load("ops.json").then(d => { d.knoten.forEach(o => OK[o.id] = o); OPSBYGOP = {}; d.knoten.forEach(o => (o.gops || []).forEach(g => (OPSBYGOP[g.gop] ||= []).push([o.id, g.art]))); return d; }); return OPS; }
+
+/* ---------- Seitenleiste ---------- */
+function treeHtml(ids, M, open, sl, lab, cur, filt){
+  return "<ul>" + ids.filter(id => !filt || filt(id)).map(id => { const n = M[id], kids = (n.kinder || []).filter(c => !filt || filt(c)), has = kids.length > 0, o = open.has(id);
+    return `<li><div class="tn"><button class="tg" data-t="${esc(id)}" ${has ? "" : "disabled"} aria-label="${o ? "Zuklappen" : "Aufklappen"}" aria-expanded="${o}">${has ? (o ? "▼" : "▶") : ""}</button>` +
+      `<a class="tl${n.typ === "abschnitt" ? " ab" : ""}${cur === n ? " on" : ""}" href="#${sl(n)}"><b>${esc(n.nr)}</b>${esc(lab(n))}</a></div>` +
+      (has && o ? treeHtml(kids, M, open, sl, lab, cur, filt) : "") + "</li>"; }).join("") + "</ul>";
+}
+const agFilter = () => AGSET ? (id => AGSET.has(id)) : null;
+function renderSide(){
+  const q = $("#q").value.trim();
+  if (q){ search(); return; }
+  if (MODE === "ebm"){
+    $("#list").innerHTML = `<div class="tree">${treeHtml(IDX.wurzeln, K, OPEN, slug, label, CUR, agFilter())}</div>`;
+    bindTree(OPEN);
+    $("#meta").textContent = AGSET ? `${AG_CUR}: ${AGSET.size.toLocaleString("de-DE")} sichtbare Knoten` : `${IDX.anzahl_knoten.toLocaleString("de-DE")} Knoten · ${(IDX.anzahl_gop_nummern ?? IDX.anzahl_gop).toLocaleString("de-DE")} Gebührenordnungspositionen in ${IDX.anzahl_gop.toLocaleString("de-DE")} Einträgen (mit Varianten)`;
+  } else if (MODE === "ops"){
+    OPS.then(d => { if (MODE !== "ops" || $("#q").value.trim()) return;
+      $("#list").innerHTML = `<div class="tree">${treeHtml(d.wurzeln, OK, OOPEN, oslug, o => o.titel || o.baumtitel, CUR, null)}</div>`;
+      bindTree(OOPEN);
+      $("#meta").textContent = `${d.anzahl.toLocaleString("de-DE")} Knoten, ${d.mit_zuordnung.toLocaleString("de-DE")} OPS-Codes mit GOP-Zuordnung`; });
+  } else if (MODE === "bmv"){
+    $("#list").innerHTML = BMV.anlagen.map(a => `<div class="grp">Anlage ${esc(a.anlage)}</div>` +
+      `<a class="row bmv" href="#${a.id}"><span class="c">Anl. ${esc(a.anlage.split(" ")[0])}</span><span class="t">${esc(a.titel)}</span></a>` +
+      a.pauschalen.map(id => { const p = BK[id]; return `<a class="row bmv" href="#bmv-${esc(id)}"><span class="c">${esc(p.nr || "–")}</span><span class="t">${esc(p.titel)}</span></a>`; }).join("")).join("");
+    $("#meta").textContent = `${BMV.pauschalen.length} Pauschalen außerhalb des EBM in ${BMV.anlagen.length} Regelungen`;
+  }
+  const on = $("#list .tl.on"); if (on) on.scrollIntoView({block:"nearest"});
+}
+function bindTree(set){ $("#list").querySelectorAll(".tg").forEach(b => b.onclick = () => { const id = b.dataset.t; set.has(id) ? set.delete(id) : set.add(id); renderSide(); }); }
+
+let FULL = null;
+async function search(){
+  const q = $("#q").value.trim().toLowerCase(); if (!q){ renderSide(); return; }
+  const words = q.split(/\s+/);
+  const match = (t, body) => words.every(w => t.includes(w) || (body || "").includes(w));
+  const score = (t, body) => words.reduce((s, w) => s + (t.includes(w) ? 50 : 0) + (body ? Math.min(body.split(w).length - 1, 10) : 0), 0);
+  let rows = [];
+  if (MODE === "ebm"){
+    if ($("#volltext").checked && !FULL){
+      $("#meta").textContent = "Lade alle Teile für die Volltextsuche …";
+      const ps = await Promise.all([...new Set(IDX.knoten.map(n => n.teil))].map(part));
+      FULL = {}; ps.forEach(p => Object.entries(p).forEach(([id, d]) => FULL[id] = (d.abschnitte || []).map(a => a.html.replace(/<[^>]+>/g, " ")).join(" ").toLowerCase()));
+    }
+    const ft = $("#volltext").checked && FULL, f = agFilter();
+    rows = IDX.knoten.filter(n => !f || f(n.knotenId)).map(n => { const t = (n.nr + " " + label(n)).toLowerCase(), b = ft ? FULL[n.knotenId] : "";
+      return match(t, b) ? [score(t, b) + (n.typ === "gop" ? 1 : 0), `<a class="row" href="#${slug(n)}"><span class="c">${esc(n.nr)}</span><span class="t">${esc(label(n))}</span></a>`] : null; }).filter(Boolean);
+  } else if (MODE === "ops"){
+    const d = await OPS;
+    rows = d.knoten.map(o => { const t = (o.nr + " " + o.titel).toLowerCase(); return match(t) ? [score(t) + (o.gops ? 1 : 0), `<a class="row" href="#${oslug(o)}"><span class="c">${esc(o.nr)}</span><span class="t">${esc(o.titel)}</span></a>`] : null; }).filter(Boolean);
+  } else if (MODE === "bmv"){
+    rows = BMV.pauschalen.map(p => { const t = ((p.nr || "") + " " + p.titel + " " + (p.abrechnung || "")).toLowerCase(); return match(t) ? [score(t), `<a class="row bmv" href="#bmv-${esc(p.id)}"><span class="c">${esc(p.nr || "–")}</span><span class="t">${esc(p.titel)}</span></a>`] : null; }).filter(Boolean);
+  }
+  if ($("#q").value.trim().toLowerCase() !== q) return;
+  rows.sort((a, b) => b[0] - a[0]);
+  $("#meta").textContent = `${rows.length.toLocaleString("de-DE")} Treffer${rows.length > 100 ? " · erste 100" : ""}`;
+  $("#list").innerHTML = rows.slice(0, 100).map(r => r[1]).join("") || `<p class="empty">Kein Treffer. Andere Schreibweise versuchen${MODE === "ebm" && !$("#volltext").checked ? " oder Volltextsuche einschalten" : ""}.</p>`;
+}
+
+/* ---------- Gemeinsame Bausteine ---------- */
+function anlageId(nr){ const a = BMV.anlagen.find(a => a.anlage.split(" ")[0] === nr); return a ? a.id : null; }
+function bodyHtml(h){ return h.replace(/<a data-k="([^"]*)">/g, (m, k) => {
+  k = k.replace(/&amp;/g, "&");
+  if (k.startsWith("bmv:")) return BK[k.slice(4)] ? `<a class="bmvl" href="#bmv-${esc(k.slice(4))}" title="Pauschale außerhalb des EBM (BMV-Ä)">` : "<a>";
+  if (k.startsWith("anl:")){ const id = anlageId(k.slice(4)); return `<a class="bmvl" href="#${id || "bmv-uebersicht-" + esc(k.slice(4).replace(/\./g, "-"))}" title="Anlage zum BMV-Ä">`; }
+  const ns = k.split("_").map(x => K[x]).filter(Boolean);
+  if (!ns.length) return `<a class="tot" title="Ziel nicht im Baum dieses Quartals">`;
+  return `<a href="#${slug(ns[0])}" title="${esc(ns.map(n => n.nr).join(", "))}">`; }); }
+function chipNr(nr){ const n = BYNR[nr]; if (n) return `<a class="chip" href="#${slug(n)}" title="${esc(label(n))}">${esc(nr)}</a>`;
+  if (BK[nr]) return `<a class="chip bmv" href="#bmv-${esc(nr)}" title="${esc(BK[nr].titel)}">${esc(nr)}</a>`; return `<span class="chip">${esc(nr)}</span>`; }
+function chipK(id){ const n = K[id]; return n ? `<a class="chip" href="#${slug(n)}" title="${esc(label(n))}">${esc(n.nr)}</a>` : ""; }
+function linkK(id, text){ const n = K[id]; return n ? `<a href="#${slug(n)}" title="${esc(n.nr + " " + label(n))}">${text}</a>` : text; }
+function chipList(ids, fn, max = 40){ if (!ids.length) return ""; const c = ids.map(fn).join("");
+  return ids.length > max ? `<details><summary>Alle ${ids.length} zeigen</summary><div class="chips" style="margin-top:8px">${c}</div></details>` : `<div class="chips">${c}</div>`; }
+function dataBlock(views){
+  const keys = Object.keys(views);
+  return `<section class="b"><h3>Als Daten</h3><div class="tabs" role="group" aria-label="Darstellung">${keys.map((k, i) => `<button type="button" data-v="${k}" aria-pressed="${i === 0}">${k}</button>`).join("")}<span class="sp"></span><button type="button" id="copy">Kopieren</button></div><pre id="out"></pre></section>`;
+}
+function bindData(views){
+  let v = Object.keys(views)[0];
+  const show = () => { $("#out").textContent = views[v](); document.querySelectorAll(".tabs [data-v]").forEach(x => x.setAttribute("aria-pressed", x.dataset.v === v)); };
+  document.querySelectorAll(".tabs [data-v]").forEach(x => x.onclick = () => { v = x.dataset.v; show(); });
+  $("#copy").onclick = () => { const t = views[v](); const done = () => { $("#copy").textContent = "Kopiert"; setTimeout(() => $("#copy").textContent = "Kopieren", 1500); };
+    try { navigator.clipboard.writeText(t).then(done, selectOut); } catch(e){ selectOut(); } };
+  show();
+}
+function selectOut(){ const r = document.createRange(); r.selectNodeContents($("#out")); const s = getSelection(); s.removeAllRanges(); s.addRange(r); $("#copy").textContent = "Markiert – mit ⌘C kopieren"; }
+function urlTable(urls){ return `<section class="b"><h3>Vorgeschlagene Adressen</h3><div class="tw"><table><tbody>${urls.map(([a, u]) => `<tr><td style="white-space:nowrap">${a}</td><td class="url">${esc(u)}</td></tr>`).join("")}</tbody></table></div><p class="note">Diese Adressen gibt es heute nicht.</p></section>`; }
+
+/* ---------- EBM-Knoten ---------- */
+async function renderNode(n){
+  CUR = n; ancestors(n).forEach(a => OPEN.add(a.knotenId)); renderSide();
+  $("#detail").innerHTML = `<p class="empty">Lade ${esc(n.nr)} …</p>`;
+  let d; try { d = (await part(n.teil))[n.knotenId] || {}; } catch(e){ $("#detail").innerHTML = `<p class="empty">Teil konnte nicht geladen werden (${esc(e.message)}).</p>`; return; }
+  const isG = n.typ === "gop" && BYNR[n.nr] === n;
+  let opsRows = [];
+  if (n.typ === "gop" && /^3[16]/.test(n.nr)){ await opsData(); opsRows = OPSBYGOP[n.nr] || []; }
+  if (CUR !== n) return;
+  const b = n.bewertung || {};
+  const kopf = n.typ === "gop" ? `<div class="kopf"><div class="kz"><div class="v">${esc(b.punkte || "–")}</div><div class="u">Punkte</div></div><div class="kz"><div class="v">${esc(b.euro || "–")}</div><div class="u">Euro</div></div>${(d.merkmale || []).map(m => `<div class="merk ${m.zutreffend ? "ja" : "nein"}"><i aria-hidden="true">${m.zutreffend ? "✓" : "✕"}</i>${esc(m.text)}</div>`).join("")}</div>` : "";
+  const secs = (d.abschnitte || []).map(a => `<section class="b">${a.ueberschrift ? `<h3>${esc(a.ueberschrift)}</h3>` : ""}<div class="txt">${bodyHtml(a.html)}</div></section>`).join("");
+  const kids = n.kinder.length ? `<section class="b"><h3>${n.typ === "gop" ? "Untergliederung" : "Enthält"}</h3><div class="tw"><table><tbody>${n.kinder.map(id => { const c = K[id], cb = c.bewertung || {}; return `<tr><td class="n" style="text-align:left">${linkK(id, esc(c.nr))}</td><td>${linkK(id, esc(label(c)))}</td>${n.typ === "gop" || c.bewertung ? `<td class="n">${esc(cb.punkte || "")}</td><td class="n">${esc(cb.euro ? cb.euro + " €" : "")}</td>` : ""}</tr>`; }).join("")}</tbody></table></div></section>` : "";
+  const aus = (d.ausschluesse || []).length ? `<section class="b"><h3>Abrechnungsausschlüsse</h3><div class="tw"><table><thead><tr><th>Bezug</th><th>Leistungen</th><th>Kapitel</th></tr></thead><tbody>${d.ausschluesse.map(a => `<tr><td style="white-space:nowrap">${esc(a.bezug)}</td><td><div class="chips">${a.leistungen.map(x => { const id = x.k.split("_").find(i => K[i]); return id ? chipK(id).replace(`>${esc(K[id].nr)}<`, `>${esc(x.nr)}<`) : chipNr(x.nr); }).join("")}${a.leistungen_text ? " " + esc(a.leistungen_text) : ""}</div></td><td>${a.kapitel.map(x => linkK(x.k.split("_").find(i => K[i]) || x.k, esc(x.nr))).join(", ")}${a.kapitel_text ? " " + esc(a.kapitel_text) : ""}</td></tr>`).join("")}</tbody></table></div></section>` : "";
+  const bmvAus = BMV.pauschalen.filter(p => p.ausschluesse.some(a => a.nr.includes(n.nr)));
+  const bmvRefs = (d.bmv_verweise || []);
+  const bmvSec = (bmvAus.length || bmvRefs.length) ? `<section class="b"><h3>Bezüge zum BMV-Ä</h3>${bmvAus.length ? `<p class="note" style="margin:0 0 6px">Nicht neben diesen Pauschalen außerhalb des EBM berechnungsfähig (Ausschluss in der jeweiligen Anlage):</p><div class="chips">${bmvAus.map(p => chipNr(p.nr || p.id)).join("")}</div>` : ""}${bmvRefs.length ? `<p class="note" style="margin:8px 0 6px">Im Text genannt:</p><div class="chips">${bmvRefs.map(h => h.startsWith("bmv:") ? chipNr(h.slice(4)) : `<a class="chip bmv txt-only" href="#${anlageId(h.slice(4)) || "bmv"}">Anlage ${esc(h.slice(4))}</a>`).join("")}</div>` : ""}</section>` : "";
+  const groups = AG && n.typ === "gop" ? AG.gruppen.filter(g => (AG.sets[g] || new Set()).has(n.knotenId)) : [];
+  const agSec = AG && n.typ === "gop" ? `<section class="b"><h3>Arztgruppen</h3>${groups.length ? `<div class="chips">${groups.map(g => `<span class="chip txt-only">${esc(g)}</span>`).join("")}</div>` : `<p class="note" style="margin:0">Keiner Arztgruppe im Filter der Online-Ansicht zugeordnet.</p>`}${AG.unvollstaendig.length ? `<p class="note">Abzug unvollständig für ${AG.unvollstaendig.length} Arztgruppen.</p>` : ""}</section>` : "";
+  const opsSec = opsRows.length ? `<section class="b"><h3>OPS-Zuordnung nach Anhang 2 · ${opsRows.length} Codes</h3>${(() => { const t = `<div class="tw"><table><thead><tr><th>OPS</th><th>Bezeichnung</th><th>Art</th></tr></thead><tbody>${opsRows.map(([id, art]) => { const o = OK[id]; return `<tr><td class="n" style="text-align:left"><a href="#${oslug(o)}">${esc(o.nr)}</a></td><td>${esc(o.titel)}</td><td>${esc(art)}</td></tr>`; }).join("")}</tbody></table></div>`; return opsRows.length > 15 ? `<details><summary>Alle ${opsRows.length} zeigen</summary>${t}</details>` : t; })()}</section>` : "";
+  const refs = (d.referenziert_von || []).length ? `<section class="b"><h3>Wird erwähnt in ${d.referenziert_von.length} Knoten</h3>${chipList(d.referenziert_von, chipK)}</section>` : "";
+  const urls = isG ? [["Seite, Quartal fest", `${PROPOSED}/${IDX.quartal}/gop/${n.nr}`], ["Seite, immer aktuell", `${PROPOSED}/gop/${n.nr}`], ["JSON", `${PROPOSED}/api/${IDX.quartal}/gop/${n.nr}`], ["FHIR $lookup", `${PROPOSED}/fhir/CodeSystem/$lookup?system=${PROPOSED}/fhir/CodeSystem/ebm&code=${n.nr}&version=${IDX.quartal}`]]
+    : [["Seite, Quartal fest", `${PROPOSED}/${IDX.quartal}/abschnitt/${encodeURIComponent(n.nr || n.knotenId)}`], ["JSON", `${PROPOSED}/api/${IDX.quartal}/knoten/${encodeURIComponent(n.knotenId)}`]];
+  $("#detail").innerHTML = `<nav class="crumb" aria-label="Pfad">${ancestors(n).map(a => `<a href="#${slug(a)}">${esc(a.nr)}</a><span aria-hidden="true">›</span>`).join("")}<span>${esc(n.nr)}</span></nav>
+    <div class="gh"><span class="code">${esc(n.nr)}</span><h2>${esc(label(n))}</h2></div>
+    ${kopf}${secs}${kids}${aus}${bmvSec}${agSec}${opsSec}${refs}
+    <section class="b"><h3>Herkunft</h3><p class="txt" style="margin:0">Inhalt 1:1 aus der <a href="https://ebm.kbv.de/" target="_blank" rel="noopener">EBM-Online-Ansicht der KBV ↗</a>, Knoten-ID <code>${esc(n.knotenId)}</code>. Die Online-Ansicht hat keine Adresse je Knoten.</p></section>
+    ${urlTable(urls)}${dataBlock(Object.assign({JSON: () => JSON.stringify(Object.assign({}, n, d, groups.length ? {arztgruppen: groups} : {}, opsRows.length ? {ops: opsRows.map(([id, art]) => ({ops: OK[id].nr, art}))} : {}), null, 2)}))}`;
+  bindData({JSON: () => JSON.stringify(Object.assign({}, n, d, groups.length ? {arztgruppen: groups} : {}, opsRows.length ? {ops: opsRows.map(([id, art]) => ({ops: OK[id].nr, art}))} : {}), null, 2)});
+}
+
+/* ---------- OPS-Knoten ---------- */
+async function renderOps(o){
+  CUR = o; ancestors(o, OK).forEach(a => OOPEN.add(a.id)); renderSide();
+  const kopf = (o.seite || o.kategorie || o.p115b) ? `<div class="kopf">${[["Seitenangabe", o.seite], ["Kategorie", o.kategorie], ["§115b", o.p115b]].filter(x => x[1]).map(([u, v]) => `<div class="kz"><div class="v">${esc(v)}</div><div class="u">${u}</div></div>`).join("")}</div>` : "";
+  const tab = o.gops ? `<section class="b"><h3>Zuordnung zu Gebührenordnungspositionen</h3><div class="tw"><table><thead><tr><th>Art</th><th>GOP</th><th>Bezeichnung</th><th class="n">Punkte</th><th class="n">Kalk. Zeit</th><th class="n">Prüfzeit</th></tr></thead><tbody>${o.gops.map(g => `<tr><td>${esc(g.art)}</td><td>${chipNr(g.gop)}</td><td>${esc(g.bezeichnung)}</td><td class="n">${esc(g.punkte)}</td><td class="n">${esc(g.kalk)}</td><td class="n">${esc(g.pruef)}</td></tr>`).join("")}</tbody></table></div></section>` : "";
+  const kids = o.kinder.length ? `<section class="b"><h3>Enthält</h3><div class="tw"><table><tbody>${o.kinder.map(id => { const c = OK[id]; return `<tr><td class="n" style="text-align:left"><a href="#${oslug(c)}">${esc(c.nr)}</a></td><td>${esc(c.titel || c.baumtitel)}</td><td>${c.kategorie ? esc(c.kategorie) : ""}</td></tr>`; }).join("")}</tbody></table></div></section>` : "";
+  $("#detail").innerHTML = `<nav class="crumb" aria-label="Pfad"><a href="#anhang2">Anhang 2</a><span aria-hidden="true">›</span>${ancestors(o, OK).map(a => `<a href="#${oslug(a)}">${esc(a.nr)}</a><span aria-hidden="true">›</span>`).join("")}<span>${esc(o.nr)}</span></nav>
+    <div class="gh"><span class="code">${esc(o.nr)}</span><h2>${esc(o.titel || o.baumtitel)}</h2></div>${kopf}${tab}${kids}
+    <section class="b"><h3>Herkunft</h3><p class="txt" style="margin:0">Inhalt 1:1 aus der <a href="https://ebm.kbv.de/ops.xhtml" target="_blank" rel="noopener">Anhang-2-Ansicht ↗</a> (ambulant und stationär), Knoten-ID <code>${esc(o.id)}</code>.</p></section>
+    ${urlTable([["JSON", `${PROPOSED}/api/${IDX.quartal}/ops/${o.nr}`], ["FHIR ConceptMap", `${PROPOSED}/fhir/ConceptMap/ops-ebm?version=${IDX.quartal}`]])}${dataBlock({JSON: 0})}`;
+  bindData({JSON: () => JSON.stringify(o, null, 2)});
+}
+
+/* ---------- BMV-Ä ---------- */
+const eur = v => v == null ? "–" : num(v) + " €";
+function renderBmvPauschale(p){
+  CUR = p; renderSide();
+  const a = BA[p.anlage];
+  const ref = (BMV.ebm_verweise || {})["bmv:" + (p.nr || "")] || [];
+  const betrag = p.betrag ? `<div class="tw"><table><thead><tr><th>Bedingung</th><th class="n">Betrag</th></tr></thead><tbody>${p.betrag.map(x => `<tr><td>${esc(x.bedingung || "—")}</td><td class="n">${eur(x.euro)}</td></tr>`).join("")}</tbody></table></div>`
+    : `<p class="txt" style="margin:0">Kein bundeseinheitlicher Betrag. ${esc(a.hoehe || "")}</p>`;
+  const aus = p.ausschluesse.length ? `<section class="b"><h3>Abrechnungsausschlüsse</h3><div class="tw"><table><thead><tr><th>Bezug</th><th>Leistungen</th></tr></thead><tbody>${p.ausschluesse.map(x => `<tr><td style="white-space:nowrap">${esc(x.bezug)}</td><td><div class="chips">${x.nr.map(chipNr).join("")}</div></td></tr>`).join("")}</tbody></table></div></section>` : "";
+  $("#detail").innerHTML = `<nav class="crumb" aria-label="Pfad"><a href="#bmv">BMV-Ä</a><span aria-hidden="true">›</span><a href="#${a.id}">Anlage ${esc(a.anlage)}</a></nav>
+    <div class="gh"><span class="code bmv">${esc(p.nr || "ohne Nr.")}</span><h2>${esc(p.titel)}</h2></div>
+    <p style="margin:10px 0 0;display:flex;gap:6px;flex-wrap:wrap"><span class="tag">Außerhalb des EBM</span>${a.status ? `<span class="tag warn">${esc(a.status)}</span>` : ""}${p.nr ? "" : `<span class="tag warn">keine Abrechnungsnummer im Vertrag</span>`}</p>
+    <section class="b"><h3>Betrag</h3>${betrag}</section>
+    ${p.abrechnung ? `<section class="b"><h3>Abrechnungsbestimmung</h3><p class="txt" style="margin:0">${esc(p.abrechnung)}</p></section>` : ""}
+    ${aus}
+    ${ref.length ? `<section class="b"><h3>Im EBM genannt in ${ref.length} Knoten</h3>${chipList(ref, chipK)}<p class="note">Die EBM-Online-Ansicht nennt diese Nummer nur als Text, ohne Link.</p></section>` : ""}
+    <section class="b"><h3>Fundstelle</h3><p class="txt" style="margin:0">Anlage ${esc(a.anlage)} BMV-Ä, ${esc(a.titel)}${a.fassung ? `, Fassung ${esc(a.fassung)}` : ""}. ${p.fundstelle.url ? `<a href="${esc(p.fundstelle.url)}#page=${p.fundstelle.seite}" target="_blank" rel="noopener">${esc(p.fundstelle.datei)}, Seite ${p.fundstelle.seite} ↗</a>` : esc(p.fundstelle.datei + ", Seite " + p.fundstelle.seite)}</p><p class="note">Von Hand aus dem PDF erfasst, Wortlaut gekürzt. Verbindlich ist die Vereinbarung.</p></section>
+    ${urlTable([["JSON", `${PROPOSED}/api/bmv/pauschale/${p.nr || p.id}`]])}${dataBlock({JSON: 0})}`;
+  bindData({JSON: () => JSON.stringify(p, null, 2)});
+}
+function renderBmvAnlage(a){
+  CUR = a; renderSide();
+  const nrs = a.anlage.split(" ")[0];
+  const ref = (BMV.ebm_verweise || {})["anl:" + nrs] || [];
+  $("#detail").innerHTML = `<nav class="crumb" aria-label="Pfad"><a href="#bmv">BMV-Ä</a></nav>
+    <div class="gh"><span class="code bmv">Anl. ${esc(nrs)}</span><h2>${esc(a.titel)}</h2></div>
+    <p style="margin:10px 0 0;display:flex;gap:6px;flex-wrap:wrap">${a.status ? `<span class="tag warn">${esc(a.status)}</span>` : ""}${a.fassung ? `<span class="tag">${esc(a.fassung)}</span>` : ""}</p>
+    <section class="b"><h3>Höhe der Vergütung</h3><p class="txt" style="margin:0">${esc(a.hoehe || "—")}</p></section>
+    <section class="b"><h3>${a.pauschalen.length} Pauschalen</h3><div class="tw"><table><thead><tr><th>Nr.</th><th>Bezeichnung</th><th class="n">Betrag</th></tr></thead><tbody>${a.pauschalen.map(id => { const p = BK[id]; return `<tr><td class="n" style="text-align:left"><a href="#bmv-${esc(id)}">${esc(p.nr || "–")}</a></td><td><a href="#bmv-${esc(id)}">${esc(p.titel)}</a></td><td class="n">${p.betrag ? p.betrag.map(x => eur(x.euro)).join("<br>") : "regional"}</td></tr>`; }).join("")}</tbody></table></div></section>
+    ${ref.length ? `<section class="b"><h3>Im EBM genannt in ${ref.length} Knoten</h3>${chipList(ref, chipK)}</section>` : ""}
+    <section class="b"><h3>Quelle</h3><p class="txt" style="margin:0">${a.urls.map(u => `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(u.split("/").pop())} ↗</a>`).join("<br>")}</p></section>`;
+}
+function renderBmvStart(){
+  CUR = null; renderSide();
+  const allRefs = Object.entries(BMV.ebm_verweise || {}).filter(([k]) => k.startsWith("anl:")).sort((a, b) => b[1].length - a[1].length);
+  $("#detail").innerHTML = `<div class="gh"><span class="code bmv">BMV-Ä</span><h2>Pauschalen außerhalb des EBM</h2></div>
+    <p class="txt">Der Bundesmantelvertrag-Ärzte und seine Anlagen vereinbaren Vergütungen, die nicht im EBM stehen. Gesichtet wurden der Hauptteil und alle Anlagen mit PDF auf der KBV-Seite (Stand ${esc(BMV.stand)}). Anlage 32 ist außer Kraft; die TI-Pauschale gilt nach der Festlegung des BMG.</p>
+    <section class="b"><h3>Regelungen mit eigenen Pauschalen</h3><div class="tw"><table><thead><tr><th>Anlage</th><th>Regelung</th><th class="n">Anzahl</th><th>Nummern</th><th>Höhe</th></tr></thead><tbody>${BMV.anlagen.map(a => `<tr><td><a href="#${a.id}">${esc(a.anlage)}</a></td><td>${esc(a.titel)}</td><td class="n">${a.pauschalen.length}</td><td>${a.pauschalen.some(id => BK[id].nr) ? esc(a.pauschalen.map(id => BK[id].nr).filter(Boolean).join(", ")) : "keine"}</td><td>${/regional/.test(a.hoehe || "") ? "regional" : "bundeseinheitlich"}</td></tr>`).join("")}</tbody></table></div></section>
+    <section class="b"><h3>Anlagen ohne eigene Pauschale</h3><div class="tw"><table><thead><tr><th>Anlage</th><th>Befund</th></tr></thead><tbody>${BMV.ohne_eigene_pauschale.map(x => `<tr><td style="white-space:nowrap">${esc(x.anlage)}</td><td>${esc(x.titel)}: ${esc(x.befund)}</td></tr>`).join("")}</tbody></table></div></section>
+    <section class="b"><h3>Verweise aus dem EBM auf Anlagen</h3><div class="chips">${allRefs.map(([k, v]) => `<span class="chip txt-only">Anlage ${esc(k.slice(4))} · ${v.length}</span>`).join("")}</div><p class="note">Anzahl der EBM-Knoten, deren Text die Anlage nennt. Im Prototyp sind diese Nennungen verlinkt.</p></section>`;
+}
+
+/* ---------- Schnittstelle ---------- */
+function renderApi(){
+  const rows = [["Position, Quartal fest", "/2026-4/gop/03000", "Seite mit eingebettetem JSON-LD"], ["Position, immer aktuell", "/gop/03000", "Weiterleitung auf das aktuelle Quartal"], ["Position als Daten", "/api/2026-4/gop/03000", "JSON mit Arztgruppen und OPS-Zuordnung"],
+    ["Beliebiger Knoten", "/api/2026-4/knoten/{Knoten-ID}", "JSON, auch Präambeln und Bestimmungen"], ["Arztgruppe", "/api/2026-4/arztgruppe/Hausarzt", "sichtbare Knoten"], ["OPS-Code (Anhang 2)", "/api/2026-4/ops/5-010.2", "Kategorie, §115b, GOP-Zuordnung"],
+    ["Pauschale außerhalb des EBM", "/api/bmv/pauschale/86510", "JSON mit Anlage, Betrag, Fundstelle"], ["FHIR CodeSystem", "/fhir/CodeSystem/ebm?version=2026-4", "FHIR R4"], ["FHIR ConceptMap", "/fhir/ConceptMap/ops-ebm?version=2026-4", "OPS → GOP"], ["Hinweise für KI-Assistenten", "/llms.txt", "Schnittstelle und Zitierregel"]];
+  $("#api").innerHTML = `<h2>Ein Katalog, drei Darstellungen</h2>
+  <p>Die EBM-Online-Ansicht zeigt Inhalte nur nach Klicks im Baum. Sie hat keine Adresse je Gebührenordnungsposition und keine Schnittstelle. Dieser Prototyp spiegelt die EBM-Ansicht, den Arztgruppenfilter und die Anhang-2-Ansicht für ${esc(IDX.quartal.replace("-", "/Q"))} und ergänzt die Pauschalen des BMV-Ä, die nicht im EBM stehen.</p>
+  <h3>Adressschema</h3><div class="tw"><table><thead><tr><th>Zweck</th><th>Pfad unter ${esc(PROPOSED)}</th><th>Antwort</th></tr></thead><tbody>${rows.map(r => `<tr><td>${r[0]}</td><td class="url">${esc(r[1])}</td><td>${r[2]}</td></tr>`).join("")}</tbody></table></div>
+  <h3>Inhalt dieses Prototyps</h3><div class="tw"><table><tbody>
+    <tr><td>Knoten der EBM-Ansicht</td><td class="n">${IDX.anzahl_knoten.toLocaleString("de-DE")}</td></tr>
+    <tr><td>Gebührenordnungspositionen (eindeutige Nummern)</td><td class="n">${Object.keys(BYNR).length.toLocaleString("de-DE")}</td></tr>
+    <tr><td>Arztgruppen im Filter</td><td class="n">${AG ? AG.gruppen.length - AG.unvollstaendig.length + " von " + AG.gruppen.length : "–"}</td></tr>
+    <tr><td>Knoten der Anhang-2-Ansicht</td><td class="n" id="opsn">…</td></tr>
+    <tr><td>Pauschalen aus dem BMV-Ä</td><td class="n">${BMV.pauschalen.length}</td></tr></tbody></table></div>
+  <p class="note">Abgerufen aus ebm.kbv.de und kbv.de. EBM-Texte unverändert, nur Markup bereinigt. BMV-Ä-Pauschalen von Hand aus den PDF erfasst. Nicht abgebildet: Quartalsvergleich, frühere Quartale, Anlage 3 (QS-Vereinbarungen), regionale Vereinbarungen.</p>`;
+  opsData().then(d => { const e = $("#opsn"); if (e) e.textContent = d.anzahl.toLocaleString("de-DE"); });
+}
+
+/* ---------- Routing ---------- */
+function setMode(m){
+  MODE = m;
+  [["ebm","nav-ebm"],["ops","nav-ops"],["bmv","nav-bmv"],["api","nav-api"]].forEach(([k, id]) => { const a = $("#" + id); if (k === m) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
+  $("#view").hidden = m === "api"; $("#api").hidden = m !== "api";
+  $("#ag").hidden = m !== "ebm" || !AG; $("#ftlabel").hidden = m !== "ebm";
+  $("#q").placeholder = m === "ops" ? "OPS-Code oder Begriff" : m === "bmv" ? "Nummer oder Begriff" : "GOP, Abschnitt oder Begriff";
+}
+let LASTMODE = null;
+async function route(){
+  const h = location.hash.slice(1);
+  const m = h === "schnittstelle" ? "api" : (h === "anhang2" || h.startsWith("o-")) ? "ops" : (h === "bmv" || h.startsWith("bmv-") || h.startsWith("anl-")) ? "bmv" : "ebm";
+  if (m !== LASTMODE){ $("#q").value = ""; LASTMODE = m; }
+  setMode(m);
+  if (!IDX) return;
+  if (m === "api"){ renderApi(); return; }
+  if (m === "ops"){
+    $("#detail").innerHTML = `<p class="empty">Lade Anhang 2 …</p>`;
+    const d = await opsData();
+    const o = h.startsWith("o-") ? OK[h.slice(2).replace(/x/g, "#")] : null;
+    if (o) renderOps(o); else { CUR = null; renderSide(); $("#detail").innerHTML = `<div class="gh"><span class="code">Anhang 2</span><h2>Zuordnung der operativen Prozeduren (OPS) zu den Kapiteln 31 und 36</h2></div><p class="txt">Die Anhang-2-Ansicht ordnet jedem OPS-Code eine Kategorie und die Gebührenordnungspositionen für Operation, Überwachung, Nachbehandlung und Anästhesie zu, jeweils ambulant und stationär. ${d.anzahl.toLocaleString("de-DE")} Knoten, davon ${d.mit_zuordnung.toLocaleString("de-DE")} mit Zuordnung. Links den Baum aufklappen oder nach Code suchen.</p>`; }
+    return;
+  }
+  if (m === "bmv"){
+    if (h.startsWith("bmv-") && BK[h.slice(4)]) renderBmvPauschale(BK[h.slice(4)]);
+    else if (BA[h]) renderBmvAnlage(BA[h]);
+    else renderBmvStart();
+    return;
+  }
+  const n = (h && fromSlug(h)) || BYNR["03000"] || K[IDX.wurzeln[0]];
+  if (n) renderNode(n); else $("#detail").innerHTML = `<p class="empty">Knoten nicht gefunden.</p>`;
+}
+
+addEventListener("hashchange", route);
+let tmr; $("#q").addEventListener("input", () => { clearTimeout(tmr); tmr = setTimeout(search, 150); });
+$("#volltext").addEventListener("change", search);
+let AG_CUR = "";
+$("#ag").addEventListener("change", () => { AG_CUR = $("#ag").value; AGSET = AG_CUR ? AG.sets[AG_CUR] : null; try { localStorage.setItem("ag", AG_CUR); } catch(e){} renderSide(); });
+route();
+Promise.all([load("index.json"), load("bmv.json"), load("arztgruppen.json").catch(() => null)]).then(([d, b, ag]) => {
+  IDX = d; d.knoten.forEach(n => { K[n.knotenId] = n; if (n.typ === "gop" && !BYNR[n.nr]) BYNR[n.nr] = n; });
+  BMV = b; b.pauschalen.forEach(p => BK[p.id] = p); b.anlagen.forEach(a => BA[a.id] = a);
+  if (ag){ AG = ag; AG.sets = {}; ag.gruppen.forEach(g => AG.sets[g] = new Set((ag.sichtbar[g] || []).map(i => d.knoten[i].knotenId)));
+    $("#ag").innerHTML = `<option value="">Alle Arztgruppen</option>` + ag.gruppen.map(g => `<option ${ag.unvollstaendig.includes(g) ? "disabled" : ""}>${esc(g)}</option>`).join("");
+    try { const s = localStorage.getItem("ag"); if (s && AG.sets[s] && !ag.unvollstaendig.includes(s)){ $("#ag").value = s; AG_CUR = s; AGSET = AG.sets[s]; } } catch(e){} }
+  $("#qlabel").textContent = "Quartal " + d.quartal.replace("-", "/Q");
+  route();
+}).catch(e => { $("#detail").innerHTML = `<p class="empty">Daten konnten nicht geladen werden (${esc(e.message)}). Seite neu laden.</p>`; $("#meta").textContent = "Daten fehlen"; });
+</script>

@@ -1,0 +1,837 @@
+{
+ "titel": "Fragenkatalog Offener EBM-Katalog",
+ "stand": "2026-11-12",
+ "quartal": "2026-4",
+ "hinweis": "Sollantworten sind Entwürfe aus dem Katalog selbst und müssen von EBM-Fachleuten freigegeben werden. Die Prüfungen testen, ob die Werkzeuge die belegten Fakten liefern; sie prüfen nicht die Formulierung einer KI-Antwort.",
+ "pruefsprache": {
+  "gleich": "Wert am Pfad ist gleich",
+  "enthaelt": "Text kommt in der Antwort vor",
+  "min": "Zahl oder Listenlänge mindestens",
+  "laenge": "Listenlänge genau",
+  "nicht_leer": "Wert vorhanden"
+ },
+ "fragen": [
+  {
+   "id": "B01",
+   "frage": "Wie viele Punkte bringt die hausärztliche Versichertenpauschale für einen 60-jährigen Patienten?",
+   "kategorie": "Bewertung",
+   "zielgruppe": "Praxis",
+   "werkzeug": "ebm_gop",
+   "argumente": {
+    "nr": "03000"
+   },
+   "pruefungen": [
+    {
+     "pfad": "bewertung[3].bedingung",
+     "gleich": "ab Beginn des 55. bis zum vollendeten 75. Lebensjahr"
+    },
+    {
+     "pfad": "bewertung[3].punkte",
+     "gleich": "148"
+    },
+    {
+     "pfad": "bewertung[3].euro",
+     "gleich": "18.86"
+    }
+   ],
+   "sollantwort": "148 Punkte (18,86 €) nach GOP 03000 für die Altersstufe ab Beginn des 55. bis zum vollendeten 75. Lebensjahr.",
+   "fundstelle": "EBM 3.2.1.1, GOP 03000",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "B02",
+   "frage": "Wie oft ist die Versichertenpauschale 03000 berechnungsfähig?",
+   "kategorie": "Abrechnungsbestimmung",
+   "zielgruppe": "Praxis",
+   "werkzeug": "ebm_gop",
+   "argumente": {
+    "nr": "03000"
+   },
+   "pruefungen": [
+    {
+     "enthaelt": "einmal im Behandlungsfall"
+    }
+   ],
+   "sollantwort": "Einmal im Behandlungsfall.",
+   "fundstelle": "EBM 3.2.1.1, GOP 03000, Abrechnungsbestimmung",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "B03",
+   "frage": "Welche Bewertung hat die unvorhergesehene Inanspruchnahme nach 01100?",
+   "kategorie": "Bewertung",
+   "zielgruppe": "Praxis",
+   "werkzeug": "ebm_gop",
+   "argumente": {
+    "nr": "01100"
+   },
+   "pruefungen": [
+    {
+     "pfad": "bewertung[0].punkte",
+     "gleich": "196"
+    },
+    {
+     "pfad": "bewertung[0].euro",
+     "gleich": "24.97"
+    }
+   ],
+   "sollantwort": "196 Punkte, 24,97 €.",
+   "fundstelle": "EBM 1.1, GOP 01100",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "B04",
+   "frage": "Was wird für die Glucose-Bestimmung nach 32025 vergütet?",
+   "kategorie": "Bewertung",
+   "zielgruppe": "Praxis",
+   "werkzeug": "ebm_gop",
+   "argumente": {
+    "nr": "32025"
+   },
+   "pruefungen": [
+    {
+     "pfad": "bewertung[0].euro",
+     "gleich": "1.60"
+    }
+   ],
+   "sollantwort": "1,60 € (Laborleistung, in Euro bewertet).",
+   "fundstelle": "EBM 32.2, GOP 32025",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "B05",
+   "frage": "Welche Bewertung hat die Früherkennungsuntersuchung auf Hautkrebs?",
+   "kategorie": "Bewertung",
+   "zielgruppe": "Praxis",
+   "werkzeug": "ebm_gop",
+   "argumente": {
+    "nr": "01745"
+   },
+   "pruefungen": [
+    {
+     "pfad": "bewertung[0].punkte",
+     "gleich": "253"
+    },
+    {
+     "pfad": "bewertung[0].euro",
+     "gleich": "32.23"
+    }
+   ],
+   "sollantwort": "GOP 01745: 253 Punkte, 32,23 €.",
+   "fundstelle": "EBM 1.7, GOP 01745",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "B06",
+   "frage": "Wie ist die Vorhaltepauschale 03040 bewertet und wie oft abrechenbar?",
+   "kategorie": "Bewertung",
+   "zielgruppe": "Praxis",
+   "werkzeug": "ebm_gop",
+   "argumente": {
+    "nr": "03040"
+   },
+   "pruefungen": [
+    {
+     "pfad": "bewertung[0].punkte",
+     "gleich": "128"
+    },
+    {
+     "enthaelt": "einmal im Behandlungsfall"
+    }
+   ],
+   "sollantwort": "128 Punkte (16,31 €), einmal im Behandlungsfall.",
+   "fundstelle": "EBM 3.2.1.2, GOP 03040",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "B07",
+   "frage": "Welche Bewertung hat die Zusatzpauschale TSS-Terminvermittlung 01710?",
+   "kategorie": "Bewertung",
+   "zielgruppe": "Praxis",
+   "werkzeug": "ebm_gop",
+   "argumente": {
+    "nr": "01710"
+   },
+   "pruefungen": [
+    {
+     "pfad": "bewertung",
+     "laenge": 0
+    },
+    {
+     "pfad": "bewertung_hinweis",
+     "nicht_leer": true
+    }
+   ],
+   "sollantwort": "Im Kopf der Detailansicht steht keine Bewertung; sie richtet sich nach den Allgemeinen Bestimmungen (Abstand zur Terminvermittlung). Die KI darf keinen Wert nennen, ohne die Bestimmung abzurufen.",
+   "fundstelle": "EBM 1.7, GOP 01710; Allgemeine Bestimmungen 4.3.10.1",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "B08",
+   "frage": "Gehört eine Videosprechstunde zum obligaten Leistungsinhalt der 03000?",
+   "kategorie": "Leistungsinhalt",
+   "zielgruppe": "Praxis",
+   "werkzeug": "ebm_gop",
+   "argumente": {
+    "nr": "03000"
+   },
+   "pruefungen": [
+    {
+     "enthaelt": "Videosprechstunde gemäß Anlage 31b"
+    }
+   ],
+   "sollantwort": "Ja: persönlicher Arzt-Patienten-Kontakt und/oder Kontakt im Rahmen einer Videosprechstunde gemäß Anlage 31b BMV-Ä.",
+   "fundstelle": "EBM 3.2.1.1, GOP 03000, obligater Leistungsinhalt",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "B09",
+   "frage": "Ist die 03000 berichtspflichtig?",
+   "kategorie": "Merkmale",
+   "zielgruppe": "Praxis",
+   "werkzeug": "ebm_gop",
+   "argumente": {
+    "nr": "03000"
+   },
+   "pruefungen": [
+    {
+     "pfad": "merkmale[0].text",
+     "gleich": "Nicht berichtspflichtig"
+    }
+   ],
+   "sollantwort": "Die Detailansicht weist 03000 als „Nicht berichtspflichtig“ aus.",
+   "fundstelle": "EBM, GOP 03000, Kopf",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "N01",
+   "frage": "Darf ich 03000 und 01436 nebeneinander abrechnen?",
+   "kategorie": "Nebeneinander",
+   "zielgruppe": "Praxis",
+   "werkzeug": "ebm_nebeneinander",
+   "argumente": {
+    "a": "03000",
+    "b": "01436"
+   },
+   "pruefungen": [
+    {
+     "pfad": "ausschluss_eingetragen",
+     "gleich": true
+    },
+    {
+     "pfad": "eintraege[0].bezug",
+     "gleich": "in derselben Sitzung"
+    }
+   ],
+   "sollantwort": "Nein, nicht in derselben Sitzung (Ausschluss bei 03000 eingetragen).",
+   "fundstelle": "EBM, GOP 03000, Abrechnungsausschlüsse",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "N02",
+   "frage": "Ist 01100 neben 01955 berechnungsfähig?",
+   "kategorie": "Nebeneinander",
+   "zielgruppe": "Praxis",
+   "werkzeug": "ebm_nebeneinander",
+   "argumente": {
+    "a": "01100",
+    "b": "01955"
+   },
+   "pruefungen": [
+    {
+     "pfad": "ausschluss_eingetragen",
+     "gleich": true
+    },
+    {
+     "enthaelt": "am Behandlungstag"
+    }
+   ],
+   "sollantwort": "Nein, nicht am Behandlungstag.",
+   "fundstelle": "EBM, GOP 01100, Abrechnungsausschlüsse",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "N03",
+   "frage": "Gibt es einen Ausschluss zwischen 03000 und 32025?",
+   "kategorie": "Nebeneinander",
+   "zielgruppe": "Praxis",
+   "werkzeug": "ebm_nebeneinander",
+   "argumente": {
+    "a": "03000",
+    "b": "32025"
+   },
+   "pruefungen": [
+    {
+     "pfad": "ausschluss_eingetragen",
+     "gleich": false
+    },
+    {
+     "enthaelt": "keine Zusage"
+    }
+   ],
+   "sollantwort": "In den Ausschlusstabellen ist keiner eingetragen. Das ist keine Zusage der Berechnungsfähigkeit; Präambeln und Bestimmungen sind zu beachten.",
+   "fundstelle": "EBM, GOP 03000 und 32025",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "N04",
+   "frage": "Kann die Onkologie-Pauschale 86510 neben der 07345 abgerechnet werden?",
+   "kategorie": "Nebeneinander",
+   "zielgruppe": "Praxis",
+   "werkzeug": "ebm_nebeneinander",
+   "argumente": {
+    "a": "86510",
+    "b": "07345"
+   },
+   "pruefungen": [
+    {
+     "pfad": "ausschluss_eingetragen",
+     "gleich": true
+    },
+    {
+     "enthaelt": "im Behandlungsfall"
+    },
+    {
+     "enthaelt": "07_Onkologie.pdf"
+    }
+   ],
+   "sollantwort": "Nein, nicht im Behandlungsfall (Anlage 7 BMV-Ä, Anhang 2, S. 14).",
+   "fundstelle": "Anlage 7 BMV-Ä, S. 14",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "N05",
+   "frage": "Sind die Zuschläge 86518 und 86516 nebeneinander berechnungsfähig?",
+   "kategorie": "Nebeneinander",
+   "zielgruppe": "Praxis",
+   "werkzeug": "ebm_nebeneinander",
+   "argumente": {
+    "a": "86518",
+    "b": "86516"
+   },
+   "pruefungen": [
+    {
+     "pfad": "ausschluss_eingetragen",
+     "gleich": true
+    }
+   ],
+   "sollantwort": "Nein, im Behandlungsfall ausgeschlossen (Anlage 7 BMV-Ä).",
+   "fundstelle": "Anlage 7 BMV-Ä, S. 15",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "S01",
+   "frage": "Welche GOP gibt es für das Hautkrebs-Screening?",
+   "kategorie": "Suche",
+   "zielgruppe": "Praxis",
+   "werkzeug": "ebm_suche",
+   "argumente": {
+    "text": "Hautkrebs"
+   },
+   "pruefungen": [
+    {
+     "pfad": "treffer[0].nr",
+     "gleich": "01745"
+    },
+    {
+     "pfad": "treffer[1].nr",
+     "gleich": "01746"
+    }
+   ],
+   "sollantwort": "01745 (Früherkennungsuntersuchung auf Hautkrebs) und 01746 (Zuschlag zu 01732).",
+   "fundstelle": "EBM 1.7",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "S02",
+   "frage": "Welche Zuschläge gibt es im Zusammenhang mit Videosprechstunden?",
+   "kategorie": "Suche",
+   "zielgruppe": "Praxis",
+   "werkzeug": "ebm_suche",
+   "argumente": {
+    "text": "Videosprechstunde Zuschlag"
+   },
+   "pruefungen": [
+    {
+     "pfad": "treffer",
+     "min": 3
+    },
+    {
+     "enthaelt": "01450"
+    }
+   ],
+   "sollantwort": "Unter anderem 01450; die Suche liefert die Kandidaten, Einzelheiten je GOP prüfen.",
+   "fundstelle": "EBM",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "S03",
+   "frage": "Gibt es eine Pauschale für digitale Gesundheitsanwendungen?",
+   "kategorie": "Suche",
+   "zielgruppe": "Praxis",
+   "werkzeug": "ebm_suche",
+   "argumente": {
+    "text": "DiGA",
+    "bereich": "bmv"
+   },
+   "pruefungen": [
+    {
+     "pfad": "treffer[0].nr",
+     "gleich": "86700"
+    }
+   ],
+   "sollantwort": "Ja, 86700 nach Anlage 34 BMV-Ä (nicht im EBM).",
+   "fundstelle": "Anlage 34 BMV-Ä",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "A01",
+   "frage": "Was ist ein persönlicher Arzt-Patienten-Kontakt?",
+   "kategorie": "Bestimmung",
+   "zielgruppe": "Praxis",
+   "werkzeug": "ebm_abschnitt",
+   "argumente": {
+    "nr": "4.3.1"
+   },
+   "pruefungen": [
+    {
+     "enthaelt": "räumliche und zeitgleiche Anwesenheit"
+    }
+   ],
+   "sollantwort": "Räumliche und zeitgleiche Anwesenheit von Arzt und Patient und direkte Interaktion (Allgemeine Bestimmungen 4.3.1).",
+   "fundstelle": "EBM, Allgemeine Bestimmungen 4.3.1",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "A02",
+   "frage": "Was ist ein Behandlungsfall?",
+   "kategorie": "Bestimmung",
+   "zielgruppe": "Praxis",
+   "werkzeug": "ebm_abschnitt",
+   "argumente": {
+    "nr": "3.1"
+   },
+   "pruefungen": [
+    {
+     "pfad": "mehrdeutig",
+     "gleich": true
+    },
+    {
+     "enthaelt": "§ 21 Abs. 1 Bundesmantelvertrag-Ärzte"
+    }
+   ],
+   "sollantwort": "Nach § 21 Abs. 1 BMV-Ä die Behandlung desselben Versicherten durch dieselbe Arztpraxis in einem Kalendervierteljahr zu Lasten derselben Krankenkasse. Die Nummer 3.1 ist mehrdeutig (auch Präambel Kapitel 3).",
+   "fundstelle": "EBM, Allgemeine Bestimmungen 3.1",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "G01",
+   "frage": "Kann ein Hausarzt die 03000 abrechnen?",
+   "kategorie": "Arztgruppe",
+   "zielgruppe": "Praxis",
+   "werkzeug": "ebm_arztgruppe",
+   "argumente": {
+    "gruppe": "Hausarzt",
+    "gop": "03000"
+   },
+   "pruefungen": [
+    {
+     "pfad": "sichtbar",
+     "gleich": true
+    }
+   ],
+   "sollantwort": "Die 03000 erscheint im Arztgruppenfilter „Hausarzt“. Berechnungsfähigkeit im Einzelfall nach Präambel 3.1.",
+   "fundstelle": "Arztgruppenfilter der Online-Ansicht",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "G02",
+   "frage": "Erscheint die 03000 für Augenärzte?",
+   "kategorie": "Arztgruppe",
+   "zielgruppe": "Praxis",
+   "werkzeug": "ebm_arztgruppe",
+   "argumente": {
+    "gruppe": "Augenarzt",
+    "gop": "03000"
+   },
+   "pruefungen": [
+    {
+     "pfad": "sichtbar",
+     "gleich": false
+    }
+   ],
+   "sollantwort": "Nein, nicht im Filter „Augenarzt“.",
+   "fundstelle": "Arztgruppenfilter der Online-Ansicht",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "G03",
+   "frage": "Welche Arztgruppen kennt der Filter der Online-Ansicht?",
+   "kategorie": "Arztgruppe",
+   "zielgruppe": "KBV",
+   "werkzeug": "ebm_arztgruppe",
+   "argumente": {},
+   "pruefungen": [
+    {
+     "pfad": "gruppen",
+     "laenge": 46
+    }
+   ],
+   "sollantwort": "46 Arztgruppen.",
+   "fundstelle": "Arztgruppenfilter der Online-Ansicht",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "O01",
+   "frage": "Welche GOP gehört zum OPS 1-465.90?",
+   "kategorie": "OPS",
+   "zielgruppe": "Praxis",
+   "werkzeug": "ebm_ops",
+   "argumente": {
+    "code": "1-465.90"
+   },
+   "pruefungen": [
+    {
+     "pfad": "kategorie",
+     "gleich": "Q2"
+    },
+    {
+     "pfad": "zuordnung[0].gop",
+     "gleich": "31272"
+    },
+    {
+     "pfad": "p115b",
+     "gleich": "Ja"
+    }
+   ],
+   "sollantwort": "Kategorie Q2; ambulant 31272, stationär 36272; dazu Überwachung, Nachbehandlung und Anästhesie laut Anhang 2. §115b: ja.",
+   "fundstelle": "Anhang 2, OPS 1-465.90",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "O02",
+   "frage": "Welche Kategorie hat die Bohrlochtrepanation 5-010.2?",
+   "kategorie": "OPS",
+   "zielgruppe": "Praxis",
+   "werkzeug": "ebm_ops",
+   "argumente": {
+    "code": "5-010.2"
+   },
+   "pruefungen": [
+    {
+     "pfad": "kategorie",
+     "gleich": "P1"
+    },
+    {
+     "pfad": "zuordnung[0].gop",
+     "gleich": "31251"
+    }
+   ],
+   "sollantwort": "Kategorie P1, ambulant 31251.",
+   "fundstelle": "Anhang 2, OPS 5-010.2",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "O03",
+   "frage": "Welche OPS-Codes führen zur 31272?",
+   "kategorie": "OPS",
+   "zielgruppe": "KBV",
+   "werkzeug": "ebm_ops",
+   "argumente": {
+    "gop": "31272"
+   },
+   "pruefungen": [
+    {
+     "pfad": "ops",
+     "min": 2
+    },
+    {
+     "enthaelt": "1-465.90"
+    }
+   ],
+   "sollantwort": "Mehrere Codes, u. a. 1-465.90 und 1-465.91 (vollständige Liste über das Werkzeug).",
+   "fundstelle": "Anhang 2",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "V01",
+   "frage": "Was zahlt die DiGA-Pauschale 86700?",
+   "kategorie": "BMV-Ä",
+   "zielgruppe": "Praxis",
+   "werkzeug": "ebm_bmv",
+   "argumente": {
+    "nr_oder_begriff": "86700"
+   },
+   "pruefungen": [
+    {
+     "pfad": "treffer[0].betrag[0].euro",
+     "gleich": 8.15
+    },
+    {
+     "enthaelt": "PZN"
+    }
+   ],
+   "sollantwort": "8,15 €, einmal im Behandlungsfall, je DiGA höchstens zweimal im Krankheitsfall, Angabe der PZN (Anlage 34 BMV-Ä).",
+   "fundstelle": "Anlage 34 BMV-Ä, S. 9",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "V02",
+   "frage": "Wie hoch ist die Sozialpsychiatrie-Pauschale 2026?",
+   "kategorie": "BMV-Ä",
+   "zielgruppe": "Praxis",
+   "werkzeug": "ebm_bmv",
+   "argumente": {
+    "nr_oder_begriff": "88895"
+   },
+   "pruefungen": [
+    {
+     "pfad": "treffer[0].betrag[0].euro",
+     "gleich": 218.96
+    },
+    {
+     "pfad": "treffer[0].betrag[1].euro",
+     "gleich": 164.22
+    }
+   ],
+   "sollantwort": "218,96 € für den 1. bis 350. Behandlungsfall, 164,22 € ab dem 351. (Anlage 11 BMV-Ä).",
+   "fundstelle": "Anlage 11 BMV-Ä, S. 9",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "V03",
+   "frage": "Wie hoch ist die monatliche TI-Pauschale für eine Praxis mit zwei Ärzten?",
+   "kategorie": "BMV-Ä",
+   "zielgruppe": "Praxis",
+   "werkzeug": "ebm_bmv",
+   "argumente": {
+    "nr_oder_begriff": "TI-Pauschale"
+   },
+   "pruefungen": [
+    {
+     "pfad": "treffer[0].betrag[0].euro",
+     "gleich": 263.62
+    }
+   ],
+   "sollantwort": "263,62 € monatlich ab 01.01.2026 (bis 3 Ärzte/Psychotherapeuten), nach der Festlegung des BMG; Anlage 32 ist außer Kraft.",
+   "fundstelle": "Festlegung des BMG; KBV-Übersicht S. 1",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "V04",
+   "frage": "Was zahlt die Krankenkasse für eine kurärztliche Behandlung über 21 Tage?",
+   "kategorie": "BMV-Ä",
+   "zielgruppe": "Praxis",
+   "werkzeug": "ebm_bmv",
+   "argumente": {
+    "nr_oder_begriff": "21 Tage"
+   },
+   "pruefungen": [
+    {
+     "pfad": "treffer[0].betrag[0].euro",
+     "gleich": 60.26
+    }
+   ],
+   "sollantwort": "60,26 € (Kurarztvertrag, Anlage 25 BMV-Ä).",
+   "fundstelle": "Anlage 25 BMV-Ä, S. 14",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "V05",
+   "frage": "Was erhält ein Gutachter für ein Gutachten zur Kurzzeittherapie?",
+   "kategorie": "BMV-Ä",
+   "zielgruppe": "Praxis",
+   "werkzeug": "ebm_bmv",
+   "argumente": {
+    "nr_oder_begriff": "Gutachten Kurzzeittherapie"
+   },
+   "pruefungen": [
+    {
+     "pfad": "treffer[0].betrag[0].euro",
+     "gleich": 27.0
+    }
+   ],
+   "sollantwort": "27,00 € (Gutachtenhonorar-Vereinbarung).",
+   "fundstelle": "Gutachtenhonorar-Vereinbarung, S. 2",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "V06",
+   "frage": "Wie viel bringt die Onkologie-Kostenpauschale 86510?",
+   "kategorie": "BMV-Ä",
+   "zielgruppe": "Praxis",
+   "werkzeug": "ebm_bmv",
+   "argumente": {
+    "nr_oder_begriff": "86510"
+   },
+   "pruefungen": [
+    {
+     "pfad": "treffer[0].betrag",
+     "gleich": null
+    },
+    {
+     "enthaelt": "regional"
+    }
+   ],
+   "sollantwort": "Kein bundeseinheitlicher Betrag: Die Höhe legt jede KV fest (Anlage 7, Anhang 2 Teil B). Betrag bei der zuständigen KV erfragen.",
+   "fundstelle": "Anlage 7 BMV-Ä, S. 14, 18",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "V07",
+   "frage": "Gelten die eArztbrief-Pauschalen 86900/86901 noch?",
+   "kategorie": "BMV-Ä",
+   "zielgruppe": "KBV",
+   "werkzeug": "ebm_bmv",
+   "argumente": {
+    "nr_oder_begriff": "86900"
+   },
+   "pruefungen": [
+    {
+     "pfad": "treffer[0].status",
+     "gleich": "außer Kraft"
+    }
+   ],
+   "sollantwort": "Sie standen in Anlage 32, die seit 30.06.2023 außer Kraft ist. Ob sie anderswo fortgelten, ist im Katalog nicht geprüft.",
+   "fundstelle": "Anlage 32 BMV-Ä, S. 29",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "X01",
+   "frage": "Was ist die GOP 99999?",
+   "kategorie": "Nicht im Katalog",
+   "zielgruppe": "Praxis",
+   "werkzeug": "ebm_gop",
+   "argumente": {
+    "nr": "99999"
+   },
+   "pruefungen": [
+    {
+     "pfad": "gefunden",
+     "gleich": false
+    }
+   ],
+   "sollantwort": "Steht nicht im EBM des Quartals.",
+   "fundstelle": "—",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "X02",
+   "frage": "Ist 86510 eine EBM-Ziffer?",
+   "kategorie": "Nicht im Katalog",
+   "zielgruppe": "Praxis",
+   "werkzeug": "ebm_gop",
+   "argumente": {
+    "nr": "86510"
+   },
+   "pruefungen": [
+    {
+     "pfad": "gefunden",
+     "gleich": false
+    },
+    {
+     "enthaelt": "Pauschale aus dem BMV-Ä"
+    }
+   ],
+   "sollantwort": "Nein, eine Kostenpauschale der Onkologie-Vereinbarung (Anlage 7 BMV-Ä).",
+   "fundstelle": "Anlage 7 BMV-Ä",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "X03",
+   "frage": "Welche GOP gehört zum OPS 9-999?",
+   "kategorie": "Nicht im Katalog",
+   "zielgruppe": "Praxis",
+   "werkzeug": "ebm_ops",
+   "argumente": {
+    "code": "9-999"
+   },
+   "pruefungen": [
+    {
+     "pfad": "gefunden",
+     "gleich": false
+    }
+   ],
+   "sollantwort": "Der Code steht nicht im Anhang 2.",
+   "fundstelle": "—",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "K01",
+   "frage": "Welche Stellen im EBM erwähnen die 01100?",
+   "kategorie": "Folgenabschätzung",
+   "zielgruppe": "KBV",
+   "werkzeug": "ebm_verweise",
+   "argumente": {
+    "nr": "01100"
+   },
+   "pruefungen": [
+    {
+     "pfad": "erwaehnt_in",
+     "min": 60
+    }
+   ],
+   "sollantwort": "67 Knoten (Stand Abzug 2026/Q4), u. a. Präambeln und Notfall- und Besuchsleistungen.",
+   "fundstelle": "EBM, Rückverweise",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "K02",
+   "frage": "Wo nennt der EBM die Onkologie-Pauschale 86510?",
+   "kategorie": "Folgenabschätzung",
+   "zielgruppe": "KBV",
+   "werkzeug": "ebm_bmv",
+   "argumente": {
+    "nr_oder_begriff": "86510"
+   },
+   "pruefungen": [
+    {
+     "pfad": "treffer[0].im_ebm_genannt_in",
+     "min": 8
+    },
+    {
+     "enthaelt": "07345"
+    }
+   ],
+   "sollantwort": "In den Ausschlüssen von 07345, 08345, 09345, 10345, 13435, 13675, 15345 und 26315 — dort nur als Text, ohne Link.",
+   "fundstelle": "EBM, Ausschlüsse der Onkologie-Zusatzpauschalen",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "K03",
+   "frage": "Wie viele Knoten erwähnen die 03000?",
+   "kategorie": "Folgenabschätzung",
+   "zielgruppe": "KBV",
+   "werkzeug": "ebm_verweise",
+   "argumente": {
+    "nr": "03000"
+   },
+   "pruefungen": [
+    {
+     "pfad": "erwaehnt_in",
+     "min": 30
+    }
+   ],
+   "sollantwort": "32 Knoten (Stand Abzug 2026/Q4).",
+   "fundstelle": "EBM, Rückverweise",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "K04",
+   "frage": "Welche Pauschalen außerhalb des EBM vereinbart der BMV-Ä?",
+   "kategorie": "BMV-Ä",
+   "zielgruppe": "KBV",
+   "werkzeug": "ebm_bmv",
+   "argumente": {},
+   "pruefungen": [
+    {
+     "pfad": "anlagen",
+     "laenge": 7
+    }
+   ],
+   "sollantwort": "Sieben Regelungen: Onkologie (Anlage 7), Sozialpsychiatrie (11), DiGA (34), Kurarzt (25), Gutachtenhonorare (zu Anlage 1), TI-Pauschale (Festlegung des BMG) und die außer Kraft getretenen eArztbrief-Pauschalen (32).",
+   "fundstelle": "Auswertung der Anlagen",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  }
+ ]
+}

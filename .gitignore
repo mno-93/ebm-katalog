@@ -1,0 +1,8 @@
+ausgabe/
+__pycache__/
+*.pyc
+.DS_Store
+.vertraulich-muster
+# ungepackte Rohdaten während eines Abzugs; eingecheckt wird nur *.jsonl.gz (ek.py packen)
+rohdaten/**/*.jsonl
+rohdaten/**/*.fertig

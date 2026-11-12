@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "ebm-katalog": {
+      "command": "python3",
+      "args": ["-I", "werkzeuge/ek.py", "mcp"]
+    }
+  }
+}

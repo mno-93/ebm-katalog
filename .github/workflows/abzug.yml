@@ -1,0 +1,46 @@
+name: Abzug der Online-Ansicht
+
+# Nur von Hand starten, einmal je Quartal. Der Abzug fragt ebm.kbv.de Knoten für Knoten ab
+# (eine Anfrage nach der anderen, 0,3 s Pause) und dauert mehrere Stunden.
+# Ergebnis ist ein Artefakt mit den gepackten Rohdaten; eingecheckt wird von Hand nach Durchsicht.
+on:
+  workflow_dispatch:
+    inputs:
+      teile:
+        description: 'Welche Ansichten (ebm, ops, arztgruppen, durch Leerzeichen getrennt)'
+        default: 'ebm ops arztgruppen'
+        required: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: abzug
+  cancel-in-progress: false
+
+jobs:
+  abzug:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v7
+      - name: EBM-Ansicht
+        if: contains(inputs.teile, 'ebm')
+        run: python3 -I werkzeuge/ek.py abzug
+      - name: Anhang-2-Ansicht (OPS)
+        if: contains(inputs.teile, 'ops')
+        run: python3 -I werkzeuge/ek.py abzug --ansicht ops
+      - name: Arztgruppenfilter
+        if: contains(inputs.teile, 'arztgruppen')
+        run: python3 -I werkzeuge/ek.py abzug --arztgruppen
+      - name: Packen
+        run: python3 -I werkzeuge/ek.py packen
+      - name: Export und Strukturprüfung
+        run: |
+          python3 -I werkzeuge/ek.py exportieren
+          python3 -I werkzeuge/ek.py pruefen
+      - uses: actions/upload-artifact@v7
+        with:
+          name: rohdaten
+          path: rohdaten/
+          if-no-files-found: error
