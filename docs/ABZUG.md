@@ -35,4 +35,4 @@ Das Quartal ist das in der Online-Ansicht voreingestellte. Für einen erneuten A
 
 ## BMV-Ä
 
-`ek.py bmv` lädt die in `quellen/bmv/liste.tsv` verzeichneten PDF nach `ausgabe/bmv/pdf/` und legt den Text mit Seitenmarken in `ausgabe/bmv/text/` ab. Die Pauschalen in `quellen/bmv/bmv_pauschalen.json` sind von Hand aus diesen Texten erfasst, jeweils mit Datei und Seite.
+`ek.py bmv` lädt die in `quellen/bmv/liste.tsv` verzeichneten PDF nach `ausgabe/bmv/pdf/` und legt den Text mit Seitenmarken in `ausgabe/bmv/text/` ab. Die Pauschalen in `quellen/bmv/bmv_pauschalen.json` sind von Hand aus diesen Texten erfasst, jeweils mit Datei und Seite. Dieselben Texte durchsucht das Werkzeug `bmv_text` (Gliederung nach Paragraf, Anhang, Abschnitt und Seite); sie werden nicht eingecheckt, die CI lädt sie bei geänderter Dokumentliste neu und hält sie im Zwischenspeicher.

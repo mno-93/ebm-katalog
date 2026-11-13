@@ -313,7 +313,15 @@ function renderBmvPauschale(p){
     <div class="gh"><span class="code bmv">${esc(p.nr || "ohne Nr.")}</span><h2>${esc(p.titel)}</h2></div>
     <p style="margin:10px 0 0;display:flex;gap:6px;flex-wrap:wrap"><span class="tag">Außerhalb des EBM</span>${a.status ? `<span class="tag warn">${esc(a.status)}</span>` : ""}${p.nr ? "" : `<span class="tag warn">keine Abrechnungsnummer im Vertrag</span>`}</p>
     <section class="b"><h3>Betrag</h3>${betrag}</section>
+    ${p.leistungsinhalt ? `<section class="b"><h3>Leistungsinhalt</h3><ul class="txt" style="margin:0">${p.leistungsinhalt.map(x => `<li>${esc(x)}</li>`).join("")}</ul></section>` : ""}
     ${p.abrechnung ? `<section class="b"><h3>Abrechnungsbestimmung</h3><p class="txt" style="margin:0">${esc(p.abrechnung)}</p></section>` : ""}
+    ${p.geltung ? `<section class="b"><h3>Geltungsbereich</h3><div class="tw"><table><tbody>
+      ${p.geltung.nur_fuer_diga ? `<tr><td>Nur für die DiGA</td><td>${p.geltung.nur_fuer_diga.map(esc).join(", ")}${p.geltung.nur_fuer_diga_fundstelle ? ` <span class="note">(${esc(p.geltung.nur_fuer_diga_fundstelle)})</span>` : ""}</td></tr>` : ""}
+      ${p.geltung.voraussetzung ? `<tr><td>Voraussetzung</td><td>${esc(p.geltung.voraussetzung)}</td></tr>` : ""}
+      ${p.geltung.berechtigt ? `<tr><td>Berechtigt</td><td>${p.geltung.berechtigt.map(esc).join("; ")}${p.geltung.berechtigt_fundstelle ? ` <span class="note">(${esc(p.geltung.berechtigt_fundstelle)})</span>` : ""}</td></tr>` : ""}
+      ${p.geltung.verguetung ? `<tr><td>Vergütung</td><td>${esc(p.geltung.verguetung)}</td></tr>` : ""}
+      ${p.geltung.mehrere_diga ? `<tr><td>Mehrere DiGA</td><td>${esc(p.geltung.mehrere_diga)}</td></tr>` : ""}
+    </tbody></table></div></section>` : ""}
     ${aus}
     ${ref.length ? `<section class="b"><h3>Im EBM genannt in ${ref.length} Knoten</h3>${chipList(ref, chipK)}<p class="note">Die EBM-Online-Ansicht nennt diese Nummer nur als Text, ohne Link.</p></section>` : ""}
     <section class="b"><h3>Fundstelle</h3><p class="txt" style="margin:0">Anlage ${esc(a.anlage)} BMV-Ä, ${esc(a.titel)}${a.fassung ? `, Fassung ${esc(a.fassung)}` : ""}. ${p.fundstelle.url ? `<a href="${esc(p.fundstelle.url)}#page=${p.fundstelle.seite}" target="_blank" rel="noopener">${esc(p.fundstelle.datei)}, Seite ${p.fundstelle.seite} ↗</a>` : esc(p.fundstelle.datei + ", Seite " + p.fundstelle.seite)}</p><p class="note">Von Hand aus dem PDF erfasst, Wortlaut gekürzt. Verbindlich ist die Vereinbarung.</p></section>

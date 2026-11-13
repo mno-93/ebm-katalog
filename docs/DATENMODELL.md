@@ -39,7 +39,7 @@ Objekt je Knotenkennung:
 
 ## bmv.json — Pauschalen außerhalb des EBM
 
-`anlagen[]` (`id`, `anlage`, `titel`, `fassung`, `hoehe`, `status`, `pauschalen[]`, `urls[]`), `pauschalen[]` (`id`, `nr` oder Ersatzkennung, `titel`, `anlage`, `abrechnung`, `betrag[]` mit `bedingung` und `euro`, `ausschluesse[]`, `fundstelle` mit `datei`, `seite`, `url`), `ohne_eigene_pauschale[]`, `ebm_verweise{"bmv:<Nr>"|"anl:<Nr>": [Knotenkennungen]}`.
+`anlagen[]` (`id`, `anlage`, `titel`, `fassung`, `hoehe`, `status`, `pauschalen[]`, `urls[]`), `pauschalen[]` (`id`, `nr` oder Ersatzkennung, `titel`, `anlage`, `abrechnung`, `betrag[]` mit `bedingung` und `euro`, `ausschluesse[]`, `fundstelle` mit `datei`, `seite`, `url`, optional `leistungsinhalt[]` und `geltung` mit `nur_fuer_diga[]`, `voraussetzung`, `berechtigt[]`, `verguetung` samt Fundstellen), `ohne_eigene_pauschale[]`, `nicht_im_katalog[]` (Themen, die der Katalog bewusst nicht enthält, mit Stichwörtern, Hinweis und Fundstelle), `ebm_verweise{"bmv:<Nr>"|"anl:<Nr>": [Knotenkennungen]}`.
 
 ## Weitere Ausgaben
 

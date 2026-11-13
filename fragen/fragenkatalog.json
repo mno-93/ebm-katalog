@@ -1108,6 +1108,205 @@
    "sollantwort": "Ja, u. a. die Vorhaltepauschale 03040.",
    "fundstelle": "EBM, GOP 03040",
    "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "S13",
+   "frage": "Welche Bedingung gilt für die 01474?",
+   "kategorie": "Schnittstelle",
+   "zielgruppe": "KI-Assistent",
+   "werkzeug": "ebm_gop",
+   "argumente": {
+    "nr": "01474",
+    "umfang": "kompakt"
+   },
+   "pruefungen": [
+    {
+     "enthaelt": "Genehmigung zur Ausführung und Abrechnung von Verhaltenstherapie"
+    }
+   ],
+   "sollantwort": "Nur mit Genehmigung für Verhaltenstherapie (Präambel 1.4).",
+   "fundstelle": "EBM, Präambel 1.4",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "S14",
+   "frage": "Gilt die 86700 für Oviva Direkt Bluthochdruck?",
+   "kategorie": "Schnittstelle",
+   "zielgruppe": "KI-Assistent",
+   "werkzeug": "ebm_bmv",
+   "argumente": {
+    "nr_oder_begriff": "86700"
+   },
+   "pruefungen": [
+    {
+     "enthaelt": "Oviva Direkt Bluthochdruck"
+    },
+    {
+     "enthaelt": "Fachärzte für Innere Medizin ohne Schwerpunkt"
+    }
+   ],
+   "sollantwort": "Ja; nur für companion shoulder, Oviva Direkt Bluthochdruck und INKA.",
+   "fundstelle": "Anlage 34 BMV-Ä, Anhang 1, S. 7–9",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "S15",
+   "frage": "Welche Pauschale gibt es für Oviva Direkt Bluthochdruck?",
+   "kategorie": "Schnittstelle",
+   "zielgruppe": "KI-Assistent",
+   "werkzeug": "ebm_suche",
+   "argumente": {
+    "text": "Oviva Direkt Bluthochdruck"
+   },
+   "pruefungen": [
+    {
+     "pfad": "treffer[0].nr",
+     "gleich": "86700"
+    }
+   ],
+   "sollantwort": "86700 aus der DiGA-Vereinbarung.",
+   "fundstelle": "Anlage 34 BMV-Ä",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "S16",
+   "frage": "Wer hat Anspruch auf einen Medikationsplan?",
+   "kategorie": "Schnittstelle",
+   "zielgruppe": "KI-Assistent",
+   "werkzeug": "bmv_text",
+   "argumente": {
+    "paragraf": "29a"
+   },
+   "pruefungen": [
+    {
+     "enthaelt": "mindestens drei zu Lasten der gesetzlichen Krankenversicherung"
+    },
+    {
+     "pfad": "seite",
+     "gleich": 45
+    }
+   ],
+   "sollantwort": "Versicherte mit dauerhaft gleichzeitig mindestens drei systemisch wirkenden Arzneimitteln, auf Verlangen.",
+   "fundstelle": "§ 29a BMV-Ä, S. 45",
+   "status": "Entwurf – fachlich nicht freigegeben",
+   "benoetigt": "bmv_text"
+  },
+  {
+   "id": "S17",
+   "frage": "Wo nennt der BMV-Ä Oviva Direkt Bluthochdruck?",
+   "kategorie": "Schnittstelle",
+   "zielgruppe": "KI-Assistent",
+   "werkzeug": "bmv_text",
+   "argumente": {
+    "text": "Oviva Direkt Bluthochdruck"
+   },
+   "pruefungen": [
+    {
+     "enthaelt": "Abschnitt 1.1"
+    }
+   ],
+   "sollantwort": "DiGA-Vereinbarung, Anhang 1 Abschnitt 1.1.",
+   "fundstelle": "Anlage 34 BMV-Ä, S. 7",
+   "status": "Entwurf – fachlich nicht freigegeben",
+   "benoetigt": "bmv_text"
+  },
+  {
+   "id": "S18",
+   "frage": "Was ist der Krankheitsfall?",
+   "kategorie": "Schnittstelle",
+   "zielgruppe": "KI-Assistent",
+   "werkzeug": "ebm_begriff",
+   "argumente": {
+    "begriff": "Krankheitsfall"
+   },
+   "pruefungen": [
+    {
+     "enthaelt": "drei nachfolgenden Kalendervierteljahre"
+    }
+   ],
+   "sollantwort": "Aktuelles und die drei nachfolgenden Kalendervierteljahre.",
+   "fundstelle": "EBM, Allgemeine Bestimmungen 3.2",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "S19",
+   "frage": "Was bekommt die Praxis für eine Reiseimpfung?",
+   "kategorie": "Schnittstelle",
+   "zielgruppe": "KI-Assistent",
+   "werkzeug": "ebm_suche",
+   "argumente": {
+    "text": "Reiseimpfung"
+   },
+   "pruefungen": [
+    {
+     "pfad": "anzahl",
+     "gleich": 0
+    },
+    {
+     "pfad": "ausserhalb_des_katalogs[0].thema",
+     "gleich": "Schutzimpfungen"
+    }
+   ],
+   "sollantwort": "Nicht im Katalog; Hinweis auf die Impfvereinbarung.",
+   "fundstelle": "Erläuterungen zur Vordruckvereinbarung, S. 41",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "S20",
+   "frage": "Welche Stellen nennen den Abschnitt der 03230?",
+   "kategorie": "Schnittstelle",
+   "zielgruppe": "KI-Assistent",
+   "werkzeug": "ebm_verweise",
+   "argumente": {
+    "nr": "03230"
+   },
+   "pruefungen": [
+    {
+     "pfad": "ueber_bereich",
+     "min": 1
+    }
+   ],
+   "sollantwort": "Knoten, die „Kapitel 3“ oder Abschnitte darüber nennen.",
+   "fundstelle": "EBM",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "S21",
+   "frage": "Spaltenköpfe von Anhang 3 bei gefilterter Abfrage?",
+   "kategorie": "Schnittstelle",
+   "zielgruppe": "KI-Assistent",
+   "werkzeug": "ebm_abschnitt",
+   "argumente": {
+    "nr": "3",
+    "filter": "03230"
+   },
+   "pruefungen": [
+    {
+     "enthaelt": "Prüfzeit in Minuten"
+    }
+   ],
+   "sollantwort": "Tabellenkopf wird mitgeliefert.",
+   "fundstelle": "EBM, Anhang 3",
+   "status": "Entwurf – fachlich nicht freigegeben"
+  },
+  {
+   "id": "S22",
+   "frage": "Wann ist die 01630 nach AB 4.3.1 nicht berechnungsfähig?",
+   "kategorie": "Schnittstelle",
+   "zielgruppe": "KI-Assistent",
+   "werkzeug": "ebm_gop",
+   "argumente": {
+    "nr": "01630",
+    "umfang": "kompakt"
+   },
+   "pruefungen": [
+    {
+     "enthaelt": "Finden im Behandlungsfall ausschließlich Arzt-Patienten-Kontakte im Rahmen einer Videosprechstunde"
+    }
+   ],
+   "sollantwort": "Wenn im Behandlungsfall ausschließlich Videosprechstunden stattfinden; die Bedingung steht als Einleitung des Listenpunkts.",
+   "fundstelle": "EBM, AB 4.3.1",
+   "status": "Entwurf – fachlich nicht freigegeben"
   }
  ]
 }

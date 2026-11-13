@@ -14,15 +14,17 @@ Im Repository liegt `.mcp.json`; Werkzeuge, die diese Datei lesen, binden den Se
 
 | Werkzeug | Wofür |
 |---|---|
-| `ebm_suche` | Volltext über EBM, Anhang 2 und BMV-Ä-Pauschalen; GOP-Treffer mit Punktzahl. Ohne Treffer wird mit hinterlegten Fachbegriffen erneut gesucht (`umformuliert_zu`, `auch_unter`), enthält keine GOP alle Wörter, kommen `teiltreffer` |
-| `ebm_gop` | eine oder mehrere GOP (Komma, höchstens 20): Bewertung mit Altersstufen, Merkmale, Leistungsinhalte, Abrechnungsbestimmung, Anmerkungen, Ausschlüsse, Arztgruppen, Zeiten aus Anhang 3, Zuschläge und Zusatzpauschalen, die die GOP erwähnen, Bezüge zum BMV-Ä; `umfang=kompakt` ohne Anmerkungen und Rückverweise; ohne Treffer `aehnlich` |
-| `ebm_abschnitt` | Präambeln, Allgemeine Bestimmungen, Kapitel- und Anhangtexte; mehrdeutige Nummern mit Pfad, eindeutig mit „Anhang 2.1“ oder „AB 4.3.1“. Lange Texte gekürzt, mit `filter` nur die Stellen rund um einen Begriff |
+| `ebm_suche` | Volltext über EBM, Anhang 2 und BMV-Ä-Pauschalen (auch deren DiGA-Listen); GOP-Treffer mit Punktzahl, Wortanfänge vor Wortteilen (`hinweis_wortteil`), Hinweise zu Themen außerhalb des Katalogs (`ausserhalb_des_katalogs`, z. B. Impfungen). Ohne Treffer wird mit hinterlegten Fachbegriffen erneut gesucht (`umformuliert_zu`, `auch_unter`), enthält keine GOP alle Wörter, kommen `teiltreffer` |
+| `ebm_gop` | eine oder mehrere GOP (Komma, höchstens 20): Bewertung mit Altersstufen, Merkmale, Leistungsinhalte, Abrechnungsbestimmung, Anmerkungen, Ausschlüsse, Arztgruppen, Zeiten aus Anhang 3, Zuschläge und Zusatzpauschalen, die die GOP erwähnen, Bedingungen aus Präambeln (`bedingungen_aus_praeambeln`, gleichlautende Sätze zusammengefasst), Bezüge zum BMV-Ä; `umfang=kompakt` ohne Anmerkungen und Rückverweise; ohne Treffer `aehnlich` |
+| `ebm_abschnitt` | Präambeln, Allgemeine Bestimmungen, Kapitel- und Anhangtexte; mehrdeutige Nummern mit Pfad, eindeutig mit „Anhang 2.1“ oder „AB 4.3.1“. Lange Texte gekürzt, mit `filter` nur die Sätze rund um einen Begriff (bei Tabellen mit `tabellenkopf`) |
 | `ebm_nebeneinander` | eingetragene Ausschlüsse, beide Richtungen, mit Bezug; Ausschlüsse ganzer Abschnitte aufgelöst (`ueber_abschnitt`); `b` als Liste für eine Sammelprüfung (höchstens 100) |
 | `ebm_arztgruppe` | Arztgruppenfilter: Gruppen (als Auswahlliste im Schema), Umfang, Sichtbarkeit einer GOP |
 | `ebm_ops` | Anhang 2: OPS → GOP und GOP → OPS, mit Felderklärung |
-| `ebm_bmv` | Pauschalen außerhalb des EBM mit Betrag oder „regional“ und Fundstelle; ohne Treffer Vorschläge und die Liste nicht erfasster Regelungen |
-| `ebm_verweise` | wer eine Nummer erwähnt und in welchen Anhangtabellen (2, 3) sie steht — für Folgenabschätzungen |
+| `ebm_bmv` | Pauschalen außerhalb des EBM mit Betrag oder „regional“, Leistungsinhalt, Geltungsbereich (z. B. DiGA-Liste und berechtigte Gruppen der 86700) und Fundstelle; ohne Treffer Vorschläge, nicht erfasste Regelungen und Hinweise zu Themen außerhalb des Katalogs |
+| `ebm_verweise` | wer eine Nummer erwähnt, in welchen Anhangtabellen (2, 3) sie steht und welche Knoten übergeordnete Abschnitte oder das Kapitel nennen (`ueber_bereich`) — für Folgenabschätzungen |
 | `ebm_felder` | Bedeutung der Felder; was die Online-Ansicht nicht erläutert, ist so gekennzeichnet |
+| `ebm_begriff` | Begriffsbestimmung aus den Allgemeinen Bestimmungen (Behandlungsfall, Krankheitsfall, Behandlungstag …) |
+| `bmv_text` | Volltext des BMV-Ä und seiner 52 Anlagen und Begleitdokumente: Suche oder Paragraf (z. B. 29a), mit Dokument, Paragraf bzw. Abschnitt, Seite und Link. Braucht `ek.py bmv` |
 
 Jede Antwort enthält Belege (Quartal, Nummer, Knotenkennung, Pfad bzw. Anlage mit Seite) und den Hinweis „KI-gebaut und nicht amtlich“. Ohne Treffer sagt das Werkzeug das ausdrücklich. Die Fachbegriffe für die Suche stehen in `quellen/synonyme.json` (von Hand, nur Einträge, deren Zielbegriff im Katalog vorkommt).
 

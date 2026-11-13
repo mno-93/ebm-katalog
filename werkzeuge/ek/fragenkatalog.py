@@ -43,7 +43,12 @@ def main(argv=None):
     d = json.loads((WURZEL / "fragen" / "fragenkatalog.json").read_text(encoding="utf-8"))
     k = Katalog(argv[0] if argv else None)
     zeilen, fehler = [], 0
+    uebersprungen = 0
     for f in d["fragen"]:
+        if f.get("benoetigt") == "bmv_text" and not k.bmvtext.verfuegbar:
+            uebersprungen += 1
+            zeilen.append(f"| {f['id']} | ⏭ | {f['frage']} | Vertragstext nicht geladen (ek.py bmv) |")
+            continue
         try:
             erg = WERKZEUGE[f["werkzeug"]][2](k, f["argumente"])
             res = [pruefe(erg, p) for p in f["pruefungen"]]
@@ -69,10 +74,10 @@ def main(argv=None):
         zeilen.append(f"| {f['id']} | {'✅' if ok else '❌'} | Beispielantwort: {f['frage']} | {'; '.join(t for r, t in res if not r) or '—'} |")
         if not ok:
             print(f"❌ {f['id']} {f['frage']}: " + "; ".join(t for r, t in res if not r))
-    n = len(d["fragen"]) + len(bsp)
+    n = len(d["fragen"]) + len(bsp) - uebersprungen
     bericht = [f"# Fragenkatalog — Prüfbericht {k.quartal}", "", f"{n - fehler} von {n} Fragen bestanden (davon {len(bsp)} Beispielantworten).", "",
                d["hinweis"], "", "| ID | Ergebnis | Frage | Abweichung |", "|---|---|---|---|"] + zeilen
     AUS.mkdir(exist_ok=True)
     (AUS / "fragenkatalog-bericht.md").write_text("\n".join(bericht) + "\n", encoding="utf-8")
-    print(f"Fragenkatalog {k.quartal}: {n - fehler} von {n} bestanden (davon {len(bsp)} Beispielantworten)")
+    print(f"Fragenkatalog {k.quartal}: {n - fehler} von {n} bestanden (davon {len(bsp)} Beispielantworten)" + (f", {uebersprungen} übersprungen (Vertragstext nicht geladen)" if uebersprungen else ""))
     return 1 if fehler else 0

@@ -128,12 +128,14 @@ def bmv():
             ids.append(pid)
             pauschalen.append({"id": pid, "nr": p["nr"], "titel": p["titel"], "anlage": aid, "abrechnung": p.get("abrechnung"),
                                "betrag": p.get("betrag"), "ausschluesse": p.get("ausschluesse", []),
+                               "leistungsinhalt": p.get("leistungsinhalt"), "geltung": p.get("geltung"),
                                "fundstelle": {"datei": (fd := p.get("seite_datei") or a["datei"].split(";")[0].strip()), "seite": p.get("seite"), "url": urls.get(fd)}})
         anlagen.append({"id": aid, "anlage": a["anlage"], "titel": a["titel"], "datei": a["datei"], "fassung": a.get("fassung"),
                         "hoehe": a.get("verguetung_hoehe"), "status": a.get("status"), "pauschalen": ids,
                         "urls": [urls.get(x.strip()) for x in a["datei"].split(";") if urls.get(x.strip())]})
     return {"stand": src["stand"], "quelle": src["quelle"], "hinweis": src["hinweis"], "anlagen": anlagen,
-            "pauschalen": pauschalen, "ohne_eigene_pauschale": src["ohne_eigene_pauschale"]}
+            "pauschalen": pauschalen, "ohne_eigene_pauschale": src["ohne_eigene_pauschale"],
+            "nicht_im_katalog": src.get("nicht_im_katalog", [])}
 
 
 ANL = re.compile(r"(Anlage\s+(\d+[a-z]?(?:\.\d)?)\s+(?:zum\s+|des\s+)?(?:BMV-Ä|BMV|Bundesmantelvertrag(?:es|s)?(?:-Ärzte)?))")

@@ -4,7 +4,7 @@ from pathlib import Path
 
 WURZEL = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(WURZEL / "werkzeuge"))
-from ek import katalog, mcp  # noqa: E402
+from ek import bmvtext, katalog, mcp  # noqa: E402
 
 
 class Protokoll(unittest.TestCase):
@@ -79,6 +79,50 @@ class Hilfen(unittest.TestCase):
         st = katalog.auszuege(t, "03230", fenster=20)
         self.assertEqual(len(st), 2)
         self.assertTrue(all("03230" in s for s in st))
+
+
+class Regeln(unittest.TestCase):
+    def test_nennt_nummer_und_bereich(self):
+        n = katalog.Katalog._nennt
+        self.assertTrue(n("Die Gebührenordnungspositionen 01474 und 01479 können", "01474"))
+        self.assertTrue(n("die GOP 01470 bis 01483 sind", "01474"))
+        self.assertFalse(n("die GOP 014741 oder 01475", "01474"))
+        self.assertFalse(n("die GOP 03470 bis 03483", "01474"))
+
+    def test_saetze_ohne_abkuerzungsbruch(self):
+        s = list(katalog.Katalog._saetze("Von Vertragsärzten bzw. -psychotherapeuten berechnet. Weiter gilt Nr. 3 der Präambel. Neuer Satz."))
+        self.assertEqual(s[0], "Von Vertragsärzten bzw. -psychotherapeuten berechnet.")
+        self.assertEqual(len(s), 3)
+
+    def test_einleitung_bei_listenpunkt(self):
+        t = "Vorher.\nFinden nur Videokontakte statt, gilt:\n- erster Punkt\nZwischensatz.\n- Die GOP 01630 ist nicht berechnungsfähig."
+        self.assertEqual(katalog.einleitung(t, t.find("01630")), "Finden nur Videokontakte statt, gilt:")
+        self.assertIsNone(katalog.einleitung(t, t.find("Vorher")))
+
+    def test_tabellenkopf(self):
+        self.assertEqual(katalog.tabellenkopf("Text | GOP1) | Kurzlegende | Prüfzeit in Minuten | 01100 | x |"), "GOP1) | Kurzlegende | Prüfzeit in Minuten | 01100 | x")
+
+    def test_auszug_auf_satzgrenzen(self):
+        t = "Erster Satz ohne Treffer. " * 20 + "Hier steht 03230 im Satz. " + "Letzter Satz. " * 20
+        st = katalog.auszuege(t, "03230", fenster=40)
+        self.assertTrue(st[0].lstrip("…").startswith("Hier steht 03230"))
+
+
+class Vertragstext(unittest.TestCase):
+    def test_ueberschriften(self):
+        u = bmvtext._ueberschrift
+        self.assertEqual(u("§ 29a ", "Medikationsplan"), "§ 29a Medikationsplan")
+        self.assertEqual(u("§ 3 Abrechnung und Vergütung", ""), "§ 3 Abrechnung und Vergütung")
+        self.assertIsNone(u("§ 139e Absatz 1 SGB V aufgenommenen digitalen", ""))
+        self.assertIsNone(u("§ 1 Grundsätze ............................ 3", ""))
+        self.assertIsNone(u("§ 27 Abs. 1 Buchst. a))", ""))
+        self.assertEqual(u("Abschnitt 1.1: Digitale Gesundheitsanwendungen", ""), "Abschnitt 1.1: Digitale Gesundheitsanwendungen")
+        self.assertIsNone(u("Anlage 2a BMV-Ä Nr. 1.1.3 erfüllen. Dieser Barcode", ""))
+
+    def test_ohne_texte(self):
+        import tempfile, pathlib
+        b = bmvtext.BmvText(pathlib.Path(tempfile.mkdtemp()))
+        self.assertFalse(b.verfuegbar)
 
 
 class Klartext(unittest.TestCase):

@@ -31,7 +31,7 @@ Tests: `python3 -I -m unittest discover -s tests -v`
 
 ## Für KI-Assistenten
 
-Der MCP-Server (`ek.py mcp`, eingebunden über `.mcp.json`) gibt Assistenten neun Werkzeuge mit Belegen je Antwort, dazu Resources, Vorlagen und Completions; die [Antwortregeln](docs/ANTWORTREGELN.md) werden mitgeliefert. Für Systeme ohne MCP erzeugt `ek.py texte` Markdown je GOP und eine `llms.txt`. Ein [Fragenkatalog](fragen/fragenkatalog.json) prüft in der CI, ob die Werkzeuge die belegten Fakten liefern. [Beispielantworten](fragen/beispielantworten.json) zeigen auf der Katalogseite, wie ein Assistent damit Alltagsfragen beantworten könnte, mit Abfrageschritten und Einordnung. Einzelheiten: [docs/KI-NUTZUNG.md](docs/KI-NUTZUNG.md).
+Der MCP-Server (`ek.py mcp`, eingebunden über `.mcp.json`) gibt Assistenten elf Werkzeuge mit Belegen je Antwort, darunter die Volltextsuche im Vertragstext des BMV-Ä,, dazu Resources, Vorlagen und Completions; die [Antwortregeln](docs/ANTWORTREGELN.md) werden mitgeliefert. Für Systeme ohne MCP erzeugt `ek.py texte` Markdown je GOP und eine `llms.txt`. Ein [Fragenkatalog](fragen/fragenkatalog.json) prüft in der CI, ob die Werkzeuge die belegten Fakten liefern. [Beispielantworten](fragen/beispielantworten.json) zeigen auf der Katalogseite, wie ein Assistent damit Alltagsfragen beantworten könnte, mit Abfrageschritten und Einordnung. Einzelheiten: [docs/KI-NUTZUNG.md](docs/KI-NUTZUNG.md).
 
 ## Befehle
 
@@ -48,7 +48,7 @@ Der MCP-Server (`ek.py mcp`, eingebunden über `.mcp.json`) gibt Assistenten neu
 | `ek.py fragenkatalog` | Fragenkatalog und Abfrageschritte der Beispielantworten prüfen, Bericht nach `ausgabe/` |
 | `ek.py texte` | Markdown je GOP, Gesamttext, `llms.txt` nach `ausgabe/site/` |
 | `ek.py vertraulich` | eingecheckte Dateien auf vertrauliche Inhalte prüfen |
-| `ek.py bmv` | BMV-Ä und Anlagen laden, Text ziehen (Arbeitsgrundlage für `quellen/bmv/`; braucht `pypdf`) |
+| `ek.py bmv` | BMV-Ä und Anlagen laden, Text ziehen (Grundlage für `bmv_text` und `quellen/bmv/`; braucht `pypdf`) |
 | `ek.py pdf build\|gop\|search\|refs` | EBM aus dem amtlichen Quartals-PDF durchsuchen (Rückfallebene; braucht `pypdf`) |
 
 Alle Befehle mit `python3 -I werkzeuge/ek.py …` aufrufen.
@@ -79,5 +79,5 @@ Projektbezogene Muster für die Vertraulichkeitsprüfung stehen in der Repositor
 - Ein Quartal je Abzug; Quartalsvergleich und frühere Quartale sind nicht abgebildet.
 - Markup ist bereinigt (Klassen, Stile, Skripte entfernt), Texte und Tabellen sind unverändert.
 - Arztgruppen werden über den Pfad der Baumtitel zugeordnet; der gefilterte Baum liefert keine Knotenkennungen.
-- Die Pauschalen aus dem BMV-Ä sind von Hand erfasst und gekürzt. Anlage 3 (Qualitätssicherungsvereinbarungen), regionale Vereinbarungen und Selektivverträge fehlen.
+- Die Pauschalen aus dem BMV-Ä sind von Hand erfasst und gekürzt; den vollständigen Vertragstext erschließt `bmv_text`, sofern `ek.py bmv` gelaufen ist. Anlage 3 (Qualitätssicherungsvereinbarungen), regionale Vereinbarungen und Selektivverträge fehlen.
 - Verweise auf Knoten, die nicht im Baum des Quartals stehen, sind gekennzeichnet; sie lassen sich auch in der Online-Ansicht nicht öffnen.

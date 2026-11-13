@@ -1,579 +1,639 @@
 {
-  "stand": "2026-11-12",
-  "quelle": "https://www.kbv.de/infothek/rechtsquellen/bundesmantelvertrag",
-  "hinweis": "Von Hand aus den PDF der Anlagen erfasst, Wortlaut gekürzt. Fundstelle = Datei und PDF-Seite; Liste der Dokumente in quellen/bmv/liste.tsv. Mit KI-Unterstützung erfasst, nicht amtlich.",
-  "anlagen": [
+ "stand": "2026-11-12",
+ "quelle": "https://www.kbv.de/infothek/rechtsquellen/bundesmantelvertrag",
+ "hinweis": "Von Hand aus den PDF der Anlagen erfasst, Wortlaut gekürzt. Fundstelle = Datei und PDF-Seite; Liste der Dokumente in quellen/bmv/liste.tsv. Mit KI-Unterstützung erfasst, nicht amtlich. Felder „geltung“ und „leistungsinhalt“ mit Fundstelle, soweit erfasst.",
+ "anlagen": [
+  {
+   "anlage": "7",
+   "titel": "Onkologie-Vereinbarung",
+   "datei": "07_Onkologie.pdf",
+   "fassung": "28.04.2026, in Kraft 01.07.2026",
+   "verguetung_hoehe": "regional: Gebührenwerte je KV nach Anhang 2 Teil B (aus Abrechnungsdaten 2008 der früheren Kostenpauschalen 86500–86505)",
+   "pauschalen": [
     {
-      "anlage": "7",
-      "titel": "Onkologie-Vereinbarung",
-      "datei": "07_Onkologie.pdf",
-      "fassung": "28.04.2026, in Kraft 01.07.2026",
-      "verguetung_hoehe": "regional: Gebührenwerte je KV nach Anhang 2 Teil B (aus Abrechnungsdaten 2008 der früheren Kostenpauschalen 86500–86505)",
-      "pauschalen": [
-        {
-          "nr": "86510",
-          "titel": "Behandlung florider Hämoblastosen entsprechend § 1 Abs. 2 d und e",
-          "abrechnung": "einmal je Behandlungsfall",
-          "betrag": null,
-          "ausschluesse": [
-            {
-              "bezug": "im Behandlungsfall",
-              "nr": [
-                "07345",
-                "08345",
-                "09345",
-                "10345",
-                "13435",
-                "13675",
-                "15345",
-                "26315",
-                "86512"
-              ]
-            }
-          ],
-          "seite": 14
-        },
-        {
-          "nr": "86512",
-          "titel": "Behandlung solider Tumore entsprechend § 1 Abs. 2 a–c unter tumorspezifischer Therapie oder Active Surveillance",
-          "abrechnung": "einmal je Behandlungsfall; nur unter Angabe der Therapieform",
-          "betrag": null,
-          "ausschluesse": [
-            {
-              "bezug": "im Behandlungsfall",
-              "nr": [
-                "07345",
-                "08345",
-                "09345",
-                "10345",
-                "13435",
-                "13675",
-                "15345",
-                "26315",
-                "86510"
-              ]
-            }
-          ],
-          "seite": 14
-        },
-        {
-          "nr": "86514",
-          "titel": "Zuschlag zu 86510 und 86512 für die intrakavitär applizierte medikamentöse Tumortherapie",
-          "abrechnung": "einmal je Behandlungsfall; nur unter Angabe der Medikamente",
-          "betrag": null,
-          "ausschluesse": [
-            {
-              "bezug": "im Behandlungsfall",
-              "nr": [
-                "07345",
-                "08345",
-                "09345",
-                "10345",
-                "13435",
-                "13675",
-                "15345",
-                "26315"
-              ]
-            }
-          ],
-          "seite": 14
-        },
-        {
-          "nr": "86516",
-          "titel": "Zuschlag zu 86510 und 86512 für die intravasal applizierte medikamentöse Tumortherapie",
-          "abrechnung": "einmal je Behandlungsfall; mindestens ein intravasales Tumortherapeutikum der ATC-Klasse L; Angabe der Medikamente",
-          "betrag": null,
-          "ausschluesse": [
-            {
-              "bezug": "im Behandlungsfall",
-              "nr": [
-                "07345",
-                "08345",
-                "09345",
-                "10345",
-                "13435",
-                "13675",
-                "15345",
-                "26315"
-              ]
-            }
-          ],
-          "seite": 15
-        },
-        {
-          "nr": "86518",
-          "titel": "Zuschlag zu 86510 und 86512 für die Palliativversorgung",
-          "abrechnung": "einmal je Behandlungsfall; obligat palliativmedizinisches Basisassessment und Symptomkontrolle",
-          "betrag": null,
-          "ausschluesse": [
-            {
-              "bezug": "im Behandlungsfall",
-              "nr": [
-                "86516",
-                "86520",
-                "86522"
-              ]
-            }
-          ],
-          "seite": 15
-        },
-        {
-          "nr": "86520",
-          "titel": "Zuschlag zu 86510 und 86512 für die orale medikamentöse Tumortherapie",
-          "abrechnung": "einmal je Behandlungsfall; Angabe der Medikamente",
-          "betrag": null,
-          "ausschluesse": [
-            {
-              "bezug": "im Behandlungsfall",
-              "nr": [
-                "86514",
-                "86516",
-                "86518",
-                "86522",
-                "07345",
-                "08345",
-                "09345",
-                "10345",
-                "13435",
-                "13675",
-                "15345",
-                "26315"
-              ]
-            }
-          ],
-          "seite": 15
-        },
-        {
-          "nr": "86522",
-          "titel": "Zuschlag zu 86510 und 86512 für die subkutan applizierte medikamentöse Tumortherapie",
-          "abrechnung": "einmal je Behandlungsfall; mindestens ein subkutanes Tumortherapeutikum der ATC-Klasse L01; Angabe der Medikamente",
-          "betrag": null,
-          "ausschluesse": [
-            {
-              "bezug": "im Behandlungsfall",
-              "nr": [
-                "86516",
-                "86518",
-                "86520",
-                "07345",
-                "08345",
-                "09345",
-                "10345",
-                "13435",
-                "13675",
-                "15345",
-                "26315"
-              ]
-            }
-          ],
-          "seite": 16
-        }
-      ]
+     "nr": "86510",
+     "titel": "Behandlung florider Hämoblastosen entsprechend § 1 Abs. 2 d und e",
+     "abrechnung": "einmal je Behandlungsfall",
+     "betrag": null,
+     "ausschluesse": [
+      {
+       "bezug": "im Behandlungsfall",
+       "nr": [
+        "07345",
+        "08345",
+        "09345",
+        "10345",
+        "13435",
+        "13675",
+        "15345",
+        "26315",
+        "86512"
+       ]
+      }
+     ],
+     "seite": 14
     },
     {
-      "anlage": "11",
-      "titel": "Sozialpsychiatrie-Vereinbarung",
-      "datei": "sozialpsychiatrie-vereinbarung.pdf",
-      "fassung": "12.11.2025, in Kraft 01.01.2026",
-      "verguetung_hoehe": "bundeseinheitlich, gestaffelt nach Fallzahl; außerhalb der morbiditätsbedingten Gesamtvergütung",
-      "pauschalen": [
-        {
-          "nr": "88895",
-          "titel": "Kostenpauschale für die sozialpsychiatrische Versorgung von Kindern und Jugendlichen",
-          "abrechnung": "je Behandlungsfall; zusätzlich zu EBM-Leistungen; Fallzahlgrenze 400 je Praxis und Quartal (modifizierbar)",
-          "betrag": [
-            {
-              "bedingung": "1. bis 350. Behandlungsfall, 2026",
-              "euro": 218.96
-            },
-            {
-              "bedingung": "ab dem 351. Behandlungsfall, 2026",
-              "euro": 164.22
-            }
-          ],
-          "seite": 9
-        }
-      ]
+     "nr": "86512",
+     "titel": "Behandlung solider Tumore entsprechend § 1 Abs. 2 a–c unter tumorspezifischer Therapie oder Active Surveillance",
+     "abrechnung": "einmal je Behandlungsfall; nur unter Angabe der Therapieform",
+     "betrag": null,
+     "ausschluesse": [
+      {
+       "bezug": "im Behandlungsfall",
+       "nr": [
+        "07345",
+        "08345",
+        "09345",
+        "10345",
+        "13435",
+        "13675",
+        "15345",
+        "26315",
+        "86510"
+       ]
+      }
+     ],
+     "seite": 14
     },
     {
-      "anlage": "34",
-      "titel": "DiGA-Vereinbarung",
-      "datei": "diga-vereinbarung.pdf",
-      "fassung": "05.03.2026, in Kraft 01.04.2026",
-      "verguetung_hoehe": "bundeseinheitlich",
-      "pauschalen": [
-        {
-          "nr": "86700",
-          "titel": "Pauschale für Leistungen im Zusammenhang mit der Anwendung einer digitalen Gesundheitsanwendung (DiGA)",
-          "abrechnung": "einmal im Behandlungsfall; je DiGA im Krankheitsfall höchstens zweimal; Angabe der PZN",
-          "betrag": [
-            {
-              "bedingung": null,
-              "euro": 8.15
-            }
-          ],
-          "seite": 9
-        }
-      ]
+     "nr": "86514",
+     "titel": "Zuschlag zu 86510 und 86512 für die intrakavitär applizierte medikamentöse Tumortherapie",
+     "abrechnung": "einmal je Behandlungsfall; nur unter Angabe der Medikamente",
+     "betrag": null,
+     "ausschluesse": [
+      {
+       "bezug": "im Behandlungsfall",
+       "nr": [
+        "07345",
+        "08345",
+        "09345",
+        "10345",
+        "13435",
+        "13675",
+        "15345",
+        "26315"
+       ]
+      }
+     ],
+     "seite": 14
     },
     {
-      "anlage": "25",
-      "titel": "Kurarztvertrag",
-      "datei": "25_Kurarztvertrag.pdf",
-      "fassung": "09.06.2026, in Kraft 01.07.2026",
-      "verguetung_hoehe": "bundeseinheitlich in Euro, Abrechnung über Kurarztschein; keine Abrechnungsnummern im Vertrag",
-      "pauschalen": [
-        {
-          "nr": null,
-          "titel": "Pauschale kurärztliche Behandlung, Dauer 21 Tage",
-          "betrag": [
-            {
-              "bedingung": null,
-              "euro": 60.26
-            }
-          ],
-          "seite": 14
-        },
-        {
-          "nr": null,
-          "titel": "Zuschlag bei Ambulanter Vorsorgeleistung bei bestehenden Krankheiten",
-          "betrag": [
-            {
-              "bedingung": null,
-              "euro": 11.69
-            }
-          ],
-          "seite": 14
-        },
-        {
-          "nr": null,
-          "titel": "Pauschale Ambulante Vorsorgeleistung für Kinder (drei bzw. vier Wochen)",
-          "betrag": [
-            {
-              "bedingung": null,
-              "euro": 42.39
-            }
-          ],
-          "seite": 14
-        },
-        {
-          "nr": null,
-          "titel": "Pauschale Kompaktkur",
-          "betrag": [
-            {
-              "bedingung": "einteilig",
-              "euro": 110.6
-            },
-            {
-              "bedingung": "erster Teil bei Refresher",
-              "euro": 73.74
-            },
-            {
-              "bedingung": "Refresher",
-              "euro": 36.86
-            },
-            {
-              "bedingung": "Zusatzaufwand Refresher",
-              "euro": 11.06
-            }
-          ],
-          "seite": 14
-        },
-        {
-          "nr": null,
-          "titel": "Erhöhung für themenzentrierte Gespräche (verhaltenspräventive Maßnahmen)",
-          "betrag": [
-            {
-              "bedingung": null,
-              "euro": 17.2
-            }
-          ],
-          "seite": 14
-        },
-        {
-          "nr": null,
-          "titel": "Pauschalvergütung sonstige Leistungen und interkurrente Erkrankungen",
-          "betrag": [
-            {
-              "bedingung": "Vorsorge zur Krankheitsverhütung, Kinder",
-              "euro": 3.77
-            },
-            {
-              "bedingung": "bei bestehenden Krankheiten, Kompaktform",
-              "euro": 5.79
-            }
-          ],
-          "seite": 14
-        },
-        {
-          "nr": null,
-          "titel": "Zuschlag bei Erbringung per Video",
-          "betrag": [
-            {
-              "bedingung": "einmalig",
-              "euro": 4.6
-            }
-          ],
-          "seite": 6
-        }
-      ]
+     "nr": "86516",
+     "titel": "Zuschlag zu 86510 und 86512 für die intravasal applizierte medikamentöse Tumortherapie",
+     "abrechnung": "einmal je Behandlungsfall; mindestens ein intravasales Tumortherapeutikum der ATC-Klasse L; Angabe der Medikamente",
+     "betrag": null,
+     "ausschluesse": [
+      {
+       "bezug": "im Behandlungsfall",
+       "nr": [
+        "07345",
+        "08345",
+        "09345",
+        "10345",
+        "13435",
+        "13675",
+        "15345",
+        "26315"
+       ]
+      }
+     ],
+     "seite": 15
     },
     {
-      "anlage": "1 (Gutachtenhonorar)",
-      "titel": "Gutachtenhonorar-Vereinbarung zur Psychotherapie-Vereinbarung",
-      "datei": "Gutachtenhonorar-Vereinbarung.pdf",
-      "fassung": "16.05.2019, in Kraft 01.07.2019",
-      "verguetung_hoehe": "bundeseinheitlich; Honorar der Gutachter, von den Krankenkassen gezahlt",
-      "pauschalen": [
-        {
-          "nr": null,
-          "titel": "Gutachten Kurzzeittherapie",
-          "betrag": [
-            {
-              "bedingung": null,
-              "euro": 27.0
-            }
-          ],
-          "seite": 2
-        },
-        {
-          "nr": null,
-          "titel": "Gutachten Langzeittherapie",
-          "betrag": [
-            {
-              "bedingung": null,
-              "euro": 50.0
-            }
-          ],
-          "seite": 2
-        },
-        {
-          "nr": null,
-          "titel": "Zweitgutachten Kurzzeittherapie",
-          "betrag": [
-            {
-              "bedingung": null,
-              "euro": 45.0
-            }
-          ],
-          "seite": 2
-        },
-        {
-          "nr": null,
-          "titel": "Zweitgutachten Langzeittherapie",
-          "betrag": [
-            {
-              "bedingung": null,
-              "euro": 85.0
-            }
-          ],
-          "seite": 2
-        }
-      ]
+     "nr": "86518",
+     "titel": "Zuschlag zu 86510 und 86512 für die Palliativversorgung",
+     "abrechnung": "einmal je Behandlungsfall; obligat palliativmedizinisches Basisassessment und Symptomkontrolle",
+     "betrag": null,
+     "ausschluesse": [
+      {
+       "bezug": "im Behandlungsfall",
+       "nr": [
+        "86516",
+        "86520",
+        "86522"
+       ]
+      }
+     ],
+     "seite": 15
     },
     {
-      "anlage": "32 (außer Kraft) / Festlegung des BMG",
-      "titel": "TI-Pauschale nach Festlegung des BMG vom 01.09.2023",
-      "datei": "2023-09-01_Festlegung_Telematik-Infrastruktur.pdf; ti-pauschale-entwicklung.pdf",
-      "fassung": "Festlegung gilt seit 01.07.2023; Anlage 32 gültig bis 30.06.2023",
-      "verguetung_hoehe": "bundeseinheitlich, monatlich je Praxis nach Zahl der Ärzte/Psychotherapeuten; jährliche Anpassung mit dem Orientierungswert (§ 10 Abs. 2 Festlegung)",
-      "pauschalen": [
-        {
-          "nr": null,
-          "titel": "Monatliche TI-Pauschale (Festlegung § 3 Abs. 3, Tabelle 3)",
-          "abrechnung": "monatlich je Praxis, Nachweis gegenüber der KV",
-          "betrag": [
-            {
-              "bedingung": "bis 3 Ärzte/Psychotherapeuten, ab 01.01.2026",
-              "euro": 263.62
-            },
-            {
-              "bedingung": "4 bis 6, ab 01.01.2026",
-              "euro": 313.52
-            },
-            {
-              "bedingung": "7 bis 9, ab 01.01.2026",
-              "euro": 359.1
-            },
-            {
-              "bedingung": "je weitere bis zu 3 Ärzte, ab 01.01.2026",
-              "euro": 31.7
-            }
-          ],
-          "seite": 1,
-          "seite_datei": "ti-pauschale-entwicklung.pdf"
-        },
-        {
-          "nr": null,
-          "titel": "Reduzierte monatliche TI-Pauschale bei Fehlen einer Anwendung (Tabelle 4)",
-          "abrechnung": "monatlich je Praxis",
-          "betrag": [
-            {
-              "bedingung": "bis 3, ab 01.01.2026",
-              "euro": 131.81
-            },
-            {
-              "bedingung": "4 bis 6, ab 01.01.2026",
-              "euro": 156.75
-            },
-            {
-              "bedingung": "7 bis 9, ab 01.01.2026",
-              "euro": 179.55
-            },
-            {
-              "bedingung": "je weitere bis zu 3, ab 01.01.2026",
-              "euro": 15.85
-            }
-          ],
-          "seite": 1,
-          "seite_datei": "ti-pauschale-entwicklung.pdf"
-        }
-      ]
+     "nr": "86520",
+     "titel": "Zuschlag zu 86510 und 86512 für die orale medikamentöse Tumortherapie",
+     "abrechnung": "einmal je Behandlungsfall; Angabe der Medikamente",
+     "betrag": null,
+     "ausschluesse": [
+      {
+       "bezug": "im Behandlungsfall",
+       "nr": [
+        "86514",
+        "86516",
+        "86518",
+        "86522",
+        "07345",
+        "08345",
+        "09345",
+        "10345",
+        "13435",
+        "13675",
+        "15345",
+        "26315"
+       ]
+      }
+     ],
+     "seite": 15
     },
     {
-      "anlage": "32 (außer Kraft)",
-      "titel": "eArztbrief-Pauschalen der TI-Finanzierungsvereinbarung",
-      "datei": "Anlage_32_TI-Vereinbarung.pdf",
-      "fassung": "26.08.2022, gültig bis 30.06.2023",
-      "verguetung_hoehe": "historisch; ob und wo die Pauschalen 86900/86901 heute geregelt sind, ist nicht geprüft",
-      "status": "außer Kraft",
-      "pauschalen": [
-        {
-          "nr": "86900",
-          "titel": "eArztbrief-Versandpauschale, je versendeten eArztbrief",
-          "betrag": [
-            {
-              "bedingung": null,
-              "euro": 0.28
-            }
-          ],
-          "seite": 29
-        },
-        {
-          "nr": "86901",
-          "titel": "eArztbrief-Empfangspauschale, je empfangenen eArztbrief",
-          "betrag": [
-            {
-              "bedingung": null,
-              "euro": 0.27
-            }
-          ],
-          "abrechnung": "gemeinsamer Höchstwert 86900 und 86901: 23,40 Euro je Arzt und Quartal",
-          "seite": 29
-        }
-      ]
+     "nr": "86522",
+     "titel": "Zuschlag zu 86510 und 86512 für die subkutan applizierte medikamentöse Tumortherapie",
+     "abrechnung": "einmal je Behandlungsfall; mindestens ein subkutanes Tumortherapeutikum der ATC-Klasse L01; Angabe der Medikamente",
+     "betrag": null,
+     "ausschluesse": [
+      {
+       "bezug": "im Behandlungsfall",
+       "nr": [
+        "86516",
+        "86518",
+        "86520",
+        "07345",
+        "08345",
+        "09345",
+        "10345",
+        "13435",
+        "13675",
+        "15345",
+        "26315"
+       ]
+      }
+     ],
+     "seite": 16
     }
-  ],
-  "ohne_eigene_pauschale": [
+   ]
+  },
+  {
+   "anlage": "11",
+   "titel": "Sozialpsychiatrie-Vereinbarung",
+   "datei": "sozialpsychiatrie-vereinbarung.pdf",
+   "fassung": "12.11.2025, in Kraft 01.01.2026",
+   "verguetung_hoehe": "bundeseinheitlich, gestaffelt nach Fallzahl; außerhalb der morbiditätsbedingten Gesamtvergütung",
+   "pauschalen": [
     {
-      "anlage": "1",
-      "titel": "Psychotherapie-Vereinbarung",
-      "befund": "Verweist auf EBM-GOP"
-    },
-    {
-      "anlage": "2, 2a, 2b",
-      "titel": "Vordrucke",
-      "befund": "Mustersammlung nennt EBM-Positionen (z. B. 01425, 01426, 01610)"
-    },
-    {
-      "anlage": "3",
-      "titel": "Qualitätssicherungsvereinbarungen",
-      "befund": "nicht gesichtet, eigene Seite mit zahlreichen Vereinbarungen"
-    },
-    {
-      "anlage": "4, 4a, 4b",
-      "titel": "Krankenversichertenkarte, eGK, Authentifizierung Fernbehandlung",
-      "befund": "keine Vergütung"
-    },
-    {
-      "anlage": "5",
-      "titel": "Hausärztliche Versorgung",
-      "befund": "§ 8 sieht eine hausärztliche Grundvergütung vor, deren Bewertung der Bewertungsausschuss festlegt; keine eigene Pauschale im Vertrag"
-    },
-    {
-      "anlage": "6",
-      "titel": "Datenaustausch",
-      "befund": "keine Vergütung"
-    },
-    {
-      "anlage": "8, 24",
-      "titel": "Delegation",
-      "befund": "keine Vergütungsregelung im Text; EBM verweist auf Anlage 8 (u. a. 03062, 03063, 38200ff) und Anlage 24 (03060)"
-    },
-    {
-      "anlage": "9.1",
-      "titel": "Dialyse",
-      "befund": "Sachkostenpauschalen im EBM Kapitel 40; regional abweichende Höhe vereinbar (S. 32)"
-    },
-    {
-      "anlage": "9.2",
-      "titel": "Mammographie-Screening",
-      "befund": "keine Pauschale im Text; EBM verweist auf Anlage 9.2 (Abschnitt 1.7.3, 34.8)"
-    },
-    {
-      "anlage": "14, 16, 21",
-      "titel": "Wohnortprinzip",
-      "befund": "Finanzflüsse zwischen KVen, keine Leistungspositionen"
-    },
-    {
-      "anlage": "17",
-      "titel": "Anerkennung regionaler Sondervertragsregelungen",
-      "befund": "regional, nicht bundeseinheitlich"
-    },
-    {
-      "anlage": "19",
-      "titel": "Finanzierung G-BA, IQTiG, IQWiG",
-      "befund": "Systemzuschlag je Fall zulasten der Krankenkassen, keine ärztliche Leistungsposition"
-    },
-    {
-      "anlage": "20",
-      "titel": "Europäische Krankenversicherungskarte",
-      "befund": "keine Vergütung"
-    },
-    {
-      "anlage": "23, 26, 29",
-      "titel": "Anforderungskataloge Verordnungssoftware, DiGA, Heilmittel",
-      "befund": "keine Vergütung"
-    },
-    {
-      "anlage": "27",
-      "titel": "Versorgung in Pflegeheimen",
-      "befund": "§ 7 regelt die Vergütung über § 87 Abs. 2a SGB V; EBM verweist auf Anlage 27 (Abschnitt 37.2, 37100ff)"
-    },
-    {
-      "anlage": "28",
-      "titel": "Terminservicestellen",
-      "befund": "keine Vergütung"
-    },
-    {
-      "anlage": "30",
-      "titel": "Palliativversorgung",
-      "befund": "keine Vergütungsregelung im Text; EBM verweist auf Anlage 30 (Abschnitt 37.3, 37300ff)"
-    },
-    {
-      "anlage": "31, 31a, 31b, 31c",
-      "titel": "Telemedizin, Telekonsil, Videosprechstunde",
-      "befund": "keine eigenen Pauschalen; EBM verweist auf Anlage 31 (z. B. 13574), 31a (34800ff), 31b (170 Knoten) und 31c (01452, 40128)"
-    },
-    {
-      "anlage": "33",
-      "titel": "HIV-PrEP",
-      "befund": "keine Vergütungsregelung im Text; EBM verweist auf Anlage 33 (01920, 01921, Abschnitt 1.7.8)"
-    },
-    {
-      "anlage": "35",
-      "titel": "Kryo-Vereinbarung",
-      "befund": "Rahmen für EBM-Abschnitt 40.12"
-    },
-    {
-      "anlage": "36",
-      "titel": "Telemedizinisches Monitoring",
-      "befund": "vom BMG beanstandet; keine Vergütungsregelung im Text"
-    },
-    {
-      "anlage": "Hauptteil",
-      "titel": "BMV-Ä",
-      "befund": "keine Leistungspauschalen; nur Bagatellgrenze 30 Euro bei Schadensersatz (S. 60)"
+     "nr": "88895",
+     "titel": "Kostenpauschale für die sozialpsychiatrische Versorgung von Kindern und Jugendlichen",
+     "abrechnung": "je Behandlungsfall; zusätzlich zu EBM-Leistungen; Fallzahlgrenze 400 je Praxis und Quartal (modifizierbar)",
+     "betrag": [
+      {
+       "bedingung": "1. bis 350. Behandlungsfall, 2026",
+       "euro": 218.96
+      },
+      {
+       "bedingung": "ab dem 351. Behandlungsfall, 2026",
+       "euro": 164.22
+      }
+     ],
+     "seite": 9
     }
-  ]
+   ]
+  },
+  {
+   "anlage": "34",
+   "titel": "DiGA-Vereinbarung",
+   "datei": "diga-vereinbarung.pdf",
+   "fassung": "05.03.2026, in Kraft 01.04.2026",
+   "verguetung_hoehe": "bundeseinheitlich",
+   "pauschalen": [
+    {
+     "nr": "86700",
+     "titel": "Pauschale für Leistungen im Zusammenhang mit der Anwendung einer digitalen Gesundheitsanwendung (DiGA)",
+     "abrechnung": "einmal im Behandlungsfall; je DiGA im Krankheitsfall höchstens zweimal; Angabe der PZN",
+     "betrag": [
+      {
+       "bedingung": null,
+       "euro": 8.15
+      }
+     ],
+     "seite": 9,
+     "leistungsinhalt": [
+      "Verlaufskontrolle und Auswertung einer digitalen Gesundheitsanwendung und/oder",
+      "Auswahl und/oder Individualisierung von Inhalten einer digitalen Gesundheitsanwendung"
+     ],
+     "geltung": {
+      "nur_fuer_diga": [
+       "companion shoulder",
+       "Oviva Direkt Bluthochdruck",
+       "INKA"
+      ],
+      "nur_fuer_diga_fundstelle": "Anhang 1 Abschnitt 1.1, S. 7",
+      "voraussetzung": "nur für DiGA, die vorläufig zur Erprobung in das Verzeichnis nach § 139e SGB V aufgenommen sind, und nur für den Zeitraum der Erprobung (Anhang 1 Abs. 1 und 3, S. 6–7)",
+      "berechtigt": [
+       "Fachärzte für Allgemeinmedizin",
+       "Fachärzte für Innere und Allgemeinmedizin",
+       "Praktische Ärzte",
+       "Ärzte ohne Gebietsbezeichnung",
+       "Fachärzte für Innere Medizin ohne Schwerpunktbezeichnung mit Teilnahme an der hausärztlichen Versorgung (§ 73 Abs. 1a SGB V)",
+       "Fachärzte für Kinder- und Jugendmedizin",
+       "Fachärzte für Orthopädie und Unfallchirurgie",
+       "Fachärzte für Orthopädie",
+       "Fachärzte für Chirurgie",
+       "Fachärzte für Kinderchirurgie",
+       "Fachärzte für Physikalische und Rehabilitative Medizin",
+       "Ärzte mit Genehmigung nach der Qualitätssicherungsvereinbarung Schmerztherapie",
+       "Fachärzte für Innere Medizin ohne Schwerpunkt",
+       "Fachärzte für Innere Medizin mit Schwerpunkt Angiologie",
+       "Fachärzte für Innere Medizin mit Schwerpunkt Endokrinologie",
+       "Fachärzte für Innere Medizin mit Schwerpunkt Gastroenterologie",
+       "Fachärzte für Innere Medizin mit Schwerpunkt Kardiologie",
+       "Fachärzte für Innere Medizin mit Schwerpunkt Nephrologie",
+       "Vertragsärzte mit Genehmigung für Blutreinigungsverfahren",
+       "Fachärzte für Neurologie",
+       "Fachärzte für Nervenheilkunde",
+       "Fachärzte für Neurologie und Psychiatrie",
+       "Fachärzte für Neurochirurgie",
+       "Fachärzte für Frauenheilkunde und Geburtshilfe",
+       "Fachärzte für Urologie"
+      ],
+      "berechtigt_fundstelle": "Anhang 1 Abschnitt 1.2, S. 7–8",
+      "verguetung": "außerhalb der morbiditätsbedingten Gesamtvergütung (Anhang 1 Abs. 4, S. 7)",
+      "mehrere_diga": "bei mehreren DiGA im Behandlungsfall entsprechend mehrfach berechnungsfähig (S. 9)"
+     }
+    }
+   ]
+  },
+  {
+   "anlage": "25",
+   "titel": "Kurarztvertrag",
+   "datei": "25_Kurarztvertrag.pdf",
+   "fassung": "09.06.2026, in Kraft 01.07.2026",
+   "verguetung_hoehe": "bundeseinheitlich in Euro, Abrechnung über Kurarztschein; keine Abrechnungsnummern im Vertrag",
+   "pauschalen": [
+    {
+     "nr": null,
+     "titel": "Pauschale kurärztliche Behandlung, Dauer 21 Tage",
+     "betrag": [
+      {
+       "bedingung": null,
+       "euro": 60.26
+      }
+     ],
+     "seite": 14
+    },
+    {
+     "nr": null,
+     "titel": "Zuschlag bei Ambulanter Vorsorgeleistung bei bestehenden Krankheiten",
+     "betrag": [
+      {
+       "bedingung": null,
+       "euro": 11.69
+      }
+     ],
+     "seite": 14
+    },
+    {
+     "nr": null,
+     "titel": "Pauschale Ambulante Vorsorgeleistung für Kinder (drei bzw. vier Wochen)",
+     "betrag": [
+      {
+       "bedingung": null,
+       "euro": 42.39
+      }
+     ],
+     "seite": 14
+    },
+    {
+     "nr": null,
+     "titel": "Pauschale Kompaktkur",
+     "betrag": [
+      {
+       "bedingung": "einteilig",
+       "euro": 110.6
+      },
+      {
+       "bedingung": "erster Teil bei Refresher",
+       "euro": 73.74
+      },
+      {
+       "bedingung": "Refresher",
+       "euro": 36.86
+      },
+      {
+       "bedingung": "Zusatzaufwand Refresher",
+       "euro": 11.06
+      }
+     ],
+     "seite": 14
+    },
+    {
+     "nr": null,
+     "titel": "Erhöhung für themenzentrierte Gespräche (verhaltenspräventive Maßnahmen)",
+     "betrag": [
+      {
+       "bedingung": null,
+       "euro": 17.2
+      }
+     ],
+     "seite": 14
+    },
+    {
+     "nr": null,
+     "titel": "Pauschalvergütung sonstige Leistungen und interkurrente Erkrankungen",
+     "betrag": [
+      {
+       "bedingung": "Vorsorge zur Krankheitsverhütung, Kinder",
+       "euro": 3.77
+      },
+      {
+       "bedingung": "bei bestehenden Krankheiten, Kompaktform",
+       "euro": 5.79
+      }
+     ],
+     "seite": 14
+    },
+    {
+     "nr": null,
+     "titel": "Zuschlag bei Erbringung per Video",
+     "betrag": [
+      {
+       "bedingung": "einmalig",
+       "euro": 4.6
+      }
+     ],
+     "seite": 6
+    }
+   ]
+  },
+  {
+   "anlage": "1 (Gutachtenhonorar)",
+   "titel": "Gutachtenhonorar-Vereinbarung zur Psychotherapie-Vereinbarung",
+   "datei": "Gutachtenhonorar-Vereinbarung.pdf",
+   "fassung": "16.05.2019, in Kraft 01.07.2019",
+   "verguetung_hoehe": "bundeseinheitlich; Honorar der Gutachter, von den Krankenkassen gezahlt",
+   "pauschalen": [
+    {
+     "nr": null,
+     "titel": "Gutachten Kurzzeittherapie",
+     "betrag": [
+      {
+       "bedingung": null,
+       "euro": 27.0
+      }
+     ],
+     "seite": 2
+    },
+    {
+     "nr": null,
+     "titel": "Gutachten Langzeittherapie",
+     "betrag": [
+      {
+       "bedingung": null,
+       "euro": 50.0
+      }
+     ],
+     "seite": 2
+    },
+    {
+     "nr": null,
+     "titel": "Zweitgutachten Kurzzeittherapie",
+     "betrag": [
+      {
+       "bedingung": null,
+       "euro": 45.0
+      }
+     ],
+     "seite": 2
+    },
+    {
+     "nr": null,
+     "titel": "Zweitgutachten Langzeittherapie",
+     "betrag": [
+      {
+       "bedingung": null,
+       "euro": 85.0
+      }
+     ],
+     "seite": 2
+    }
+   ]
+  },
+  {
+   "anlage": "32 (außer Kraft) / Festlegung des BMG",
+   "titel": "TI-Pauschale nach Festlegung des BMG vom 01.09.2023",
+   "datei": "2023-09-01_Festlegung_Telematik-Infrastruktur.pdf; ti-pauschale-entwicklung.pdf",
+   "fassung": "Festlegung gilt seit 01.07.2023; Anlage 32 gültig bis 30.06.2023",
+   "verguetung_hoehe": "bundeseinheitlich, monatlich je Praxis nach Zahl der Ärzte/Psychotherapeuten; jährliche Anpassung mit dem Orientierungswert (§ 10 Abs. 2 Festlegung)",
+   "pauschalen": [
+    {
+     "nr": null,
+     "titel": "Monatliche TI-Pauschale (Festlegung § 3 Abs. 3, Tabelle 3)",
+     "abrechnung": "monatlich je Praxis, Nachweis gegenüber der KV",
+     "betrag": [
+      {
+       "bedingung": "bis 3 Ärzte/Psychotherapeuten, ab 01.01.2026",
+       "euro": 263.62
+      },
+      {
+       "bedingung": "4 bis 6, ab 01.01.2026",
+       "euro": 313.52
+      },
+      {
+       "bedingung": "7 bis 9, ab 01.01.2026",
+       "euro": 359.1
+      },
+      {
+       "bedingung": "je weitere bis zu 3 Ärzte, ab 01.01.2026",
+       "euro": 31.7
+      }
+     ],
+     "seite": 1,
+     "seite_datei": "ti-pauschale-entwicklung.pdf"
+    },
+    {
+     "nr": null,
+     "titel": "Reduzierte monatliche TI-Pauschale bei Fehlen einer Anwendung (Tabelle 4)",
+     "abrechnung": "monatlich je Praxis",
+     "betrag": [
+      {
+       "bedingung": "bis 3, ab 01.01.2026",
+       "euro": 131.81
+      },
+      {
+       "bedingung": "4 bis 6, ab 01.01.2026",
+       "euro": 156.75
+      },
+      {
+       "bedingung": "7 bis 9, ab 01.01.2026",
+       "euro": 179.55
+      },
+      {
+       "bedingung": "je weitere bis zu 3, ab 01.01.2026",
+       "euro": 15.85
+      }
+     ],
+     "seite": 1,
+     "seite_datei": "ti-pauschale-entwicklung.pdf"
+    }
+   ]
+  },
+  {
+   "anlage": "32 (außer Kraft)",
+   "titel": "eArztbrief-Pauschalen der TI-Finanzierungsvereinbarung",
+   "datei": "Anlage_32_TI-Vereinbarung.pdf",
+   "fassung": "26.08.2022, gültig bis 30.06.2023",
+   "verguetung_hoehe": "historisch; ob und wo die Pauschalen 86900/86901 heute geregelt sind, ist nicht geprüft",
+   "status": "außer Kraft",
+   "pauschalen": [
+    {
+     "nr": "86900",
+     "titel": "eArztbrief-Versandpauschale, je versendeten eArztbrief",
+     "betrag": [
+      {
+       "bedingung": null,
+       "euro": 0.28
+      }
+     ],
+     "seite": 29
+    },
+    {
+     "nr": "86901",
+     "titel": "eArztbrief-Empfangspauschale, je empfangenen eArztbrief",
+     "betrag": [
+      {
+       "bedingung": null,
+       "euro": 0.27
+      }
+     ],
+     "abrechnung": "gemeinsamer Höchstwert 86900 und 86901: 23,40 Euro je Arzt und Quartal",
+     "seite": 29
+    }
+   ]
+  }
+ ],
+ "ohne_eigene_pauschale": [
+  {
+   "anlage": "1",
+   "titel": "Psychotherapie-Vereinbarung",
+   "befund": "Verweist auf EBM-GOP"
+  },
+  {
+   "anlage": "2, 2a, 2b",
+   "titel": "Vordrucke",
+   "befund": "Mustersammlung nennt EBM-Positionen (z. B. 01425, 01426, 01610)"
+  },
+  {
+   "anlage": "3",
+   "titel": "Qualitätssicherungsvereinbarungen",
+   "befund": "nicht gesichtet, eigene Seite mit zahlreichen Vereinbarungen"
+  },
+  {
+   "anlage": "4, 4a, 4b",
+   "titel": "Krankenversichertenkarte, eGK, Authentifizierung Fernbehandlung",
+   "befund": "keine Vergütung"
+  },
+  {
+   "anlage": "5",
+   "titel": "Hausärztliche Versorgung",
+   "befund": "§ 8 sieht eine hausärztliche Grundvergütung vor, deren Bewertung der Bewertungsausschuss festlegt; keine eigene Pauschale im Vertrag"
+  },
+  {
+   "anlage": "6",
+   "titel": "Datenaustausch",
+   "befund": "keine Vergütung"
+  },
+  {
+   "anlage": "8, 24",
+   "titel": "Delegation",
+   "befund": "keine Vergütungsregelung im Text; EBM verweist auf Anlage 8 (u. a. 03062, 03063, 38200ff) und Anlage 24 (03060)"
+  },
+  {
+   "anlage": "9.1",
+   "titel": "Dialyse",
+   "befund": "Sachkostenpauschalen im EBM Kapitel 40; regional abweichende Höhe vereinbar (S. 32)"
+  },
+  {
+   "anlage": "9.2",
+   "titel": "Mammographie-Screening",
+   "befund": "keine Pauschale im Text; EBM verweist auf Anlage 9.2 (Abschnitt 1.7.3, 34.8)"
+  },
+  {
+   "anlage": "14, 16, 21",
+   "titel": "Wohnortprinzip",
+   "befund": "Finanzflüsse zwischen KVen, keine Leistungspositionen"
+  },
+  {
+   "anlage": "17",
+   "titel": "Anerkennung regionaler Sondervertragsregelungen",
+   "befund": "regional, nicht bundeseinheitlich"
+  },
+  {
+   "anlage": "19",
+   "titel": "Finanzierung G-BA, IQTiG, IQWiG",
+   "befund": "Systemzuschlag je Fall zulasten der Krankenkassen, keine ärztliche Leistungsposition"
+  },
+  {
+   "anlage": "20",
+   "titel": "Europäische Krankenversicherungskarte",
+   "befund": "keine Vergütung"
+  },
+  {
+   "anlage": "23, 26, 29",
+   "titel": "Anforderungskataloge Verordnungssoftware, DiGA, Heilmittel",
+   "befund": "keine Vergütung"
+  },
+  {
+   "anlage": "27",
+   "titel": "Versorgung in Pflegeheimen",
+   "befund": "§ 7 regelt die Vergütung über § 87 Abs. 2a SGB V; EBM verweist auf Anlage 27 (Abschnitt 37.2, 37100ff)"
+  },
+  {
+   "anlage": "28",
+   "titel": "Terminservicestellen",
+   "befund": "keine Vergütung"
+  },
+  {
+   "anlage": "30",
+   "titel": "Palliativversorgung",
+   "befund": "keine Vergütungsregelung im Text; EBM verweist auf Anlage 30 (Abschnitt 37.3, 37300ff)"
+  },
+  {
+   "anlage": "31, 31a, 31b, 31c",
+   "titel": "Telemedizin, Telekonsil, Videosprechstunde",
+   "befund": "keine eigenen Pauschalen; EBM verweist auf Anlage 31 (z. B. 13574), 31a (34800ff), 31b (170 Knoten) und 31c (01452, 40128)"
+  },
+  {
+   "anlage": "33",
+   "titel": "HIV-PrEP",
+   "befund": "keine Vergütungsregelung im Text; EBM verweist auf Anlage 33 (01920, 01921, Abschnitt 1.7.8)"
+  },
+  {
+   "anlage": "35",
+   "titel": "Kryo-Vereinbarung",
+   "befund": "Rahmen für EBM-Abschnitt 40.12"
+  },
+  {
+   "anlage": "36",
+   "titel": "Telemedizinisches Monitoring",
+   "befund": "vom BMG beanstandet; keine Vergütungsregelung im Text"
+  },
+  {
+   "anlage": "Hauptteil",
+   "titel": "BMV-Ä",
+   "befund": "keine Leistungspauschalen; nur Bagatellgrenze 30 Euro bei Schadensersatz (S. 60)"
+  }
+ ],
+ "nicht_im_katalog": [
+  {
+   "thema": "Schutzimpfungen",
+   "stichwoerter": [
+    "impf",
+    "schutzimpf",
+    "reiseimpf",
+    "vakzin"
+   ],
+   "hinweis": "Die Vergütung von Schutzimpfungen steht weder im EBM noch in den erfassten Pauschalen des BMV-Ä. Die Erläuterungen zur Vordruckvereinbarung verweisen auf die „gültige Impfvereinbarung“; Impfvereinbarungen sind nicht Teil dieses Katalogs. Auskunft gibt die Kassenärztliche Vereinigung.",
+   "fundstelle": {
+    "dokument": "Erläuterungen zur Vordruckvereinbarung (Anlage 2 BMV-Ä)",
+    "datei": "02_Erlaeuterungen.pdf",
+    "seite": 41
+   }
+  }
+ ]
 }
