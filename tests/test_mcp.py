@@ -132,3 +132,15 @@ class Klartext(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class StatischeTexte(unittest.TestCase):
+    def test_defekte_links(self):
+        import tempfile, pathlib
+        from ek.texte import defekte_links
+        with tempfile.TemporaryDirectory() as d:
+            site = pathlib.Path(d)
+            (site / "texte" / "gop").mkdir(parents=True)
+            (site / "texte" / "gop" / "03000.md").write_text("[gut](03000.md) [fehlt](../abschnitt/I-3.1.md) [extern](https://ebm.kbv.de/)", encoding="utf-8")
+            (site / "llms.txt").write_text("[GOP](texte/gop/03000.md)", encoding="utf-8")
+            self.assertEqual(defekte_links(site), ["texte/gop/03000.md -> ../abschnitt/I-3.1.md"])

@@ -31,7 +31,7 @@ Tests: `python3 -I -m unittest discover -s tests -v`
 
 ## Für KI-Assistenten
 
-Der MCP-Server (`ek.py mcp`, eingebunden über `.mcp.json`) gibt Assistenten elf Werkzeuge mit Belegen je Antwort, darunter die Volltextsuche im Vertragstext des BMV-Ä,, dazu Resources, Vorlagen und Completions; die [Antwortregeln](docs/ANTWORTREGELN.md) werden mitgeliefert. Für Systeme ohne MCP erzeugt `ek.py texte` Markdown je GOP und eine `llms.txt`. Ein [Fragenkatalog](fragen/fragenkatalog.json) prüft in der CI, ob die Werkzeuge die belegten Fakten liefern. [Beispielantworten](fragen/beispielantworten.json) zeigen auf der Katalogseite, wie ein Assistent damit Alltagsfragen beantworten könnte, mit Abfrageschritten und Einordnung. Einzelheiten: [docs/KI-NUTZUNG.md](docs/KI-NUTZUNG.md).
+Der MCP-Server (`ek.py mcp`, eingebunden über `.mcp.json`) gibt Assistenten elf Werkzeuge mit Belegen je Antwort, darunter die Volltextsuche im Vertragstext des BMV-Ä, dazu Resources, Vorlagen und Completions; die [Antwortregeln](docs/ANTWORTREGELN.md) werden mitgeliefert. Für Systeme ohne MCP erzeugt `ek.py texte` verlinkte Markdown-Texte je GOP und Abschnitt mit vorberechneten Präambelbedingungen und Ausschlüssen, dazu Register, Gliederung und eine `llms.txt` als Einstieg — eine KI mit Webabruf folgt den Links statt Werkzeuge aufzurufen. Ein [Fragenkatalog](fragen/fragenkatalog.json) prüft in der CI, ob die Werkzeuge die belegten Fakten liefern. [Beispielantworten](fragen/beispielantworten.json) zeigen auf der Katalogseite, wie ein Assistent damit Alltagsfragen beantworten könnte, mit Abfrageschritten und Einordnung. Einzelheiten: [docs/KI-NUTZUNG.md](docs/KI-NUTZUNG.md).
 
 ## Befehle
 
@@ -46,7 +46,7 @@ Der MCP-Server (`ek.py mcp`, eingebunden über `.mcp.json`) gibt Assistenten elf
 | `ek.py mcp` | MCP-Server über stdio |
 | `ek.py frage WERKZEUG '{json}'` | ein Werkzeug direkt aufrufen |
 | `ek.py fragenkatalog` | Fragenkatalog und Abfrageschritte der Beispielantworten prüfen, Bericht nach `ausgabe/` |
-| `ek.py texte` | Markdown je GOP, Gesamttext, `llms.txt` nach `ausgabe/site/` |
+| `ek.py texte` | verlinkte Markdown-Texte (GOP, Abschnitte, Register, Gliederung, OPS, Stichworte), Gesamttext, `llms.txt` nach `ausgabe/site/`, mit Linkprüfung |
 | `ek.py vertraulich` | eingecheckte Dateien auf vertrauliche Inhalte prüfen |
 | `ek.py bmv` | BMV-Ä und Anlagen laden, Text ziehen (Grundlage für `bmv_text` und `quellen/bmv/`; braucht `pypdf`) |
 | `ek.py pdf build\|gop\|search\|refs` | EBM aus dem amtlichen Quartals-PDF durchsuchen (Rückfallebene; braucht `pypdf`) |

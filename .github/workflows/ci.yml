@@ -44,7 +44,7 @@ jobs:
           python3 -I werkzeuge/ek.py bmv
       - name: Fragenkatalog
         run: python3 -I werkzeuge/ek.py fragenkatalog
-      - name: Texte für KI-Systeme (Markdown je GOP, llms.txt)
+      - name: Texte für KI-Systeme ohne MCP (Markdown, llms.txt, Linkprüfung)
         run: python3 -I werkzeuge/ek.py texte
       - name: MCP-Server antwortet
         run: |
