@@ -17,6 +17,8 @@ Schreibt nach ausgabe/site/:
   texte/stichworte.md          Alltagsbegriffe, Begriffsbestimmungen, Themen außerhalb des Katalogs
   texte/ebm-<Q>.md             alles in einer Datei (GOP, Abschnitte, Präambeln, BMV-Ä-Pauschalen)
 """
+import os
+import posixpath
 import re
 from collections import defaultdict
 
@@ -24,6 +26,34 @@ from .grundlagen import AUS
 from .katalog import HINWEIS, Katalog, synonyme
 
 BMV_SEITE = "https://www.kbv.de/infothek/rechtsquellen/bundesmantelvertrag"
+LESEHILFE = "Lesehilfe des Katalogs (maschinell abgeleitet, nicht EBM-Wortlaut)"
+
+_ALTER = [
+    (re.compile(r"ab (?:dem )?Beginn des (\d+)\.\s*bis (?:zum )?vollendeten (\d+)\.\s*Lebensjahr(?:es)?"),
+     lambda a, b: f"Alter {int(a) - 1} bis {int(b) - 1} Jahre"),
+    (re.compile(r"ab (?:dem )?Beginn des (\d+)\.\s*Lebensjahr(?:es)?"), lambda a: f"ab Alter {int(a) - 1} Jahre"),
+    (re.compile(r"(?:nach Vollendung des|ab (?:dem )?vollendeten) (\d+)\.\s*Lebensjahr(?:es)?"), lambda a: f"ab Alter {int(a)} Jahre"),
+    (re.compile(r"bis (?:zum )?vollendeten (\d+)\.\s*Lebensjahr(?:es)?"), lambda b: f"Alter 0 bis {int(b) - 1} Jahre (unter {int(b)})"),
+]
+
+
+def altersgrenzen(text):
+    """Altersangaben im EBM-Wortlaut mit Umrechnung in Jahre: [(Wortlaut, Lesehilfe)].
+
+    „ab Beginn des 19. Lebensjahres“ = ab dem 18. Geburtstag; „bis zum vollendeten 66. Lebensjahr“ = bis zum 66. Geburtstag,
+    also höchstens 65 Jahre alt.
+    """
+    out, belegt = [], []
+    for rx, f in _ALTER:
+        for m in rx.finditer(text or ""):
+            if any(a <= m.start() < b for a, b in belegt):
+                continue
+            belegt.append(m.span())
+            eintrag = (m.group(0), f(*m.groups()))
+            if eintrag not in out:
+                out.append(eintrag)
+    return out
+
 ROEMISCH = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"]
 
 
@@ -105,18 +135,26 @@ class Texte:
         z = self.kopf(f"GOP {r['nr']} — {r['titel']}", n)
         if r["bewertung"]:
             z += ["## Bewertung", "", "| Bedingung | Punkte | Euro |", "|---|---|---|"]
-            z += [f"| {b['bedingung'] or '—'} | {b.get('punkte') or '—'} | {b.get('euro') or '—'} |" for b in r["bewertung"]] + [""]
+            for b in r["bewertung"]:
+                hilfe = "; ".join(h for _, h in altersgrenzen(b["bedingung"] or ""))
+                bed = (b["bedingung"] or "—") + (f" (= {hilfe}, Lesehilfe)" if hilfe else "")
+                z.append(f"| {bed} | {b.get('punkte') or '—'} | {b.get('euro') or '—'} |")
+            z.append("")
             z += ["Euro mit dem bundeseinheitlichen Orientierungswert; regionale Punktwerte können abweichen.", ""]
         elif r["bewertung_hinweis"]:
             z += [f"Bewertung: {r['bewertung_hinweis']}", ""]
         if r["merkmale"]:
             z += ["Merkmale (Kennzeichen der Online-Ansicht, Bedeutung dort nicht erläutert): "
                   + "; ".join(f"{m['text']} ({'ja' if m['zutreffend'] else 'nein'})" for m in r["merkmale"]), ""]
-        for a in r["abschnitte"]:
-            z += [f"## {a['ueberschrift'] or 'Text'}", "", a["text"], ""]
-        # Regeln außerhalb der GOP
         pr = self.praeambeln(n)
         bed = r.get("bedingungen_aus_praeambeln", [])
+        z += self.auf_einen_blick(nr, r, n, bed)
+        for a in r["abschnitte"]:
+            z += [f"## {a['ueberschrift'] or 'Text'}", "", a["text"], ""]
+            hilfe = altersgrenzen(a["text"])
+            if hilfe:
+                z += [f"{LESEHILFE}: " + "; ".join(f"„{w}“ = {h}" for w, h in hilfe) + ".", ""]
+        # Regeln außerhalb der GOP
         z += ["## Regeln außerhalb dieser GOP", "",
               "Begrenzungen stehen oft in Präambeln und Allgemeinen Bestimmungen, nicht bei der GOP. "
               "Die folgenden Sätze nennen diese GOP und enthalten eine Bedingung (ausschließlich, nur, Genehmigung, nicht berechnungsfähig …). "
@@ -188,11 +226,62 @@ class Texte:
         z += ["---", f"Herkunft: EBM-Online-Ansicht https://ebm.kbv.de/, Knotenkennung {n['knotenId']}. {HINWEIS}", ""]
         return "\n".join(z)
 
+    def ist_zuschlag_zu(self, x, nr):
+        """Beschreibt sich x als Zuschlag (oder Zusatzpauschale) zu nr, einzeln oder als Bereich?"""
+        h, _ = self.k.gop_knoten(x)
+        if not h:
+            return False
+        text = " ".join(a["text"] for a in self.k._abschnitte(h["knotenId"])[:1]) + " " + (h["titel"] or "")
+        m = re.search(r"(?:Zuschlag|Zusatzpauschale)\w* (?:zu|zur|zum)\b(.{0,400})", text, re.S)
+        return bool(m) and self.k._nennt(m.group(1), nr)
+
+    def auf_einen_blick(self, nr, r, n, bed):
+        """Kurzfassung oben auf der GOP-Seite: was vor der Abrechnung zu prüfen ist. Nur Verweise auf Angaben weiter unten."""
+        k, z = self.k, []
+        texte = {a["ueberschrift"]: a["text"] for a in r["abschnitte"]}
+        alle = " ".join(texte.values()) + " " + " ".join(b["bedingung"] or "" for b in r["bewertung"])
+        alter = altersgrenzen(alle)
+        if alter:
+            z.append("- **Alter:** " + "; ".join(f"„{w}“ = {h}" for w, h in alter) + " (Lesehilfe, maschinell abgeleitet)")
+        if texte.get("Abrechnungsbestimmung"):
+            z.append(f"- **Häufigkeit:** {texte['Abrechnungsbestimmung'][:200]}")
+        wichtig = [b for b in bed if re.search(r"ausschließlich|Genehmigung|nicht berechnungsfähig|Punktzahlvolumen|nur", b["satz"])]
+        for b in wichtig[:3]:
+            satz = b["satz"] if len(b["satz"]) <= 260 else b["satz"][:257] + " …"
+            vor = f" (gilt, wenn: {b['einleitung']})" if b.get("einleitung") else ""
+            z.append(f"- **Bedingung aus {self.link(b['knotenId'])}:** „{satz}“{vor}")
+        if len(bed) > len(wichtig[:3]):
+            z.append(f"- Weitere Bedingungssätze aus Präambeln und Bestimmungen: {len(bed) - len(wichtig[:3])}, siehe „Regeln außerhalb dieser GOP“.")
+        d = k.inhalt(n["knotenId"])
+        aus = defaultdict(set)
+        for a in d.get("ausschluesse", []):
+            aus[a["bezug"]].update(x["nr"] for x in a["leistungen"])
+            for kap in a["kapitel"]:
+                aus[a["bezug"]].update(self.abschnitt_gops(kap))
+        for x, b in self.gegen.get(nr, []):
+            aus[b].add(x)
+        if aus:
+            z.append("- **Ausschlüsse (beide Richtungen):** " + "; ".join(f"{b}: {len(v)} GOP" for b, v in aus.items()) + ", Liste unten.")
+        zu = [x.split(" ", 1)[0] for x in r.get("zuschlaege", []) if self.ist_zuschlag_zu(x.split(" ", 1)[0], nr)]
+        if zu:
+            z.append("- **Zuschläge zu dieser GOP:** " + ", ".join(self.gop_link(x) for x in zu[:12])
+                     + (" …" if len(zu) > 12 else "") + " (Voraussetzungen jeweils dort)")
+        if r.get("zeiten") and (r["zeiten"].get("kalkulationszeit") or r["zeiten"].get("pruefzeit")):
+            t = r["zeiten"]
+            zeit = lambda v: f"{v} Min." if re.fullmatch(r"\d+", v or "") else {"KA": "keine (KA)", "./.": "keine (./.)"}.get(v, v or "—")
+            z.append(f"- **Anhang 3:** Kalkulationszeit {zeit(t['kalkulationszeit'])}, Prüfzeit {zeit(t['pruefzeit'])}")
+        if not z:
+            return []
+        return ["## Auf einen Blick", "", "Vor der Abrechnung prüfen. Kurzfassung aus den Abschnitten unten, maschinell zusammengestellt; maßgeblich ist der Wortlaut.", ""] + z + [""]
+
     def abschnitt_md(self, kid):
         k, n = self.k, self.k.K[kid]
         z = self.kopf(f"{n['nr']} {self.titel(n)}".strip(), n)
         for a in k._abschnitte(kid):
             z += ([f"## {a['ueberschrift']}", ""] if a["ueberschrift"] else []) + [a["text"], ""]
+            hilfe = altersgrenzen(a["text"])
+            if hilfe and len(hilfe) <= 12:
+                z += [f"{LESEHILFE}: " + "; ".join(f"„{w}“ = {h}" for w, h in hilfe) + ".", ""]
         if n["kinder"]:
             z += ["## Enthält", ""]
             for c in n["kinder"]:
@@ -394,48 +483,106 @@ class Texte:
         return "\n".join(z)
 
 
-def llms_txt(k, mit_bmv_gliederung):
+def basis_url():
+    """Öffentliche Adresse der Seite für absolute Links: EK_BASIS_URL, sonst aus GITHUB_REPOSITORY (Pages), sonst None (relativ)."""
+    b = os.environ.get("EK_BASIS_URL")
+    if not b and os.environ.get("GITHUB_REPOSITORY"):
+        konto, repo = os.environ["GITHUB_REPOSITORY"].split("/", 1)
+        b = f"https://{konto.lower()}.github.io/{repo}/"
+    return (b.rstrip("/") + "/") if b else None
+
+
+LINK = re.compile(r"\]\(([^)\s]+)\)")
+
+
+def absolut(text, datei, basis):
+    """Relative Links einer Seite (Pfad relativ zur Wurzel der Seite) in absolute Adressen umschreiben."""
+    if not basis:
+        return text
+    ordner = posixpath.dirname(datei)
+    def ersetze(m):
+        ziel = m.group(1)
+        if ziel.startswith(("http:", "https:", "#", "mailto:")):
+            return m.group(0)
+        pfad, _, anker = ziel.partition("#")
+        voll = posixpath.normpath(posixpath.join(ordner, pfad))
+        return f"]({basis}{voll}{'#' + anker if anker else ''})"
+    return LINK.sub(ersetze, text)
+
+
+def als_txt(text, basis):
+    """Gleiche Seite als .txt: Links auf .md-Seiten des Katalogs zeigen auf die .txt-Fassung."""
+    def ersetze(m):
+        ziel = m.group(1)
+        if ziel.startswith(("http:", "https:")) and not (basis and ziel.startswith(basis)):
+            return m.group(0)
+        if posixpath.basename(ziel).startswith("ebm-"):
+            return m.group(0)  # Gesamtdatei gibt es nur als .md
+        return "](" + re.sub(r"\.md(?=$|#)", ".txt", ziel) + ")"
+    return LINK.sub(ersetze, text)
+
+
+def llms_txt(k, vertrag, basis):
     q = k.quartal.replace("-", "/Q")
-    return "\n".join([
-        "# Offener EBM-Katalog", "",
-        f"> Maschinenlesbarer Spiegel der EBM-Online-Ansicht (Quartal {q}) mit Arztgruppenfilter, Anhang 2 (OPS) und den Pauschalen des BMV-Ä außerhalb des EBM. {HINWEIS}", "",
-        "## Wegweiser", "",
-        "Alle Texte sind Markdown und untereinander verlinkt. Für eine Antwort den Links folgen:", "",
-        "1. Nummer bekannt: `texte/gop/<Nummer>.md` (z. B. [texte/gop/03000.md](texte/gop/03000.md)). Die Seite enthält Bewertung, Leistungsinhalt, Bestimmungen, "
-        "Ausschlüsse in beiden Richtungen (Abschnittsausschlüsse aufgelöst), Zeiten aus Anhang 3, Zuschläge, Rückverweise und — wichtig — "
-        "**Regeln außerhalb dieser GOP**: Sätze aus Präambeln und Allgemeinen Bestimmungen, die die GOP mit einer Bedingung nennen, und Links auf die Präambeln.",
-        "2. Nummer unbekannt: [texte/titel.md](texte/titel.md) (alle GOP-Titel in einer Datei, nach Wörtern durchsuchen), [texte/register.md](texte/register.md) (GOP je Kapitel), [texte/inhalt.md](texte/inhalt.md) (Gliederung), "
-        "[texte/stichworte.md](texte/stichworte.md) (Alltagsbegriffe, Begriffsbestimmungen, Themen außerhalb des Katalogs).",
-        "3. Pauschalen außerhalb des EBM (Onkologie, DiGA, TI, Kurarzt …): [texte/bmv.md](texte/bmv.md)."
-        + (" Vertragstext des BMV-Ä und seiner Anlagen im Wortlaut: [texte/bmv-gliederung.md](texte/bmv-gliederung.md) (Überschriften mit Link auf den Text, z. B. § 29a Medikationsplan, und auf die PDF-Seite)." if mit_bmv_gliederung else ""),
-        "4. OPS-Code: [texte/ops.md](texte/ops.md).", "",
-        "## Antwortregeln", "",
-        "1. Nur aus diesen Texten (und den verlinkten Verträgen auf kbv.de) antworten. Was dort nicht steht, ist „nicht im Katalog“ — nicht aus dem Gedächtnis ergänzen.",
-        "2. Jede Aussage mit Beleg: Quartal, Nummer, Fundstelle (Pfad im EBM bzw. Dokument und Seite des BMV-Ä).",
-        f"3. Der Katalog bildet das Quartal {q} ab; andere Zeiträume als nicht abgedeckt kennzeichnen.",
-        "4. „Kein Ausschluss eingetragen“ ist keine Erlaubnis. Vor einer Antwort zur Abrechenbarkeit den Abschnitt „Regeln außerhalb dieser GOP“ und die verlinkten Präambeln lesen.",
-        "5. Regionale Werte nicht beziffern; Euro-Werte gelten mit dem bundeseinheitlichen Orientierungswert.",
-        "6. Keine Einzelfallberatung; im Einzelfall an die Abrechnungsberatung der Kassenärztlichen Vereinigung verweisen.",
-        "7. Grenzen nennen: KI-gebaut, nicht amtlich; Qualitätssicherungsvereinbarungen, regionale Verträge und Selektivverträge sind nicht enthalten.",
-        "8. Gleiche Abschnittsnummern gibt es in den Allgemeinen Bestimmungen (Pfad I) und in den Kapiteln; den Pfad nennen.",
-        "9. Merkmale und die Spalte §115b werden nicht erläutert; unverändert wiedergeben, nicht deuten. Sichtbarkeit im Arztgruppenfilter ist keine Berechtigung.",
-        "10. Fehlen Alter, Arztgruppe oder Fallbezug, die Annahme nennen oder nachfragen.",
-        "11. Vor „nicht im Katalog“ die BMV-Ä-Pauschalen und den Vertragstext (texte/vertrag/) prüfen: Ansprüche, Berechtigungen und Geltungsbereiche regelt oft der BMV-Ä. Vertragsstellen mit Dokument, Paragraf und PDF-Seite zitieren.", "",
-        "## Weitere Formate", "",
-        f"- [Gesamter EBM als eine Datei](texte/ebm-{k.quartal}.md) (für Wissensspeicher)",
-        "- JSON: [daten/index.json](daten/index.json) (Gliederung), daten/teil-0.json bis daten/teil-7.json, [daten/arztgruppen.json](daten/arztgruppen.json), [daten/ops.json](daten/ops.json), [daten/bmv.json](daten/bmv.json)",
-        "- MCP-Server mit Werkzeugen (Suche, Sammelprüfung, Vertragstext): `python3 -I werkzeuge/ek.py mcp` im Repository.", ""])
+    u = lambda pfad: f"{basis or ''}{pfad}"
+    z = ["# Offener EBM-Katalog", "",
+         f"> Maschinenlesbarer Spiegel der EBM-Online-Ansicht (Quartal {q}) mit Arztgruppenfilter, Anhang 2 (OPS), den Pauschalen des BMV-Ä außerhalb des EBM "
+         f"und dem Wortlaut des BMV-Ä und seiner Anlagen. {HINWEIS}", "",
+         "## Wegweiser", "",
+         "Alle Texte sind Markdown und untereinander verlinkt. Jede Seite gibt es zusätzlich als `.txt` mit gleichem Inhalt "
+         f"(für Browser, die `.md` nicht anzeigen), z. B. [{u('texte/gop/03000.txt')}]({u('texte/gop/03000.txt')}). Für eine Antwort den Links folgen:", "",
+         f"1. Nummer bekannt: `texte/gop/<Nummer>.md`, z. B. [{u('texte/gop/03000.md')}]({u('texte/gop/03000.md')}). Oben steht **„Auf einen Blick“**: Altersgrenzen "
+         "mit Umrechnung in Jahre, Häufigkeit, Bedingungen aus Präambeln, Zahl der Ausschlüsse, Zuschläge. Darunter Wortlaut, **Regeln außerhalb dieser GOP**, "
+         "Ausschlüsse in beiden Richtungen, Zeiten aus Anhang 3, Rückverweise.",
+         "2. Nummer unbekannt: Titelliste, Register, Gliederung oder Stichworte (Links unten).",
+         "3. Pauschalen außerhalb des EBM (Onkologie, DiGA, TI, Kurarzt …): BMV-Ä-Pauschalen. Ansprüche, Berechtigungen und Geltungsbereiche: Vertragstext (Liste unten).",
+         "4. OPS-Code: Anhang 2.", "",
+         "## Einstiegsseiten", ""]
+    for titel, pfad in [("Titelliste aller GOP (nach Wörtern durchsuchen)", "texte/titel.md"), ("Register nach Kapiteln", "texte/register.md"),
+                        ("Gliederung mit allen Abschnitten, Präambeln, Allgemeinen Bestimmungen", "texte/inhalt.md"),
+                        ("Stichworte: Alltagsbegriffe, DiGA, Begriffsbestimmungen, Themen außerhalb des Katalogs", "texte/stichworte.md"),
+                        ("Pauschalen aus dem BMV-Ä", "texte/bmv.md"), ("Anhang 2: OPS-Code → GOP", "texte/ops.md")] + (
+                        [("Gliederung des BMV-Ä und seiner Anlagen (Überschriften mit Link auf den Wortlaut)", "texte/bmv-gliederung.md")] if vertrag else []):
+        z.append(f"- {titel}: [{u(pfad)}]({u(pfad)})")
+    z += ["", "Abschnittsseiten heißen `texte/abschnitt/<Teil>-<Nummer>.md` mit dem Teil als römischer Zahl: I = Allgemeine Bestimmungen (z. B. `I-4.3.1.md`), "
+          "II–V und VII–VIII = Kapitel (z. B. `III-3.1.md` = Präambel Kapitel 3), VI = Anhänge (z. B. `VI-3.md`). Bereiche wie „03040 – 03045“ werden zu `III-03040-03045.md`; "
+          "im Zweifel den Link aus der Gliederung nehmen statt den Namen zu raten.", ""]
+    if vertrag:
+        z += ["## Vertragstext (BMV-Ä und Anlagen, Wortlaut)", ""]
+        z += [f"- {t}: [{u('texte/vertrag/' + d)}]({u('texte/vertrag/' + d)})" for t, d in vertrag] + [""]
+    z += ["## Antwortregeln", "",
+          "1. Nur aus diesen Texten (und den verlinkten Verträgen auf kbv.de) antworten. Was dort nicht steht, ist „nicht im Katalog“ — nicht aus dem Gedächtnis ergänzen.",
+          "2. Jede Aussage mit Beleg: Quartal, Nummer, Fundstelle. **Fundstelle ist der Pfad im EBM** (z. B. „Präambel 3.1“, „GOP 01474, Anmerkung“) bzw. Dokument, Paragraf und Seite des BMV-Ä. "
+          "Dateipfade des Katalogs sind nur der Beleg, wo es steht; Dateien wie Titelliste oder Register sind keine Stellen im EBM.",
+          f"3. Der Katalog bildet das Quartal {q} ab; andere Zeiträume als nicht abgedeckt kennzeichnen.",
+          "4. „Kein Ausschluss eingetragen“ ist keine Erlaubnis. Vor einer Antwort zur Abrechenbarkeit „Auf einen Blick“, „Regeln außerhalb dieser GOP“ und die verlinkten Präambeln lesen.",
+          "5. **Altersgrenzen genau lesen:** „ab Beginn des 19. Lebensjahres“ = ab 18 Jahren; „bis zum vollendeten 66. Lebensjahr“ = bis 65 Jahre. Die Seiten zeigen dazu eine Lesehilfe.",
+          "6. Regionale Werte nicht beziffern; Euro-Werte gelten mit dem bundeseinheitlichen Orientierungswert.",
+          "7. Keine Einzelfallberatung; im Einzelfall an die Abrechnungsberatung der Kassenärztlichen Vereinigung verweisen.",
+          "8. Grenzen nennen: KI-gebaut, nicht amtlich; Qualitätssicherungsvereinbarungen, regionale Verträge und Selektivverträge sind nicht enthalten.",
+          "9. Gleiche Abschnittsnummern gibt es in den Allgemeinen Bestimmungen (Pfad I) und in den Kapiteln; den Pfad nennen.",
+          "10. Merkmale und die Spalte §115b werden nicht erläutert; unverändert wiedergeben, nicht deuten. Sichtbarkeit im Arztgruppenfilter ist keine Berechtigung.",
+          "11. Fehlen Alter, Arztgruppe oder Fallbezug, die Annahme nennen oder nachfragen.",
+          "12. Vor „nicht im Katalog“ die BMV-Ä-Pauschalen und den Vertragstext prüfen: Ansprüche, Berechtigungen und Geltungsbereiche regelt oft der BMV-Ä. Vertragsstellen mit Dokument, Paragraf und PDF-Seite zitieren.", "",
+          "## Weitere Formate", "",
+          f"- Gesamter EBM als eine Datei (für Wissensspeicher): [{u('texte/ebm-' + k.quartal + '.md')}]({u('texte/ebm-' + k.quartal + '.md')})",
+          f"- JSON: [{u('daten/index.json')}]({u('daten/index.json')}) (Gliederung), daten/teil-0.json bis daten/teil-7.json, daten/arztgruppen.json, daten/ops.json, daten/bmv.json",
+          "- MCP-Server mit Werkzeugen (Suche, Sammelprüfung, Vertragstext): `python3 -I werkzeuge/ek.py mcp` im Repository.", ""]
+    return "\n".join(z)
 
 
-def defekte_links(site):
-    """Relative Markdown-Links in texte/ und llms.txt, deren Ziel fehlt (Gesamtdatei ausgenommen)."""
+def defekte_links(site, basis=None):
+    """Interne Links in texte/ und llms.txt (relativ oder absolut unter basis), deren Ziel fehlt (Gesamtdatei ausgenommen)."""
     out = []
-    dateien = [f for f in (site / "texte").rglob("*.md") if not f.name.startswith("ebm-")] + [site / "llms.txt"]
+    dateien = [f for f in (site / "texte").rglob("*") if f.suffix in (".md", ".txt") and not f.name.startswith("ebm-")] + [site / "llms.txt"]
     for f in dateien:
         if not f.exists():
             continue
         for ziel in re.findall(r"\]\(([^)#\s]+)", f.read_text(encoding="utf-8")):
-            if not ziel.startswith(("http:", "https:")) and not (f.parent / ziel).exists():
+            if basis and ziel.startswith(basis):
+                if not (site / ziel[len(basis):]).exists():
+                    out.append(f"{f.relative_to(site)} -> {ziel}")
+            elif not ziel.startswith(("http:", "https:")) and not (f.parent / ziel).exists():
                 out.append(f"{f.relative_to(site)} -> {ziel}")
     return out
 
@@ -443,50 +590,46 @@ def defekte_links(site):
 def main(argv=None):
     k = Katalog(argv[0] if argv else None)
     t = Texte(k)
+    basis = basis_url()
     site = AUS / "site"
-    td = site / "texte"
-    for u in ("gop", "abschnitt", "register", "ops"):
-        (td / u).mkdir(parents=True, exist_ok=True)
+    seiten = {}  # Pfad relativ zu site -> Text
     alle = []
     for nr in t.gops:
-        s = t.gop_md(nr)
-        (td / "gop" / f"{nr}.md").write_text(s, encoding="utf-8")
-        alle.append(s)
+        seiten[f"texte/gop/{nr}.md"] = s = t.gop_md(nr); alle.append(s)
     for kid in t.slugs:
-        s = t.abschnitt_md(kid)
-        (td / "abschnitt" / f"{t.slugs[kid]}.md").write_text(s, encoding="utf-8")
-        alle.append(s)
-    (td / "inhalt.md").write_text(t.inhalt_md(), encoding="utf-8")
-    idx, seiten = t.register()
-    (td / "titel.md").write_text(t.titelliste(), encoding="utf-8")
-    (td / "register.md").write_text(idx, encoding="utf-8")
-    for kk, s in seiten.items():
-        (td / "register" / f"{kk}.md").write_text(s, encoding="utf-8")
-    idx, seiten = t.ops()
+        seiten[f"texte/abschnitt/{t.slugs[kid]}.md"] = s = t.abschnitt_md(kid); alle.append(s)
+    seiten["texte/inhalt.md"] = t.inhalt_md()
+    idx, reg = t.register()
+    seiten["texte/titel.md"] = t.titelliste()
+    seiten["texte/register.md"] = idx
+    seiten.update({f"texte/register/{kk}.md": s for kk, s in reg.items()})
+    idx, ops = t.ops()
     if idx:
-        (td / "ops.md").write_text(idx, encoding="utf-8")
-        for g, s in seiten.items():
-            (td / "ops" / f"{g}.md").write_text(s, encoding="utf-8")
+        seiten["texte/ops.md"] = idx
+        seiten.update({f"texte/ops/{g}.md": s for g, s in ops.items()})
     if k.bmv_daten:
-        b = t.bmv_md()
-        (td / "bmv.md").write_text(b, encoding="utf-8")
-        alle.append(b)
-    gl = None
+        seiten["texte/bmv.md"] = s = t.bmv_md(); alle.append(s)
+    vertrag = []
     if k.bmvtext.verfuegbar:
-        (td / "vertrag").mkdir(exist_ok=True)
-        seiten, ort = t.vertragsseiten()
-        for name, text in seiten.items():
-            (td / "vertrag" / name).write_text(text, encoding="utf-8")
-        gl = t.bmv_gliederung(ort)
-    if gl:
-        (td / "bmv-gliederung.md").write_text(gl, encoding="utf-8")
-    (td / "stichworte.md").write_text(t.stichworte(), encoding="utf-8")
-    (td / f"ebm-{k.quartal}.md").write_text("\n\n".join(alle), encoding="utf-8")
-    (site / "llms.txt").write_text(llms_txt(k, bool(gl)), encoding="utf-8")
-    kaputt = defekte_links(site)
+        vs, ort = t.vertragsseiten()
+        seiten.update({f"texte/vertrag/{name}": s for name, s in vs.items()})
+        seiten["texte/bmv-gliederung.md"] = t.bmv_gliederung(ort)
+        titel = {d["dokument"]: d["titel"] for d in k.bmvtext.dokumente()}
+        vertrag = [(f"{titel[st]} ({st}.pdf)", f"{st}.md") for st in titel]
+    seiten["texte/stichworte.md"] = t.stichworte()
+    for pfad, text in seiten.items():
+        ziel = site / pfad
+        ziel.parent.mkdir(parents=True, exist_ok=True)
+        text = absolut(text, pfad, basis)
+        ziel.write_text(text, encoding="utf-8")
+        ziel.with_suffix(".txt").write_text(als_txt(text, basis), encoding="utf-8")
+    (site / "texte" / f"ebm-{k.quartal}.md").write_text("\n\n".join(alle), encoding="utf-8")
+    (site / "llms.txt").write_text(llms_txt(k, vertrag, basis), encoding="utf-8")
+    kaputt = defekte_links(site, basis)
     if kaputt:
         print(f"{len(kaputt)} defekte Links, z. B.:\n  " + "\n  ".join(kaputt[:10]))
         return 1
-    print(f"{len(t.gops)} GOP-, {len(t.slugs)} Abschnittstexte, Register, Gliederung, OPS, Stichworte, llms.txt -> {site}"
-          + ("" if gl else " (ohne BMV-Ä-Gliederung: Vertragstext nicht geladen)"))
+    print(f"{len(t.gops)} GOP-, {len(t.slugs)} Abschnittstexte, Register, Gliederung, OPS, Stichworte, llms.txt, je Seite .md und .txt -> {site}"
+          + (f", absolute Links auf {basis}" if basis else ", relative Links")
+          + ("" if vertrag else " (ohne Vertragstext)"))
     return 0

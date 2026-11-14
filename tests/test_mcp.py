@@ -157,3 +157,22 @@ class VertragstextGepackt(unittest.TestCase):
             bl = [x for x in b.bloecke if x["ueberschrift"]]
             self.assertEqual(bl[0]["ueberschrift"], "§ 29a Medikationsplan")
             self.assertEqual(bl[0]["seite"], 45)
+
+
+class StatischeHilfen(unittest.TestCase):
+    def test_altersgrenzen(self):
+        from ek.texte import altersgrenzen
+        self.assertEqual(altersgrenzen("ab Beginn des 19. bis zum vollendeten 66. Lebensjahr")[0][1], "Alter 18 bis 65 Jahre")
+        self.assertEqual(altersgrenzen("bis zum vollendeten 4. Lebensjahr")[0][1], "Alter 0 bis 3 Jahre (unter 4)")
+        self.assertEqual(altersgrenzen("ab Beginn des 76. Lebensjahres")[0][1], "ab Alter 75 Jahre")
+        self.assertEqual(altersgrenzen("nach Vollendung des 18. Lebensjahres")[0][1], "ab Alter 18 Jahre")
+        self.assertEqual(len(altersgrenzen("ab Beginn des 55. bis zum vollendeten 75. Lebensjahr")), 1)
+
+    def test_absolut_und_txt(self):
+        from ek.texte import absolut, als_txt
+        b = "https://beispiel.github.io/ebm-katalog/"
+        t = absolut("[x](../abschnitt/I-3.1.md) [y](https://ebm.kbv.de/) [z](03000.md#Bewertung)", "texte/gop/01474.md", b)
+        self.assertEqual(t, f"[x]({b}texte/abschnitt/I-3.1.md) [y](https://ebm.kbv.de/) [z]({b}texte/gop/03000.md#Bewertung)")
+        self.assertEqual(absolut("[x](a.md)", "texte/b.md", None), "[x](a.md)")
+        self.assertEqual(als_txt(t, b), f"[x]({b}texte/abschnitt/I-3.1.txt) [y](https://ebm.kbv.de/) [z]({b}texte/gop/03000.txt#Bewertung)")
+        self.assertEqual(als_txt("[g](ebm-2026-4.md)", None), "[g](ebm-2026-4.md)")

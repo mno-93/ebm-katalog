@@ -44,11 +44,16 @@ python3 -I werkzeuge/ek.py frage ebm_nebeneinander '{"a":"03000","b":"01436"}'
 
 ## 2. Ohne MCP: verlinkte Texte für Webabruf und Upload
 
-Für Assistenten, die nur Links abrufen (Chat mit Webzugriff) oder Dateien in einen Wissensspeicher laden. `python3 -I werkzeuge/ek.py texte` schreibt nach `ausgabe/site/` und prüft alle relativen Links:
+Für Assistenten, die nur Links abrufen (Chat mit Webzugriff) oder Dateien in einen Wissensspeicher laden. `python3 -I werkzeuge/ek.py texte` schreibt nach `ausgabe/site/` und prüft alle internen Links:
+
+- **Absolute Adressen:** In der CI (`GITHUB_REPOSITORY` gesetzt) oder mit `EK_BASIS_URL` werden alle internen Links absolut geschrieben, z. B. `https://<konto>.github.io/<repo>/texte/gop/03000.md`. Abrufwerkzeuge, die nur bereits gesehene Adressen öffnen, kommen so von `llms.txt` aus an jede Seite. Lokal bleiben die Links relativ.
+- **`.txt`-Spiegel:** Jede Seite gibt es zusätzlich als `.txt` mit Links auf die `.txt`-Fassungen. Manche Chat-Browser zeigen `.md` nicht an.
+- **„Auf einen Blick“:** Oben auf jeder GOP-Seite stehen Altersgrenzen mit Umrechnung in Jahre, Häufigkeit, die wichtigsten Bedingungen aus Präambeln, die Zahl der Ausschlüsse beider Richtungen, Zuschläge zur GOP und Anhang 3. Die Kurzfassung ist maschinell zusammengestellt.
+- **Lesehilfe Altersgrenzen:** Neben jedem Wortlaut wie „ab Beginn des 19. bis zum vollendeten 66. Lebensjahr“ steht „= Alter 18 bis 65 Jahre“, gekennzeichnet als Lesehilfe des Katalogs. Grund: In Tests haben Modelle diese Grenzen falsch umgerechnet.
 
 | Datei | Inhalt |
 |---|---|
-| `llms.txt` | Einstieg: Wegweiser, Antwortregeln ohne Werkzeuge, Verweise |
+| `llms.txt` | Einstieg: Wegweiser, Einstiegsseiten und Vertragsdokumente mit Adresse, Antwortregeln ohne Werkzeuge |
 | `texte/gop/<Nr>.md` | je GOP alles, was `ebm_gop` liefert, vorberechnet: Bewertung, Texte, **Regeln außerhalb der GOP** (Bedingungssätze aus Präambeln und Allgemeinen Bestimmungen mit Listeneinleitung, Links auf die Präambeln), Ausschlüsse in beiden Richtungen mit aufgelösten Abschnittsausschlüssen, Zeiten aus Anhang 3, Zuschläge, Rückverweise, Arztgruppen |
 | `texte/abschnitt/<Teil>-<Nr>.md` | je Abschnitt, Präambel, Allgemeine Bestimmung und Anhang; Teil als römische Zahl, z. B. `I-4.3.1.md` (Allgemeine Bestimmungen), `III-3.1.md` (Präambel Kapitel 3) |
 | `texte/register.md`, `texte/register/<KK>.md` | alle GOP je Kapitel mit Titel und Punkten — Ersatz für die Suche |

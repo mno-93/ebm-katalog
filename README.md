@@ -46,7 +46,7 @@ Der MCP-Server (`ek.py mcp`, eingebunden über `.mcp.json`) gibt Assistenten elf
 | `ek.py mcp` | MCP-Server über stdio |
 | `ek.py frage WERKZEUG '{json}'` | ein Werkzeug direkt aufrufen |
 | `ek.py fragenkatalog` | Fragenkatalog und Abfrageschritte der Beispielantworten prüfen, Bericht nach `ausgabe/` |
-| `ek.py texte` | verlinkte Markdown-Texte (GOP, Abschnitte, Register, Gliederung, OPS, Stichworte), Gesamttext, `llms.txt` nach `ausgabe/site/`, mit Linkprüfung |
+| `ek.py texte` | verlinkte Texte als `.md` und `.txt` (GOP mit Kurzfassung und Lesehilfe zu Altersgrenzen, Abschnitte, Register, Gliederung, OPS, Stichworte, Vertragstext), Gesamttext, `llms.txt` nach `ausgabe/site/`, mit Linkprüfung; absolute Links mit `EK_BASIS_URL` oder in der CI |
 | `ek.py vertraulich` | eingecheckte Dateien auf vertrauliche Inhalte prüfen |
 | `ek.py bmv` | BMV-Ä und Anlagen von kbv.de laden, Text ziehen und gepackt nach `rohdaten/bmv/` legen (Grundlage für `bmv_text`, `texte/vertrag/` und `quellen/bmv/`; braucht `pypdf`). Nur nötig, wenn sich die Dokumentliste ändert |
 | `ek.py pdf build\|gop\|search\|refs` | EBM aus dem amtlichen Quartals-PDF durchsuchen (Rückfallebene; braucht `pypdf`) |
