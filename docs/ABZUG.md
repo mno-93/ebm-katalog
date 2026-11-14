@@ -36,3 +36,9 @@ Das Quartal ist das in der Online-Ansicht voreingestellte. Für einen erneuten A
 ## BMV-Ä
 
 `ek.py bmv` lädt die in `quellen/bmv/liste.tsv` verzeichneten PDF nach `ausgabe/bmv/pdf/` und legt den Text mit Seitenmarken in `ausgabe/bmv/text/` ab. Die Pauschalen in `quellen/bmv/bmv_pauschalen.json` sind von Hand aus diesen Texten erfasst, jeweils mit Datei und Seite. Dieselben Texte durchsucht das Werkzeug `bmv_text` (Gliederung nach Paragraf, Anhang, Abschnitt und Seite); sie werden nicht eingecheckt, die CI lädt sie bei geänderter Dokumentliste neu und hält sie im Zwischenspeicher.
+
+## Vertragstext BMV-Ä
+
+`python3 -I werkzeuge/ek.py bmv` lädt die Dokumente aus `quellen/bmv/liste.tsv` (BMV-Ä, Anlagen, Begleitdokumente) von kbv.de, zieht mit `pypdf` den Text je Seite und legt ihn gepackt nach `rohdaten/bmv/<Datei>.txt.gz`. `rohdaten/bmv/stand.json` hält je Dokument URL, Titel, Seitenzahl, Abrufdatum und SHA-256 der PDF, damit sich eine Textfassung der PDF eindeutig zuordnen lässt. Die PDF selbst werden nicht eingecheckt (`ausgabe/bmv/pdf/`). Neu laden nur, wenn kbv.de eine neue Fassung veröffentlicht oder sich die Dokumentliste ändert; dann die Änderung an `rohdaten/bmv/` wie einen neuen Abzug prüfen.
+
+Der Textauszug ist maschinell: Tabellen, Seitenumbrüche und Silbentrennung können fehlerhaft sein. Verbindlich ist die PDF; jede Fundstelle nennt deshalb Seite und Link.

@@ -1,13 +1,14 @@
 """Volltext des Bundesmantelvertrags-Ärzte (BMV-Ä) und seiner Anlagen.
 
-Grundlage sind die Textauszüge, die `ek.py bmv` aus den PDF auf kbv.de erzeugt (ausgabe/bmv/text/, nicht
-eingecheckt). Gliederung je Dokument: Seiten (=====SEITE n=====) und Überschriften (§, Anhang, Abschnitt),
+Grundlage sind die Textauszüge, die `ek.py bmv` aus den PDF auf kbv.de erzeugt: eingecheckt gepackt in
+rohdaten/bmv/*.txt.gz, ersatzweise ungepackt in ausgabe/bmv/text/. Gliederung je Dokument: Seiten (=====SEITE n=====) und Überschriften (§, Anhang, Abschnitt),
 damit jeder Treffer mit Paragraf, Seite und Link belegt werden kann.
 """
+import gzip
 import re
 from functools import cached_property
 
-from .grundlagen import AUS, QUELLEN
+from .grundlagen import AUS, QUELLEN, ROH
 
 LEITER = re.compile(r"\.{6,}|…{3,}")  # Inhaltsverzeichnis mit Punktleitern
 PARA = re.compile(r"^§\s*(\d+[a-z]?)\s*(.*)$")
@@ -42,11 +43,26 @@ def _ueberschrift(zeile, naechste):
 
 class BmvText:
     def __init__(self, verzeichnis=None):
-        self.d = verzeichnis or (AUS / "bmv" / "text")
+        if verzeichnis is None:
+            roh = ROH / "bmv"
+            verzeichnis = roh if roh.exists() and any(roh.glob("*.txt.gz")) else AUS / "bmv" / "text"
+        self.d = verzeichnis
+
+    def _dateien(self):
+        """(Stamm, Datei) je Dokument; gepackt (.txt.gz) oder ungepackt (.txt)."""
+        if not self.d.exists():
+            return []
+        out = {f.name[:-7]: f for f in self.d.glob("*.txt.gz")}
+        out.update({f.stem: f for f in self.d.glob("*.txt") if f.stem not in out})
+        return sorted(out.items())
+
+    @staticmethod
+    def _lies(f):
+        return gzip.decompress(f.read_bytes()).decode("utf-8") if f.name.endswith(".gz") else f.read_text(encoding="utf-8")
 
     @property
     def verfuegbar(self):
-        return self.d.exists() and any(self.d.glob("*.txt"))
+        return bool(self._dateien())
 
     @cached_property
     def liste(self):
@@ -62,16 +78,16 @@ class BmvText:
     def bloecke(self):
         """Absätze mit Dokument, Seite und letzter Überschrift."""
         out = []
-        for txt in sorted(self.d.glob("*.txt")):
-            meta = self.liste.get(txt.stem, {"datei": txt.stem + ".pdf", "url": None, "titel": txt.stem})
-            zeilen = txt.read_text(encoding="utf-8").splitlines()
+        for stamm, txt in self._dateien():
+            meta = self.liste.get(stamm, {"datei": stamm + ".pdf", "url": None, "titel": stamm})
+            zeilen = self._lies(txt).splitlines()
             seite, kopf, puffer, start = 1, None, [], 1
 
             def schliessen():
                 text = re.sub(r"-\s+\n?\s*(?=[a-zäöüß])", "", " ".join(puffer))  # Silbentrennung
                 text = re.sub(r"\s+", " ", text).strip()
                 if len(text) > 20 and not LEITER.search(text):
-                    out.append({"stamm": txt.stem, **meta, "seite": start, "ueberschrift": kopf, "text": text})
+                    out.append({"stamm": stamm, **meta, "seite": start, "ueberschrift": kopf, "text": text})
                 puffer.clear()
 
             for i, z in enumerate(zeilen):

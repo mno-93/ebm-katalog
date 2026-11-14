@@ -144,3 +144,16 @@ class StatischeTexte(unittest.TestCase):
             (site / "texte" / "gop" / "03000.md").write_text("[gut](03000.md) [fehlt](../abschnitt/I-3.1.md) [extern](https://ebm.kbv.de/)", encoding="utf-8")
             (site / "llms.txt").write_text("[GOP](texte/gop/03000.md)", encoding="utf-8")
             self.assertEqual(defekte_links(site), ["texte/gop/03000.md -> ../abschnitt/I-3.1.md"])
+
+
+class VertragstextGepackt(unittest.TestCase):
+    def test_liest_txt_gz(self):
+        import gzip, tempfile
+        with tempfile.TemporaryDirectory() as d:
+            p = Path(d) / "bmv-aerzte.txt.gz"
+            p.write_bytes(gzip.compress("=====SEITE 45=====\n§ 29a\nMedikationsplan\n(1) Vertragsärzte haben auf Verlangen einen Medikationsplan zu erstellen.\n".encode("utf-8")))
+            b = bmvtext.BmvText(Path(d))
+            self.assertTrue(b.verfuegbar)
+            bl = [x for x in b.bloecke if x["ueberschrift"]]
+            self.assertEqual(bl[0]["ueberschrift"], "§ 29a Medikationsplan")
+            self.assertEqual(bl[0]["seite"], 45)

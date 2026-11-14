@@ -48,7 +48,7 @@ Der MCP-Server (`ek.py mcp`, eingebunden über `.mcp.json`) gibt Assistenten elf
 | `ek.py fragenkatalog` | Fragenkatalog und Abfrageschritte der Beispielantworten prüfen, Bericht nach `ausgabe/` |
 | `ek.py texte` | verlinkte Markdown-Texte (GOP, Abschnitte, Register, Gliederung, OPS, Stichworte), Gesamttext, `llms.txt` nach `ausgabe/site/`, mit Linkprüfung |
 | `ek.py vertraulich` | eingecheckte Dateien auf vertrauliche Inhalte prüfen |
-| `ek.py bmv` | BMV-Ä und Anlagen laden, Text ziehen (Grundlage für `bmv_text` und `quellen/bmv/`; braucht `pypdf`) |
+| `ek.py bmv` | BMV-Ä und Anlagen von kbv.de laden, Text ziehen und gepackt nach `rohdaten/bmv/` legen (Grundlage für `bmv_text`, `texte/vertrag/` und `quellen/bmv/`; braucht `pypdf`). Nur nötig, wenn sich die Dokumentliste ändert |
 | `ek.py pdf build\|gop\|search\|refs` | EBM aus dem amtlichen Quartals-PDF durchsuchen (Rückfallebene; braucht `pypdf`) |
 
 Alle Befehle mit `python3 -I werkzeuge/ek.py …` aufrufen.
@@ -60,6 +60,7 @@ werkzeuge/ek.py            Kommandozeile
 werkzeuge/ek/              abzug (JSF-Client), export, extra (Arztgruppen, OPS, BMV-Ä), pruefen, vertraulich, …
 web/index.html             Katalogseite (eine Datei, lädt ausgabe/site/daten/*.json)
 rohdaten/<Quartal>/        gepackte Abzüge der Online-Ansicht
+rohdaten/bmv/              Textauszüge des BMV-Ä und seiner Anlagen (gepackt) mit stand.json (URL, Seiten, SHA-256 der PDF)
 quellen/bmv/               Pauschalen aus dem BMV-Ä (von Hand, mit Fundstelle) und Dokumentliste
 fragen/                    Fragenkatalog mit Sollantworten (Entwurf), Beispielantworten
 tests/                     Tests mit Ausschnitten der Online-Ansicht
@@ -79,5 +80,5 @@ Projektbezogene Muster für die Vertraulichkeitsprüfung stehen in der Repositor
 - Ein Quartal je Abzug; Quartalsvergleich und frühere Quartale sind nicht abgebildet.
 - Markup ist bereinigt (Klassen, Stile, Skripte entfernt), Texte und Tabellen sind unverändert.
 - Arztgruppen werden über den Pfad der Baumtitel zugeordnet; der gefilterte Baum liefert keine Knotenkennungen.
-- Die Pauschalen aus dem BMV-Ä sind von Hand erfasst und gekürzt; den vollständigen Vertragstext erschließt `bmv_text`, sofern `ek.py bmv` gelaufen ist. Anlage 3 (Qualitätssicherungsvereinbarungen), regionale Vereinbarungen und Selektivverträge fehlen.
+- Die Pauschalen aus dem BMV-Ä sind von Hand erfasst und gekürzt; den vollständigen Vertragstext (Textauszug aus 53 PDF, Abruf 12.11.2026) erschließen `bmv_text` und `texte/vertrag/`; verbindlich sind die PDF auf kbv.de. Anlage 3 (Qualitätssicherungsvereinbarungen), regionale Vereinbarungen und Selektivverträge fehlen.
 - Verweise auf Knoten, die nicht im Baum des Quartals stehen, sind gekennzeichnet; sie lassen sich auch in der Online-Ansicht nicht öffnen.

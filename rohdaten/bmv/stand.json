@@ -1,0 +1,429 @@
+{
+ "hinweis": "Textauszüge der PDF auf kbv.de, maschinell mit pypdf gezogen (KI-gebaut). Verbindlich sind die PDF; Seitenumbrüche, Tabellen und Silbentrennung können fehlerhaft sein.",
+ "dokumente": [
+  {
+   "datei": "01_Psychotherapie_Aerzte.pdf",
+   "url": "https://www.kbv.de/documents/infothek/rechtsquellen/bundesmantelvertrag/anlage-01-psychotherapie-vereinbarung/01_Psychotherapie_Aerzte.pdf",
+   "titel": "Psychotherapie-Vereinbarung",
+   "seiten": 29,
+   "sha256_pdf": "5ff2c7a037844db6a33e667a677548116bd6c0f572aa3fa50700245b9804ad11",
+   "abgerufen": "2026-11-12"
+  },
+  {
+   "datei": "01_Psychotherapie_Aerzte_bis_31.03.2024.pdf",
+   "url": "https://www.kbv.de/documents/infothek/rechtsquellen/bundesmantelvertrag/anlage-01-psychotherapie-vereinbarung/01_Psychotherapie_Aerzte_bis_31.03.2024.pdf",
+   "titel": "Psychotherapie-Vereinbarung",
+   "seiten": 34,
+   "sha256_pdf": "70260bda5cb4fa3800a24cba8a8d563b1346a0d3ba6f42ba5c2b19cd0aa214d8",
+   "abgerufen": "2026-11-12"
+  },
+  {
+   "datei": "02_Erlaeuterungen.pdf",
+   "url": "https://www.kbv.de/documents/infothek/rechtsquellen/bundesmantelvertrag/anlage-02-vordruckvereinbarung/02_Erlaeuterungen.pdf",
+   "titel": "Erläuterungen zur Vordruckvereinbarung",
+   "seiten": 146,
+   "sha256_pdf": "0601d3e054fd09076d0f107e5852104c916c2feb03fcf733bae2e20113f0500a",
+   "abgerufen": "2026-11-12"
+  },
+  {
+   "datei": "02_Mustersammlung.pdf",
+   "url": "https://www.kbv.de/documents/infothek/rechtsquellen/bundesmantelvertrag/anlage-02-vordruckvereinbarung/02_Mustersammlung.pdf",
+   "titel": "Mustersammlung",
+   "seiten": 105,
+   "sha256_pdf": "7ffa19a13e96e6a96b2386b4b1631cd33aac9326edeafa43d59b6c35d9ec1665",
+   "abgerufen": "2026-11-12"
+  },
+  {
+   "datei": "02_Mustersammlung_PT.pdf",
+   "url": "https://www.kbv.de/documents/infothek/rechtsquellen/bundesmantelvertrag/anlage-02-vordruckvereinbarung/02_Mustersammlung_PT.pdf",
+   "titel": "Mustersammlung Psychotherapie",
+   "seiten": 20,
+   "sha256_pdf": "ff978c000dd854eddfa5b0534fe7aba8e0cbfb52e0ab2d0860bf1111636a08dd",
+   "abgerufen": "2026-11-12"
+  },
+  {
+   "datei": "02_Vordruckvereinbarung.pdf",
+   "url": "https://www.kbv.de/documents/infothek/rechtsquellen/bundesmantelvertrag/anlage-02-vordruckvereinbarung/02_Vordruckvereinbarung.pdf",
+   "titel": "Vordruckvereinbarung",
+   "seiten": 27,
+   "sha256_pdf": "7bd69916743b24a8e7db57b0feb9c3ea2abd781252139534aa5477d34f663d57",
+   "abgerufen": "2026-11-12"
+  },
+  {
+   "datei": "02a_Blankoformularbedruckung.pdf",
+   "url": "https://www.kbv.de/documents/infothek/rechtsquellen/bundesmantelvertrag/anlage-02a-blankoformularbedruckung/02a_Blankoformularbedruckung.pdf",
+   "titel": "Vordruck-Vereinbarung Blankoformularbedruckung",
+   "seiten": 159,
+   "sha256_pdf": "eac20a1dd21617aa0ddb358198ce4751fa6069b80cab7f20cc71fc961642393b",
+   "abgerufen": "2026-11-12"
+  },
+  {
+   "datei": "02a_Blankoformularbedruckung_Handbuch.pdf",
+   "url": "https://www.kbv.de/documents/infothek/rechtsquellen/bundesmantelvertrag/anlage-02a-blankoformularbedruckung/02a_Blankoformularbedruckung_Handbuch.pdf",
+   "titel": "Technisches Handbuch Blankoformularbedruckung",
+   "seiten": 140,
+   "sha256_pdf": "1fbd62aa322d8f3f6f5a70ef49c83cccda132cce9befbbc954f51e8f3b36aaa2",
+   "abgerufen": "2026-11-12"
+  },
+  {
+   "datei": "02b_Aenderungsvereinbarung.pdf",
+   "url": "https://www.kbv.de/documents/infothek/rechtsquellen/bundesmantelvertrag/anlage-02b-digitale-vordrucke/02b_Aenderungsvereinbarung.pdf",
+   "titel": "Änderungsvereinbarung über die Verwendung digitaler Vordrucke in der vertragsärztlichen Versorgung - Vordruck-Vereinbarung digitale Vordrucke",
+   "seiten": 2,
+   "sha256_pdf": "783fc34177916e339d0c26aa5c4581149ab71884b7f34b5a775d26c90f502c03",
+   "abgerufen": "2026-11-12"
+  },
+  {
+   "datei": "02b_Vordruckvereinbarung_digitale_Vordrucke.pdf",
+   "url": "https://www.kbv.de/documents/infothek/rechtsquellen/bundesmantelvertrag/anlage-02b-digitale-vordrucke/02b_Vordruckvereinbarung_digitale_Vordrucke.pdf",
+   "titel": "Vordruck-Vereinbarung digitale Vordrucke",
+   "seiten": 15,
+   "sha256_pdf": "522ae3fcd5546bad773679e2d0c6f1f4c52af6acd5206a74cd00db5e1a872c84",
+   "abgerufen": "2026-11-12"
+  },
+  {
+   "datei": "04_Krankenversichertenkarte.pdf",
+   "url": "https://www.kbv.de/documents/infothek/rechtsquellen/bundesmantelvertrag/anlage-04-krankenversichertenkarte/04_Krankenversichertenkarte.pdf",
+   "titel": "Krankversichertenkarten-Vereinbarung",
+   "seiten": 10,
+   "sha256_pdf": "2c75daf6b00b7346b49dcfda4a049b2b6a83366d0c614c1e2f8bfea6028f3666",
+   "abgerufen": "2026-11-12"
+  },
+  {
+   "datei": "04a-elektronische-gesundheitskarte.pdf",
+   "url": "https://www.kbv.de/documents/infothek/rechtsquellen/bundesmantelvertrag/anlage-04a-elektronische-gesundheitskarte/04a-elektronische-gesundheitskarte.pdf",
+   "titel": "eGK-Vereinbarung",
+   "seiten": 11,
+   "sha256_pdf": "8809137028e4d04f4b0f881ec2bdd07541a26999fba2e7e55bf6c4cf8ab14a82",
+   "abgerufen": "2026-11-12"
+  },
+  {
+   "datei": "04a_elektr._Gesundheitskarte_technische_Anlage.pdf",
+   "url": "https://www.kbv.de/documents/infothek/rechtsquellen/bundesmantelvertrag/anlage-04a-elektronische-gesundheitskarte/04a_elektr._Gesundheitskarte_technische_Anlage.pdf",
+   "titel": "Anwendung der eGK",
+   "seiten": 33,
+   "sha256_pdf": "638b224664664c1a213e2b031532e79bad405d9607e7314ea1fd279b24e60153",
+   "abgerufen": "2026-11-12"
+  },
+  {
+   "datei": "05_Hausaerztl._Versorgung.pdf",
+   "url": "https://www.kbv.de/documents/infothek/rechtsquellen/bundesmantelvertrag/anlage-05-hausaerztliche-versorgung/05_Hausaerztl._Versorgung.pdf",
+   "titel": "Vertrag über die hausärztliche Versorgung",
+   "seiten": 9,
+   "sha256_pdf": "d2974d773883e1fd1a4b3b74f39c4786cd97faf8477ae5bee153fe4e9e2a2c81",
+   "abgerufen": "2026-11-12"
+  },
+  {
+   "datei": "06_DA.pdf",
+   "url": "https://www.kbv.de/documents/infothek/rechtsquellen/bundesmantelvertrag/anlage-06-datenaustausch/06_DA.pdf",
+   "titel": "Vertrag über den Datenaustausch",
+   "seiten": 20,
+   "sha256_pdf": "cb30aa72ee2eeb27b8b8971fe81babf30389eb799f667a3b47292d48d804121e",
+   "abgerufen": "2026-11-12"
+  },
+  {
+   "datei": "07_Onkologie.pdf",
+   "url": "https://www.kbv.de/documents/infothek/rechtsquellen/bundesmantelvertrag/anlage-07-onkologie-vereinbarung/07_Onkologie.pdf",
+   "titel": "Onkologie-Vereinbarung",
+   "seiten": 23,
+   "sha256_pdf": "b561cf668a2b093819b53c5d48767616cd56bad17d4a8e4c78f328eb9e2e0ef0",
+   "abgerufen": "2026-11-12"
+  },
+  {
+   "datei": "08_Delegation.pdf",
+   "url": "https://www.kbv.de/documents/infothek/rechtsquellen/bundesmantelvertrag/anlage-08-delegationsvereinbarung/08_Delegation.pdf",
+   "titel": "Delegations-Vereinbarung für ärztlich angeordnete Hilfeleistungen",
+   "seiten": 9,
+   "sha256_pdf": "beba4980319b25e20c2567657a5b2066efe2a37b115926169efe1ceafc53d3a6",
+   "abgerufen": "2026-11-12"
+  },
+  {
+   "datei": "09.1_Niereninsuffizienz.pdf",
+   "url": "https://www.kbv.de/documents/infothek/rechtsquellen/bundesmantelvertrag/anlage-09.1-versorgung-chronisch-niereninsuffizienter-patienten/09.1_Niereninsuffizienz.pdf",
+   "titel": "Versorgung chronisch niereninsuffizienter Patienten",
+   "seiten": 32,
+   "sha256_pdf": "6f5d1b186f96b8dc3dfc4da24e218a7da6e41416222cf8bec1c515584fd87fcd",
+   "abgerufen": "2026-11-12"
+  },
+  {
+   "datei": "09.2-bmv-mammographie.pdf",
+   "url": "https://www.kbv.de/documents/infothek/rechtsquellen/bundesmantelvertrag/anlage-09.2-mammographie-screening/09.2-bmv-mammographie.pdf",
+   "titel": "Vereinbarung zum Mammographie-Screening-Programm",
+   "seiten": 91,
+   "sha256_pdf": "d4c1c61454b5f851dcf683ace1eebbef5a876ee227fd52171d59b054a004bc4f",
+   "abgerufen": "2026-11-12"
+  },
+  {
+   "datei": "09.2_Mammographie.pdf",
+   "url": "https://www.kbv.de/documents/infothek/rechtsquellen/bundesmantelvertrag/anlage-09.2-mammographie-screening/09.2_Mammographie.pdf",
+   "titel": "Vereinbarung zum Mammographie-Screening-Programm",
+   "seiten": 89,
+   "sha256_pdf": "79a30631a5b6b809bf7934e21baf7b03f04c45c4592c977c61e870cf53a6540d",
+   "abgerufen": "2026-11-12"
+  },
+  {
+   "datei": "14_WOP_BKK.pdf",
+   "url": null,
+   "titel": "14_WOP_BKK.pdf",
+   "seiten": 27,
+   "sha256_pdf": "2b81f04f4152122436658c3342d2525e59537521e123eeaeaac7631f02dc1620",
+   "abgerufen": "2026-11-12"
+  },
+  {
+   "datei": "16_WOP_IKK.pdf",
+   "url": "https://www.kbv.de/documents/infothek/rechtsquellen/bundesmantelvertrag/anlage-16-einfuehrung-wohnortprinzip-ikk/16_WOP_IKK.pdf",
+   "titel": "Einführung des Wohnortprinzips - IKK",
+   "seiten": 14,
+   "sha256_pdf": "73f0a7214fe48716418f193fd9786d36c95fa2c1001617a11f9524615d733060",
+   "abgerufen": "2026-11-12"
+  },
+  {
+   "datei": "17_regionale_Sondervereinbarungen.pdf",
+   "url": "https://www.kbv.de/documents/infothek/rechtsquellen/bundesmantelvertrag/anlage-17-bundesweite-anerkennung-von-regionalen-sondervertragsregelungen/17_regionale_Sondervereinbarungen.pdf",
+   "titel": "Anerkennung regionaler Sondervertragsregelungen",
+   "seiten": 3,
+   "sha256_pdf": "3288a43453eb148f931ecb03f7ca9fd22f1d484fefec1e5b6b4135bc9025943a",
+   "abgerufen": "2026-11-12"
+  },
+  {
+   "datei": "19_Finanzierung_G-BA_IQWIG.pdf",
+   "url": "https://www.kbv.de/documents/infothek/rechtsquellen/bundesmantelvertrag/anlage-19-finanzierung-gba-und-iqwig/19_Finanzierung_G-BA_IQWIG.pdf",
+   "titel": "Finanzierungsvereinbarung des G-BA, IQTiG und IQWiG",
+   "seiten": 6,
+   "sha256_pdf": "154f433bab71bf37133ff32c51a8408cdd52b947c06d79139b82cb554578f836",
+   "abgerufen": "2026-11-12"
+  },
+  {
+   "datei": "2023-09-01_Festlegung_Telematik-Infrastruktur.pdf",
+   "url": "https://www.kbv.de/documents/infothek/rechtsquellen/bundesmantelvertrag/anlage-32-vereinbarung-telematikinfrastruktur/2023-09-01_Festlegung_Telematik-Infrastruktur.pdf",
+   "titel": "Festlegung des Vereinbarungsinhalts durch das BMG",
+   "seiten": 8,
+   "sha256_pdf": "596d80d586529d81b68202951d8d69257ca013939a0010b62fb7d924dd93d820",
+   "abgerufen": "2026-11-12"
+  },
+  {
+   "datei": "2025-02-01_Anlage_36_BMV-AE_BMG_beanstandet.pdf",
+   "url": "https://www.kbv.de/documents/infothek/rechtsquellen/bundesmantelvertrag/anlage-36-telemedizinisches-monitoring/2025-02-01_Anlage_36_BMV-AE_BMG_beanstandet.pdf",
+   "titel": "Vereinbarung über die Anforderungen an die technischen Verfahren zum telemedizinischen Monitoring",
+   "seiten": 7,
+   "sha256_pdf": "e1db1ae6816b5717dc60564194b776f44c46b462067f137a70e25f49202f5e31",
+   "abgerufen": "2026-11-12"
+  },
+  {
+   "datei": "2025-11-12-aenderungsvereinbarung-anlage-2a.pdf",
+   "url": "https://www.kbv.de/documents/infothek/rechtsquellen/bekanntmachungen/bundesmantelvertrag/2026/2025-11-12-aenderungsvereinbarung-anlage-2a.pdf",
+   "titel": "Vordruck-Vereinbarung Blankoformularbedruckung (Anlage 2a BMV-Ä): Änderungsvereinbarung",
+   "seiten": 6,
+   "sha256_pdf": "1e2e914ddab3a76f8f9c01445b2a58e99265c572b89e7836703cec83fbab2897",
+   "abgerufen": "2026-11-12"
+  },
+  {
+   "datei": "2026-04-07-aenderungsvereinbarung-vordrucke-versorgung.pdf",
+   "url": "https://www.kbv.de/documents/infothek/rechtsquellen/bekanntmachungen/bundesmantelvertrag/2026/2026-04-07-aenderungsvereinbarung-vordrucke-versorgung.pdf",
+   "titel": "Vereinbarung über Vordrucke für die vertragsärztliche Versorgung (Anlage 2 BMV-Ä): Änderungsvereinbarung",
+   "seiten": 2,
+   "sha256_pdf": "6661fc987b58fdaaf1e223817c4e28ec7fdcfffb46e500666a51e28b14275d32",
+   "abgerufen": "2026-11-12"
+  },
+  {
+   "datei": "20_europ._Kankenversicherungskarte.pdf",
+   "url": "https://www.kbv.de/documents/infothek/rechtsquellen/bundesmantelvertrag/anlage-20-europaeische-krankenversichertenkarte/20_europ._Kankenversicherungskarte.pdf",
+   "titel": "Vereinbarung zur Anwendung der europäischen Krankenversicherungskarte",
+   "seiten": 33,
+   "sha256_pdf": "1e679b8a3adb43e42ee3362e121b2562b677f91ae8e45367f66b6cbe87688759",
+   "abgerufen": "2026-11-12"
+  },
+  {
+   "datei": "21_WOP.pdf",
+   "url": "https://www.kbv.de/documents/infothek/rechtsquellen/bundesmantelvertrag/anlage-21-umsetzung-wohnortprinzip/21_WOP.pdf",
+   "titel": "Vereinbarung zur Umsetzung des Wohnortprinzips",
+   "seiten": 2,
+   "sha256_pdf": "232d9b7658a7d3901bd52d0a0ea1e10d58991329d5af35fe98d1448ea065459f",
+   "abgerufen": "2026-11-12"
+  },
+  {
+   "datei": "23_AVWG-2027.pdf",
+   "url": "https://www.kbv.de/documents/infothek/rechtsquellen/bundesmantelvertrag/anlage-23-anforderungskatalog-avwg/23_AVWG-2027.pdf",
+   "titel": "Anforderungskatalog für Verordnungssoftware",
+   "seiten": 74,
+   "sha256_pdf": "787abca485fd3aa1ebe3d6f65594b05f3e7f88de17f5c57353c28dfd0f2f66e8",
+   "abgerufen": "2026-11-12"
+  },
+  {
+   "datei": "23_AVWG.pdf",
+   "url": "https://www.kbv.de/documents/infothek/rechtsquellen/bundesmantelvertrag/anlage-23-anforderungskatalog-avwg/23_AVWG.pdf",
+   "titel": "Anforderungskatalog für Verordnungssoftware",
+   "seiten": 71,
+   "sha256_pdf": "cdf2a639d95d9bc76f9bae63f2b364f1c491a87c4e93d059e9b3a31867f44b8b",
+   "abgerufen": "2026-11-12"
+  },
+  {
+   "datei": "24_Delegation.pdf",
+   "url": "https://www.kbv.de/documents/infothek/rechtsquellen/bundesmantelvertrag/anlage-24-delegation/24_Delegation.pdf",
+   "titel": "Delegationsvereinbarung für ärztliche Leistungen",
+   "seiten": 11,
+   "sha256_pdf": "c61f33e785549b4853fdcf216153804381572c5f3f7ce5f361526e856ca3a5f1",
+   "abgerufen": "2026-11-12"
+  },
+  {
+   "datei": "25_Kurarztvertrag.pdf",
+   "url": "https://www.kbv.de/documents/infothek/rechtsquellen/bundesmantelvertrag/anlage-25-vertrag-ueber-kuraerztliche-behandlung/25_Kurarztvertrag.pdf",
+   "titel": "Kurarztvertrag",
+   "seiten": 39,
+   "sha256_pdf": "6273f4ed7b192fe75218647ecca8201e4769b846a0eec6d96e949e7b16f452fd",
+   "abgerufen": "2026-11-12"
+  },
+  {
+   "datei": "Anlage_26_Anforderungskatalog_DiGA.pdf",
+   "url": "https://www.kbv.de/documents/infothek/rechtsquellen/bundesmantelvertrag/anlage-26-anforderungskatalog-diga/Anlage_26_Anforderungskatalog_DiGA.pdf",
+   "titel": "Anforderungskatalog für DiGA",
+   "seiten": 34,
+   "sha256_pdf": "5baeb8baa46be7f4a568dc0ac75e99e6e2fab0b8cb8192f02c7409030ba442cb",
+   "abgerufen": "2026-11-12"
+  },
+  {
+   "datei": "Anlage_27_119b_SGBV.pdf",
+   "url": "https://www.kbv.de/documents/infothek/rechtsquellen/bundesmantelvertrag/anlage-27-vereinbarung-versorgung-in-pflegeheimen/Anlage_27_119b_SGBV.pdf",
+   "titel": "Vereinbarung für Versorgung in Pflegeheimen",
+   "seiten": 7,
+   "sha256_pdf": "c6ff2fcf1d41ff9c84d550e818fda8f110fbae0d1aed45d43606cdb7cd716f04",
+   "abgerufen": "2026-11-12"
+  },
+  {
+   "datei": "Anlage_28_Terminservicestellen.pdf",
+   "url": "https://www.kbv.de/documents/infothek/rechtsquellen/bundesmantelvertrag/anlage-28-terminservicestellen/Anlage_28_Terminservicestellen.pdf",
+   "titel": "Vereinbarung für Terminservicestellen",
+   "seiten": 9,
+   "sha256_pdf": "1e5e0731812bac7b5d76368c9e67ad1f9b79e7cc8dfddfdaf3c5a2f933c0af59",
+   "abgerufen": "2026-11-12"
+  },
+  {
+   "datei": "Anlage_29_Anforderungskatalog_Heilmittel.pdf",
+   "url": "https://www.kbv.de/documents/infothek/rechtsquellen/bundesmantelvertrag/anlage-29-anforderungskatalog-verordnung-heilmittel/Anlage_29_Anforderungskatalog_Heilmittel.pdf",
+   "titel": "Anforderungskatalog für die Verordnung von Heilmittel",
+   "seiten": 53,
+   "sha256_pdf": "a1e0803c4c438b57d0db78c008420779a19f12b9fd4f235c54af9578d66fd408",
+   "abgerufen": "2026-11-12"
+  },
+  {
+   "datei": "Anlage_30_Palliativversorgung.pdf",
+   "url": "https://www.kbv.de/documents/infothek/rechtsquellen/bundesmantelvertrag/anlage-30-palliativversorgung/Anlage_30_Palliativversorgung.pdf",
+   "titel": "Vereinbarung für Palliativversorgung",
+   "seiten": 14,
+   "sha256_pdf": "d100a14cb37db96fcfe9abb303766aa1b77b3bb9c26a998835f8b9154e1249f9",
+   "abgerufen": "2026-11-12"
+  },
+  {
+   "datei": "Anlage_31_Telemedizinische_Leistungen.pdf",
+   "url": "https://www.kbv.de/documents/infothek/rechtsquellen/bundesmantelvertrag/anlage-31-telemedizinische-leistungen/Anlage_31_Telemedizinische_Leistungen.pdf",
+   "titel": "Telemedizin-Vereinbarung",
+   "seiten": 11,
+   "sha256_pdf": "3c95d61f87b2f48697e524980ff4013cb4cde632f13ccc2efbd74b556a550b5c",
+   "abgerufen": "2026-11-12"
+  },
+  {
+   "datei": "Anlage_31a_Telekonsil.pdf",
+   "url": "https://www.kbv.de/documents/infothek/rechtsquellen/bundesmantelvertrag/anlage-31a-vereinbarung-telekonsil/Anlage_31a_Telekonsil.pdf",
+   "titel": "Telekonsil-Vereinbarung",
+   "seiten": 7,
+   "sha256_pdf": "c8c4f63bb003ae294c159cbd72018980a0442de2434ac32287c1f5efca91406b",
+   "abgerufen": "2026-11-12"
+  },
+  {
+   "datei": "Anlage_31b_Videosprechstunde.pdf",
+   "url": "https://www.kbv.de/documents/infothek/rechtsquellen/bundesmantelvertrag/anlage-31b-videosprechstunde/Anlage_31b_Videosprechstunde.pdf",
+   "titel": "Vereinbarung für Videosprechstunden",
+   "seiten": 11,
+   "sha256_pdf": "bd04df6203e4a04348deafc2bfc8327f8b4e5160e4d4287da6bb036a45f05b68",
+   "abgerufen": "2026-11-12"
+  },
+  {
+   "datei": "Anlage_31c_BMV-Vereinbarung_Versorgungsqualitaet_telemedizinischer_Leistungen.pdf",
+   "url": "https://www.kbv.de/documents/infothek/rechtsquellen/bundesmantelvertrag/anlage-31c-telemedizinische-leistungen/Anlage_31c_BMV-Vereinbarung_Versorgungsqualitaet_telemedizinischer_Leistungen.pdf",
+   "titel": "Vereinbarung für telemedizinische Leistungen",
+   "seiten": 9,
+   "sha256_pdf": "1a8ddeaa2bb2f8c1fe55452701c4e3c8398a52625a9e0caa16d12b7ff5ef3d73",
+   "abgerufen": "2026-11-12"
+  },
+  {
+   "datei": "Anlage_32_TI-Vereinbarung.pdf",
+   "url": "https://www.kbv.de/documents/infothek/rechtsquellen/bundesmantelvertrag/anlage-32-vereinbarung-telematikinfrastruktur/Anlage_32_TI-Vereinbarung.pdf",
+   "titel": "Vereinbarung zur Finanzierung der Telematikinfrastruktur",
+   "seiten": 35,
+   "sha256_pdf": "7e9a157f12feb72d9578fa6373088792f9bac0598bae68a35b8226c79ab3c470",
+   "abgerufen": "2026-11-12"
+  },
+  {
+   "datei": "Anlage_33_HIV-Praeexpositionsprophylaxe.pdf",
+   "url": "https://www.kbv.de/documents/infothek/rechtsquellen/bundesmantelvertrag/anlage-33-hiv-praeexpositionsprophylaxe/Anlage_33_HIV-Praeexpositionsprophylaxe.pdf",
+   "titel": "Vereinbarung über die HIV-Präexpositionsprophylaxe zur Prävention einer HIV-Infektion",
+   "seiten": 4,
+   "sha256_pdf": "f1a78fa5cdb568517e313adbd330773150913aff21f3b8ab42e077bda20a09ea",
+   "abgerufen": "2026-11-12"
+  },
+  {
+   "datei": "Anlage_35_Kryo-Vereinbarung.pdf",
+   "url": "https://www.kbv.de/documents/infothek/rechtsquellen/bundesmantelvertrag/anlage-35-kryo-vereinbarung/Anlage_35_Kryo-Vereinbarung.pdf",
+   "titel": "Kryo-Vereinbarung",
+   "seiten": 3,
+   "sha256_pdf": "279e2368a71cd25f4b9c56a60eb3038a191e3fae338fa4ed92f29b4b7037aa54",
+   "abgerufen": "2026-11-12"
+  },
+  {
+   "datei": "Anlage_4b_Authentifizierung_Fernbehandlung.pdf",
+   "url": "https://www.kbv.de/documents/infothek/rechtsquellen/bundesmantelvertrag/anlage-04b-authentifizierung-fernbehandlung/Anlage_4b_Authentifizierung_Fernbehandlung.pdf",
+   "titel": "Vereinbarung zur Authentifizierung bei Fernbehandlungen",
+   "seiten": 3,
+   "sha256_pdf": "57d39059f224dc9b7f6fbf420da6ca9ae3dff81a7eeabd84813f6e286bcf638f",
+   "abgerufen": "2026-11-12"
+  },
+  {
+   "datei": "Gutachtenhonorar-Vereinbarung.pdf",
+   "url": "https://www.kbv.de/documents/infothek/rechtsquellen/bundesmantelvertrag/anlage-01-psychotherapie-vereinbarung/Gutachtenhonorar-Vereinbarung.pdf",
+   "titel": "Gutachtenhonorar-Vereinbarung",
+   "seiten": 3,
+   "sha256_pdf": "54aeaf49ee11309e1a09d084495832c741f125d7285823f8089d8c7cc343b1cd",
+   "abgerufen": "2026-11-12"
+  },
+  {
+   "datei": "bmv-aerzte.pdf",
+   "url": "https://www.kbv.de/documents/infothek/rechtsquellen/bundesmantelvertrag/bmv-aerzte.pdf",
+   "titel": "Bundesmantelvertrag-Ärzte",
+   "seiten": 69,
+   "sha256_pdf": "36c5a23d58dda8f89beaec186af55a19cf32549bcdc89be88839564b15b18c33",
+   "abgerufen": "2026-11-12"
+  },
+  {
+   "datei": "diga-vereinbarung.pdf",
+   "url": "https://www.kbv.de/documents/infothek/rechtsquellen/bundesmantelvertrag/anlage-34-diga/diga-vereinbarung.pdf",
+   "titel": "DiGA-Vereinbarung",
+   "seiten": 10,
+   "sha256_pdf": "51580c8dcbd9460cb57164b30d3c42d303a4d16bef683e96767a661630381c41",
+   "abgerufen": "2026-11-12"
+  },
+  {
+   "datei": "sozialpsychiatrie-vereinbarung-ergaenzungsvereinbarung.pdf",
+   "url": "https://www.kbv.de/documents/infothek/rechtsquellen/bundesmantelvertrag/anlage-11-sozialpsychiatrie-vereinbarung/sozialpsychiatrie-vereinbarung-ergaenzungsvereinbarung.pdf",
+   "titel": "Ergänzungsvereinbarung der Sozialpsychiatrie-Vereinbarung",
+   "seiten": 2,
+   "sha256_pdf": "4e227cb81b47c81c8a9129f7120870bbd5e75e73e2b053321249f401df39a8d5",
+   "abgerufen": "2026-11-12"
+  },
+  {
+   "datei": "sozialpsychiatrie-vereinbarung.pdf",
+   "url": "https://www.kbv.de/documents/infothek/rechtsquellen/bundesmantelvertrag/anlage-11-sozialpsychiatrie-vereinbarung/sozialpsychiatrie-vereinbarung.pdf",
+   "titel": "Sozialpsychiatrie-Vereinbarung",
+   "seiten": 12,
+   "sha256_pdf": "ad19b13c3f3b24b71766fbbfb0471ae29f6b9f38c2ce201ada347b916daeb6f7",
+   "abgerufen": "2026-11-12"
+  },
+  {
+   "datei": "ti-pauschale-entwicklung.pdf",
+   "url": "https://www.kbv.de/documents/infothek/rechtsquellen/bundesmantelvertrag/anlage-32-vereinbarung-telematikinfrastruktur/ti-pauschale-entwicklung.pdf",
+   "titel": "Übersicht: Entwicklung der monatlichen TI-Pauschale",
+   "seiten": 3,
+   "sha256_pdf": "cd6bda70f79791369416ece4a6ef29b2a1ba645f1be0e1f679ed8d1ce1ea5edc",
+   "abgerufen": "2026-11-12"
+  }
+ ]
+}

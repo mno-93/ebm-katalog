@@ -12,7 +12,8 @@ Schreibt nach ausgabe/site/:
   texte/abschnitt/<Pfad>.md    je Abschnitt, Präambel, Allgemeine Bestimmung, Anhang
   texte/ops.md, texte/ops/<Gruppe>.md   Anhang 2: OPS-Code -> GOP
   texte/bmv.md                 Pauschalen aus dem BMV-Ä mit Geltungsbereich
-  texte/bmv-gliederung.md      Gliederung des Vertragstexts mit Seitenlinks auf die PDF (nur Überschriften)
+  texte/bmv-gliederung.md      Gliederung des Vertragstexts: Überschriften mit Link auf den Wortlaut und die PDF-Seite
+  texte/vertrag/<Datei>.md     Wortlaut des BMV-Ä und seiner Anlagen (Textauszug aus rohdaten/bmv), lange Dokumente in Teilen
   texte/stichworte.md          Alltagsbegriffe, Begriffsbestimmungen, Themen außerhalb des Katalogs
   texte/ebm-<Q>.md             alles in einer Datei (GOP, Abschnitte, Präambeln, BMV-Ä-Pauschalen)
 """
@@ -22,6 +23,7 @@ from collections import defaultdict
 from .grundlagen import AUS
 from .katalog import HINWEIS, Katalog, synonyme
 
+BMV_SEITE = "https://www.kbv.de/infothek/rechtsquellen/bundesmantelvertrag"
 ROEMISCH = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"]
 
 
@@ -34,6 +36,8 @@ class Texte:
             if n["typ"] != "gop":
                 nr = re.sub(r"[^\w.]+", "-", n["nr"] or "").strip("-") or str(k.pos[n["knotenId"]])
                 self.slugs[n["knotenId"]] = f"{ROEMISCH[int(n['teil'])]}-{nr}"
+        self.vertrag = (f"[Gliederung des BMV-Ä mit Seitenlinks](bmv-gliederung.md)" if k.bmvtext.verfuegbar
+                        else f"[Bundesmantelvertrag und Anlagen auf kbv.de]({BMV_SEITE})")
         self.gops = sorted({n["nr"] for n in k.index["knoten"] if n["typ"] == "gop"})
         # Ausschlüsse in Gegenrichtung: bei anderen GOP eingetragen
         self.gegen = defaultdict(list)
@@ -281,7 +285,7 @@ class Texte:
     def bmv_md(self):
         d = self.k.bmv_daten
         z = ["# Pauschalen aus dem BMV-Ä außerhalb des EBM", "", f"{HINWEIS}", "",
-             "Von Hand aus den PDF auf kbv.de erfasst. Regeln, Ansprüche und Berechtigungen stehen im Vertragstext: [Gliederung mit Seitenlinks](bmv-gliederung.md).", ""]
+             "Von Hand aus den PDF auf kbv.de erfasst. Regeln, Ansprüche und Berechtigungen stehen im Vertragstext: " + self.vertrag + ".", ""]
         for a in d["anlagen"]:
             z += [f"## Anlage {a['anlage']}: {a['titel']}", "", f"Fassung: {a.get('fassung') or '—'}. Höhe: {a.get('hoehe') or '—'}." + (f" Status: {a['status']}." if a.get("status") else ""), ""]
             for pid in a["pauschalen"]:
@@ -302,23 +306,64 @@ class Texte:
             z += ["## Themen außerhalb des Katalogs", ""] + [f"- **{x['thema']}:** {x['hinweis']}" for x in d["nicht_im_katalog"]] + [""]
         return "\n".join(z).replace("](../gop/", "](gop/")
 
-    def bmv_gliederung(self):
+    TEIL = 80000  # Zeichen je Vertragsseite; längere Dokumente werden an Überschriften geteilt
+
+    def vertragsseiten(self):
+        """Wortlaut je Dokument des BMV-Ä: {Dateiname: Text}; lange Dokumente in Teilen. Zusätzlich die Zuordnung Block -> Datei."""
+        b = self.k.bmvtext
+        seiten, ort = {}, {}
+        hinweis = ("Textauszug aus der PDF auf kbv.de, maschinell gezogen (KI-gebaut). Verbindlich ist die PDF; Seitenumbrüche, "
+                   "Tabellen und Silbentrennung können fehlerhaft sein. Seitenangaben beziehen sich auf die PDF.")
+        for doc in b.dokumente():
+            st = doc["dokument"]
+            url = b.liste.get(st, {}).get("url")
+            bl = [x for x in b.bloecke if x["stamm"] == st]
+            teile, akt, laenge = [], [], 0
+            for x in bl:
+                if akt and laenge + len(x["text"]) > self.TEIL and (x["ueberschrift"] != akt[-1]["ueberschrift"] or laenge > 1.5 * self.TEIL):
+                    teile.append(akt); akt, laenge = [], 0
+                akt.append(x); laenge += len(x["text"])
+            if akt:
+                teile.append(akt)
+            namen = [f"{st}.md"] if len(teile) == 1 else [f"{st}-{i}.md" for i in range(1, len(teile) + 1)]
+            for name, teil in zip(namen, teile):
+                z = [f"# {doc['titel']}" + (f" (Teil {namen.index(name) + 1} von {len(namen)})" if len(namen) > 1 else ""), "",
+                     f"Datei {doc['datei']}" + (f", PDF: {url}" if url else "") + f". {hinweis}", ""]
+                if len(namen) > 1:
+                    z += ["Teile: " + " · ".join(f"[{i + 1}]({n})" for i, n in enumerate(namen)) + " · [Gliederung](../bmv-gliederung.md)", ""]
+                kopf = object()
+                for x in teil:
+                    ort[id(x)] = name
+                    if x["ueberschrift"] != kopf:
+                        kopf = x["ueberschrift"]
+                        if kopf:
+                            z += [f"## {kopf}", ""]
+                    link = f"[S. {x['seite']}]({url}#page={x['seite']})" if url else f"S. {x['seite']}"
+                    z += [f"{x['text']} ({link})", ""]
+                seiten[name] = "\n".join(z)
+            if len(namen) > 1:
+                seiten[f"{st}.md"] = "\n".join([f"# {doc['titel']}", "", f"Datei {doc['datei']}" + (f", PDF: {url}" if url else "") + f". {hinweis}", "",
+                                                 "Das Dokument ist in Teile geteilt:", ""] + [f"- [Teil {i + 1}]({n})" for i, n in enumerate(namen)] + [""])
+        return seiten, ort
+
+    def bmv_gliederung(self, ort):
         b = self.k.bmvtext
         if not b.verfuegbar:
             return None
-        z = ["# Gliederung des BMV-Ä und seiner Anlagen", "", "Nur Überschriften mit Seite; der Wortlaut steht in den PDF auf kbv.de (Link springt auf die Seite). "
-             "Ansprüche, Berechtigungen, Geltungsbereiche und Verfahren regelt oft der Vertrag, nicht der EBM. KI-gebaut: Überschriften maschinell erkannt.", ""]
+        z = ["# Gliederung des BMV-Ä und seiner Anlagen", "", "Überschriften mit Seite. Der Link führt auf den Wortlaut im Katalog (Textauszug), "
+             "„PDF“ auf die Seite der verbindlichen PDF auf kbv.de. Ansprüche, Berechtigungen, Geltungsbereiche und Verfahren regelt oft der Vertrag, "
+             "nicht der EBM. KI-gebaut: Überschriften maschinell erkannt.", ""]
         gesehen = set()
         for doc in b.dokumente():
             bl = [x for x in b.bloecke if x["stamm"] == doc["dokument"] and x["ueberschrift"]]
             url = b.liste.get(doc["dokument"], {}).get("url")
-            z += [f"## {doc['titel']}", "", f"PDF: {url or doc['datei']}", ""]
+            z += [f"## {doc['titel']}", "", f"Wortlaut: [vertrag/{doc['dokument']}.md](vertrag/{doc['dokument']}.md)" + (f" · PDF: {url}" if url else ""), ""]
             for x in bl:
                 key = (doc["dokument"], x["ueberschrift"])
                 if key in gesehen:
                     continue
                 gesehen.add(key)
-                z.append(f"- [{x['ueberschrift']}]({url}#page={x['seite']}) — S. {x['seite']}" if url else f"- {x['ueberschrift']} — S. {x['seite']}")
+                z.append(f"- [{x['ueberschrift']}](vertrag/{ort[id(x)]}) — S. {x['seite']}" + (f" ([PDF]({url}#page={x['seite']}))" if url else ""))
             z.append("")
         return "\n".join(z)
 
@@ -330,7 +375,7 @@ class Texte:
         z += ["", "## Begriffsbestimmungen (Allgemeine Bestimmungen)", ""]
         ab = [n for n in k.index["knoten"] if n["teil"] == "0" and n["typ"] != "gop"]
         z += [f"- {self.link(n['knotenId'])}".replace("](../", "](") for n in ab if re.match(r"^3(\.\d+)?$", n["nr"] or "")]
-        z += ["", "Der Behandlungsfall ist zusätzlich in § 21 BMV-Ä bestimmt, siehe [Gliederung des BMV-Ä](bmv-gliederung.md).", ""]
+        z += ["", "Der Behandlungsfall ist zusätzlich in § 21 BMV-Ä bestimmt, siehe " + self.vertrag + ".", ""]
         d = k.bmv_daten
         if d and d.get("nicht_im_katalog"):
             z += ["## Nicht im Katalog", ""] + [f"- **{x['thema']}** (Stichwörter: {', '.join(x['stichwoerter'])}): {x['hinweis']}" for x in d["nicht_im_katalog"]] + [""]
@@ -362,7 +407,7 @@ def llms_txt(k, mit_bmv_gliederung):
         "2. Nummer unbekannt: [texte/titel.md](texte/titel.md) (alle GOP-Titel in einer Datei, nach Wörtern durchsuchen), [texte/register.md](texte/register.md) (GOP je Kapitel), [texte/inhalt.md](texte/inhalt.md) (Gliederung), "
         "[texte/stichworte.md](texte/stichworte.md) (Alltagsbegriffe, Begriffsbestimmungen, Themen außerhalb des Katalogs).",
         "3. Pauschalen außerhalb des EBM (Onkologie, DiGA, TI, Kurarzt …): [texte/bmv.md](texte/bmv.md)."
-        + (" Vertragstext des BMV-Ä: [texte/bmv-gliederung.md](texte/bmv-gliederung.md) mit Seitenlinks auf die PDF auf kbv.de." if mit_bmv_gliederung else ""),
+        + (" Vertragstext des BMV-Ä und seiner Anlagen im Wortlaut: [texte/bmv-gliederung.md](texte/bmv-gliederung.md) (Überschriften mit Link auf den Text, z. B. § 29a Medikationsplan, und auf die PDF-Seite)." if mit_bmv_gliederung else ""),
         "4. OPS-Code: [texte/ops.md](texte/ops.md).", "",
         "## Antwortregeln", "",
         "1. Nur aus diesen Texten (und den verlinkten Verträgen auf kbv.de) antworten. Was dort nicht steht, ist „nicht im Katalog“ — nicht aus dem Gedächtnis ergänzen.",
@@ -375,7 +420,7 @@ def llms_txt(k, mit_bmv_gliederung):
         "8. Gleiche Abschnittsnummern gibt es in den Allgemeinen Bestimmungen (Pfad I) und in den Kapiteln; den Pfad nennen.",
         "9. Merkmale und die Spalte §115b werden nicht erläutert; unverändert wiedergeben, nicht deuten. Sichtbarkeit im Arztgruppenfilter ist keine Berechtigung.",
         "10. Fehlen Alter, Arztgruppe oder Fallbezug, die Annahme nennen oder nachfragen.",
-        "11. Vor „nicht im Katalog“ die BMV-Ä-Pauschalen und den Vertragstext prüfen: Ansprüche, Berechtigungen und Geltungsbereiche regelt oft der BMV-Ä.", "",
+        "11. Vor „nicht im Katalog“ die BMV-Ä-Pauschalen und den Vertragstext (texte/vertrag/) prüfen: Ansprüche, Berechtigungen und Geltungsbereiche regelt oft der BMV-Ä. Vertragsstellen mit Dokument, Paragraf und PDF-Seite zitieren.", "",
         "## Weitere Formate", "",
         f"- [Gesamter EBM als eine Datei](texte/ebm-{k.quartal}.md) (für Wissensspeicher)",
         "- JSON: [daten/index.json](daten/index.json) (Gliederung), daten/teil-0.json bis daten/teil-7.json, [daten/arztgruppen.json](daten/arztgruppen.json), [daten/ops.json](daten/ops.json), [daten/bmv.json](daten/bmv.json)",
@@ -426,7 +471,13 @@ def main(argv=None):
         b = t.bmv_md()
         (td / "bmv.md").write_text(b, encoding="utf-8")
         alle.append(b)
-    gl = t.bmv_gliederung()
+    gl = None
+    if k.bmvtext.verfuegbar:
+        (td / "vertrag").mkdir(exist_ok=True)
+        seiten, ort = t.vertragsseiten()
+        for name, text in seiten.items():
+            (td / "vertrag" / name).write_text(text, encoding="utf-8")
+        gl = t.bmv_gliederung(ort)
     if gl:
         (td / "bmv-gliederung.md").write_text(gl, encoding="utf-8")
     (td / "stichworte.md").write_text(t.stichworte(), encoding="utf-8")

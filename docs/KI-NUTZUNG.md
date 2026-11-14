@@ -24,7 +24,7 @@ Im Repository liegt `.mcp.json`; Werkzeuge, die diese Datei lesen, binden den Se
 | `ebm_verweise` | wer eine Nummer erwähnt, in welchen Anhangtabellen (2, 3) sie steht und welche Knoten übergeordnete Abschnitte oder das Kapitel nennen (`ueber_bereich`) — für Folgenabschätzungen |
 | `ebm_felder` | Bedeutung der Felder; was die Online-Ansicht nicht erläutert, ist so gekennzeichnet |
 | `ebm_begriff` | Begriffsbestimmung aus den Allgemeinen Bestimmungen (Behandlungsfall, Krankheitsfall, Behandlungstag …) |
-| `bmv_text` | Volltext des BMV-Ä und seiner 52 Anlagen und Begleitdokumente: Suche oder Paragraf (z. B. 29a), mit Dokument, Paragraf bzw. Abschnitt, Seite und Link. Braucht `ek.py bmv` |
+| `bmv_text` | Volltext des BMV-Ä und seiner 52 Anlagen und Begleitdokumente: Suche oder Paragraf (z. B. 29a), mit Dokument, Paragraf bzw. Abschnitt, Seite und Link. Liest die eingecheckten Textauszüge in `rohdaten/bmv/` |
 
 Jede Antwort enthält Belege (Quartal, Nummer, Knotenkennung, Pfad bzw. Anlage mit Seite) und den Hinweis „KI-gebaut und nicht amtlich“. Ohne Treffer sagt das Werkzeug das ausdrücklich. Die Fachbegriffe für die Suche stehen in `quellen/synonyme.json` (von Hand, nur Einträge, deren Zielbegriff im Katalog vorkommt).
 
@@ -56,10 +56,11 @@ Für Assistenten, die nur Links abrufen (Chat mit Webzugriff) oder Dateien in ei
 | `texte/stichworte.md` | Alltagsbegriffe, Begriffsbestimmungen, Themen außerhalb des Katalogs |
 | `texte/ops.md`, `texte/ops/<Gruppe>.md` | Anhang 2: OPS-Code → GOP |
 | `texte/bmv.md` | Pauschalen aus dem BMV-Ä mit Geltungsbereich und Leistungsinhalt |
-| `texte/bmv-gliederung.md` | Überschriften des Vertragstexts mit Seitenlinks auf die PDF auf kbv.de (nur wenn `ek.py bmv` gelaufen ist; der Wortlaut wird nicht mitgeliefert) |
+| `texte/bmv-gliederung.md` | Überschriften des Vertragstexts mit Link auf den Wortlaut und auf die PDF-Seite |
+| `texte/vertrag/<Datei>.md` | Wortlaut des BMV-Ä und seiner Anlagen (Textauszug), lange Dokumente in Teilen, jeder Absatz mit PDF-Seite |
 | `texte/ebm-<Quartal>.md` | alles in einer Datei, für Wissensspeicher |
 
-Grenzen gegenüber MCP: keine Volltextsuche (Register und Stichworte ersetzen sie nur teilweise), keine Sammelprüfung beliebiger Paare, Vertragstext nur über die PDF auf kbv.de. Die Katalogseite selbst wird per JavaScript aufgebaut; Abrufwerkzeuge ohne Skriptausführung sehen dort nur den Hinweis auf `llms.txt`.
+Grenzen gegenüber MCP: keine Volltextsuche (Register und Stichworte ersetzen sie nur teilweise), keine Sammelprüfung beliebiger Paare. Die Katalogseite selbst wird per JavaScript aufgebaut; Abrufwerkzeuge ohne Skriptausführung sehen dort nur den Hinweis auf `llms.txt`.
 
 ## 3. Daten direkt
 
