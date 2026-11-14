@@ -49,6 +49,7 @@ Für Assistenten, die nur Links abrufen (Chat mit Webzugriff) oder Dateien in ei
 - **Absolute Adressen:** In der CI (`GITHUB_REPOSITORY` gesetzt) oder mit `EK_BASIS_URL` werden alle internen Links absolut geschrieben, z. B. `https://<konto>.github.io/<repo>/texte/gop/03000.md`. Abrufwerkzeuge, die nur bereits gesehene Adressen öffnen, kommen so von `llms.txt` aus an jede Seite. Lokal bleiben die Links relativ.
 - **`.txt`-Spiegel:** Jede Seite gibt es zusätzlich als `.txt` mit Links auf die `.txt`-Fassungen. Manche Chat-Browser zeigen `.md` nicht an.
 - **„Auf einen Blick“:** Oben auf jeder GOP-Seite stehen Altersgrenzen mit Umrechnung in Jahre, Häufigkeit, die wichtigsten Bedingungen aus Präambeln, die Zahl der Ausschlüsse beider Richtungen, Zuschläge zur GOP und Anhang 3. Die Kurzfassung ist maschinell zusammengestellt.
+- **Listennummern:** Nummerierte Punkte der Präambeln und Bestimmungen tragen ihre Nummer aus dem EBM („10. Relevant für die Fallzählung …“), damit Verweise wie „Nr. 10 der Präambel 3.1“ zitierbar sind; Spiegelstriche bleiben Spiegelstriche. Gilt auch für die Werkzeugergebnisse des MCP-Servers.
 - **Lesehilfe Altersgrenzen:** Neben jedem Wortlaut wie „ab Beginn des 19. bis zum vollendeten 66. Lebensjahr“ steht „= Alter 18 bis 65 Jahre“, gekennzeichnet als Lesehilfe des Katalogs. Grund: In Tests haben Modelle diese Grenzen falsch umgerechnet.
 
 | Datei | Inhalt |

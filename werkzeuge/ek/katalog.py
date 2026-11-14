@@ -30,9 +30,37 @@ EBM_URL = "https://ebm.kbv.de/"
 OPS_URL = "https://ebm.kbv.de/ops.xhtml"
 
 
+def _listen(html):
+    """Listenpunkte markieren: nummerierte Listen (<ol>) mit „1.“, „2.“ …, sonst Spiegelstrich.
+
+    Die Nummern entsprechen der Zählung im EBM („Nr. 10 der Präambel 3.1“); verschachtelte Listen zählen eigenständig.
+    """
+    out, stapel, pos = [], [], 0
+    for m in re.finditer(r"<(/?)(ol|ul|li)\b[^>]*>", html):
+        out.append(html[pos:m.start()]); pos = m.end()
+        zu, tag = m.group(1), m.group(2)
+        if tag in ("ol", "ul"):
+            if zu:
+                if stapel:
+                    stapel.pop()
+            else:
+                stapel.append([tag, 0])
+            out.append(m.group(0))
+        elif tag == "li" and not zu:
+            if stapel and stapel[-1][0] == "ol":
+                stapel[-1][1] += 1
+                out.append(f"\n{stapel[-1][1]}. ")
+            else:
+                out.append("\n- ")
+        else:
+            out.append(m.group(0))
+    out.append(html[pos:])
+    return re.sub(r"(\n(?:\d+\.|-) )\s*<p>", r"\1", "".join(out))
+
+
 def klartext(html, links=None):
-    """Bereinigtes HTML der Abschnitte in lesbaren Text (Listen mit Spiegelstrich)."""
-    s = re.sub(r"<li>\s*(?:<p>)?", "\n- ", html)
+    """Bereinigtes HTML der Abschnitte in lesbaren Text (nummerierte Listen mit „1.“, sonst Spiegelstrich)."""
+    s = _listen(html)
     s = re.sub(r"</p>\s*</li>", "</li>", s)
     s = re.sub(r"</?(p|ul|ol|tr|table|thead|tbody|h5|h6)[^>]*>", "\n", s)
     s = re.sub(r"<br\s*/?>", "\n", s)
@@ -71,11 +99,14 @@ def _satzgrenzen(text, i, j, fenster=300, spielraum=400):
 def einleitung(text, pos, zeilen=30):
     """Für eine Stelle in einem Listenpunkt: der nächste vorangehende Einleitungssatz (Zeile, die auf „:“ endet)."""
     anfang = text.rfind("\n", 0, pos) + 1
-    if not text[anfang:anfang + 2] == "- ":
+    zeile = text[anfang:anfang + 6]
+    nummer = re.match(r"\d+\. ", zeile)
+    if not (zeile.startswith("- ") or nummer):
         return None
     vorher = text[:anfang].rstrip("\n").split("\n")[-zeilen:]
     for z in reversed(vorher):
-        if z.rstrip().endswith(":") and not z.startswith("- "):
+        # Spiegelstrich: Einleitung darf ein nummerierter Punkt sein; nummerierter Punkt: nur Text außerhalb der Liste
+        if z.rstrip().endswith(":") and not z.startswith("- ") and not (nummer and re.match(r"\d+\. ", z)):
             return z.strip()
     return None
 
@@ -209,7 +240,7 @@ class Katalog:
 
     @staticmethod
     def _saetze(text):
-        for teil in re.split(r"\n(?=- )|(?<!\bbzw)(?<!\bggf)(?<!\bvgl)(?<!\bAbs)(?<!\bNr)(?<!\bz\. B)(?<=[.;])\s+(?=[A-ZÄÖÜ(§])", text):
+        for teil in re.split(r"\n(?=- |\d+\. )|(?<!\bbzw)(?<!\bggf)(?<!\bvgl)(?<!\bAbs)(?<!\bNr)(?<!\bz\. B)(?<=[.;])\s+(?=[A-ZÄÖÜ(§])", text):
             s = re.sub(r"\s+", " ", teil).strip(" -")
             if s:
                 yield s

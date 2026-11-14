@@ -176,3 +176,12 @@ class StatischeHilfen(unittest.TestCase):
         self.assertEqual(absolut("[x](a.md)", "texte/b.md", None), "[x](a.md)")
         self.assertEqual(als_txt(t, b), f"[x]({b}texte/abschnitt/I-3.1.txt) [y](https://ebm.kbv.de/) [z]({b}texte/gop/03000.txt#Bewertung)")
         self.assertEqual(als_txt("[g](ebm-2026-4.md)", None), "[g](ebm-2026-4.md)")
+
+
+class Listennummern(unittest.TestCase):
+    def test_ol_nummeriert_ul_spiegelstrich(self):
+        self.assertEqual(katalog.klartext("<ol><li><p>Eins:</p><ul><li><p>a</p></li></ul></li><li><p>Zwei</p></li></ol>"), "1. Eins:\n- a\n2. Zwei")
+
+    def test_einleitung_bei_nummer(self):
+        text = "Finden nur Videokontakte statt, gilt:\n1. Abschlag 20 %\n2. Die Zuschläge 01630 sind nicht berechnungsfähig."
+        self.assertEqual(katalog.einleitung(text, text.find("01630")), "Finden nur Videokontakte statt, gilt:")
